@@ -12,10 +12,14 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
+        // figure out how to
+        //validate content (make sure it is valid json)
+        //loadInDataStructure
         return null;
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
+        // set dataSet equal null?
         return null;
     }
 
