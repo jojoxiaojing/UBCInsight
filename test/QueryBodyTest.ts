@@ -85,21 +85,21 @@ describe("QueryBody", function () {
 
 
     it("Test QueryBody Constructor", function () {
-        qB.parseQueryFilters();
+        qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
     });
 
     it("Test QueryBody Constructor with no valid body", function () {
-        qBBroken.parseQueryFilters();
+        qBBroken.parseQueryFilters(qBBroken.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(0);
     });
 
 /*    it("Test QueryBody Constructor, the right object is pushed in the attribute array", function () {
-        qB.parseQueryFilters();
+        qB.parseQueryFilters(qB.filters);
         let firstElement = qB.filters[0];
-        expect(firstElement.filters[0]).to.deep.equal("FilterLogic");
+        expect(typeof firstElement).to.deep.equal("FilterOR");
     })*/
 
 });

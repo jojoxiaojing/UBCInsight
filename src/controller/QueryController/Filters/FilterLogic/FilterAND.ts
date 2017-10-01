@@ -1,12 +1,16 @@
+import {IFilterLogic} from "./IFilterLogic";
+import {IFilter} from "../IFilter";
+import FilterOR from "./FilterOR";
 import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
-import FilterComparison from "../FilterComparison/FilterComparison";
 
-export default class FilterLogic {
-    filters: any[];
+export default class FilterAND implements IFilterLogic{
+    type: "FilterLogic";
+    subType: "FilterAND";
+    filters: IFilter[];
 
-    // potential need to check beforehand if there is a single key-value pair,
+    // potentially need to check beforehand if there is a single key-value pair,
     // otherwise throw an error before the constructor is called
     constructor(filter: any) {
         this.filters = [];
@@ -23,24 +27,25 @@ export default class FilterLogic {
         // otherwise the object is JSON, e.g. GT/LT/EQ
         else {
             for (var key in objJSON) {
-
                 var val = objJSON[key];
+/*                console.log(key)
+                console.log(val)*/
                 if (key === "OR") {
-                    //var orFilter = new FilterOR(val);
-                    var orFilter = new FilterLogic(val);
+                    var orFilter = new FilterOR(val);
+                    //var orFilter = new FilterLogic(val);
                     this.filters.push(orFilter);
-                    orFilter.parseLogicFilters(orFilter);
+                    this.parseLogicFilters(orFilter);
                 } else if (key === "AND") {
-                    //var andFilter = new FilterAND(val);
-                    var andFilter = new FilterLogic(val);
-                    this.filters.push(val);
-                    andFilter.parseLogicFilters(andFilter);
+                    var andFilter = new FilterAND(val);
+                    //var andFilter = new FilterLogic(val);
+                    this.filters.push(andFilter);
+                    this.parseLogicFilters(andFilter);
                 } else if (key === "GT") {
-                    this.filters.push(new FilterComparison(val));
+                    this.filters.push(new FilterGT(val));
                 } else if (key === "LT") {
-                    this.filters.push(new FilterComparison(val));
+                    this.filters.push(new FilterLT(val));
                 } else if (key === "EQ") {
-                    this.filters.push(new FilterComparison(val));
+                    this.filters.push(new FilterEQ(val));
                 }
             }
         }

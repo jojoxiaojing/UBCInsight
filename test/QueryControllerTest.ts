@@ -88,7 +88,7 @@ describe("QueryController", function () {
 
     it("Test QueryBody Constructor", function () {
         let qB = qC.getQueryObj();
-        qB.parseQueryFilters();
+        qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
     });
