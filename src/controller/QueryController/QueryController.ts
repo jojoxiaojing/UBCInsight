@@ -6,6 +6,8 @@ interface IQueryController {
     queryObj: QueryBody;
     queryOpt: QueryOptions;
 
+    getQueryObj(): QueryBody;
+    getQueryOpt(): QueryOptions;
     getQuery(): JSON;
     getHasWhere(): boolean;
     getHasOptions(): boolean;
@@ -30,7 +32,6 @@ export default class QueryController implements IQueryController{
         this.setHasOptions(false);
         this.parseQueryBody();
         this.parseQueryOptions();
-        //throw error in the constructor regarding validity of query
     }
 
     // parse through JSON stored in query and construct the QueryBody object
@@ -72,6 +73,14 @@ export default class QueryController implements IQueryController{
 
     setQueryOpt(options: QueryOptions) : void {
         this.queryOpt = new QueryOptions(options);
+    }
+
+    getQueryObj(): QueryBody {
+        return this.queryObj;
+    }
+
+    getQueryOpt(): QueryOptions {
+        return this.queryOpt;
     }
 
     getQuery(): any {

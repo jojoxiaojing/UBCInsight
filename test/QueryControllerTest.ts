@@ -64,19 +64,27 @@ describe("QueryController", function () {
         qC = null;
     });
 
-    it("Test constructor", function () {
+    it("Test QueryController constructor", function () {
         let out = qC.getQuery();
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
         expect(out).to.deep.equal(testQueryObject);
     });
 
-    it("Test constructor error", function () {
+    it("Test QueryController constructor error", function () {
         try {
             new QueryController(testQueryBroken);
         } catch(err) {
             expect(err).to.deep.equal("error: query is invalid");
         }
     });
+
+/*
+    it("Test QueryController constructor, test types of attributes", function () {
+        let out = qC.getQuery();
+        expect(out.getQueryObj()).to.have.property('GT');
+        expect(out.getQueryOpt()).to.have.property('COLUMNS');
+    });
+*/
 
 });

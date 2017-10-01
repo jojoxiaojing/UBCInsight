@@ -1,12 +1,10 @@
-import Filter from "./Filters/FilterLogic/FilterLogic";
-import FilterOR from "./Filters/FilterLogic/FilterOR";
-import FilterAND from "./Filters/FilterLogic/FilterAND";
+import Filter, {default as FilterLogic} from "./Filters/FilterLogic/FilterLogic";
 import FilterGT from "./Filters/FilterComparison/FilterGT";
 import FilterLT from "./Filters/FilterComparison/FilterLT";
 import FilterEQ from "./Filters/FilterComparison/FilterEQ";
 
 interface IQueryBody {
-    filters: Filter[];
+    filters: any[];
 
     getBody(): JSON;
     setBody(body: any): void;
@@ -16,7 +14,7 @@ interface IQueryBody {
 export default class QueryBody implements IQueryBody{
 
     body: JSON;
-    filters: Filter[];
+    filters: any[];
 
     constructor(body: any) {
         this.setBody(body);
@@ -33,9 +31,15 @@ export default class QueryBody implements IQueryBody{
 
            // check if each filter is of type listed in AST, then push to the array of filters
             if (objJSON.hasOwnProperty("OR")) {
-                this.filters.push(new FilterOR(val));
+                //FILTEROR
+                var orFilter = new FilterLogic(val);
+                this.filters.push(orFilter);
+                orFilter.parseLogicFilters(orFilter);
             } else if (objJSON.hasOwnProperty("AND")){
-                this.filters.push(new FilterAND(val));
+                //FILTERAND
+                var andFilter = new FilterLogic(val);
+                this.filters.push(val);
+                andFilter.parseLogicFilters(andFilter);
             } else if (objJSON.hasOwnProperty("GT")){
                 this.filters.push(new FilterGT(val));
             } else if (objJSON.hasOwnProperty("LT")){

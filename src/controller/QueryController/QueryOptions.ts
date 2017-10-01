@@ -9,8 +9,5 @@ export default class QueryOptions implements IQueryOptions{
         this.options = options;
     }
 
-/*    setOptions(options: any): void {
-        this.options = options;
-    }*/
-
+    //TODO: need to implement options subclasses
 }
