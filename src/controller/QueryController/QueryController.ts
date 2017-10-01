@@ -13,7 +13,7 @@ interface IQueryController {
     getHasOptions(): boolean;
     setHasWhere(where: boolean): void;
     setHasOptions(options: boolean): void;
-    setQueryObj(body: QueryBody): void;
+    setQueryObj(body: JSON): void;
 }
 
 export default class QueryController implements IQueryController{
@@ -40,7 +40,7 @@ export default class QueryController implements IQueryController{
         for (var key in objJSON) {
             let val = objJSON[key];
             // construct Query object and set WHERE flag on
-            if (objJSON.hasOwnProperty("WHERE")) {
+            if (key ==="WHERE") {
                 this.setQueryObj(val);
                 // need to add an if statement for recursively checking validity of nested query components
                 this.setHasWhere(true);
@@ -57,7 +57,7 @@ export default class QueryController implements IQueryController{
             let val = objJSON[key];
 
             // construct Options object and set OPTIONS flag on
-            if (objJSON.hasOwnProperty("OPTIONS")) {
+            if (key === "OPTIONS") {
                 this.setQueryOpt(val);
                 // need to add an if statement for recursively checking validity of nested query components
                 this.setHasOptions(true);
@@ -67,7 +67,7 @@ export default class QueryController implements IQueryController{
         if (this.getHasOptions() !== true) throw ("error: query is invalid");
     }
 
-    setQueryObj(body: QueryBody): void {
+    setQueryObj(body: JSON): void {
         this.queryObj = new QueryBody(body);
     }
 
