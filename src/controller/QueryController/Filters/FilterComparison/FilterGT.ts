@@ -13,8 +13,14 @@ export default class FilterGT implements IFilterComparison {
         for (var key in filter) {
             let val = filter[key];
             // this is a workaround, as object passed to filter contains EQ
-            this.subNode1 = Object.keys(val)[0];
-            this.subNode2 = Object.values(val)[0];
+            let keys = Object.keys(filter);
+            let vals = Object.values(filter);
+            /*        console.log(keys)
+                    console.log(vals)*/
+            this.subNode1 = keys[0];
+            this.subNode2 = vals[0];
+            //console.log(this.subNode1)
+            //console.log(this.subNode2)
         }
     }
 
@@ -41,7 +47,8 @@ export default class FilterGT implements IFilterComparison {
         var dataFiltered = [];
         let element: any;
         for (element of this.data) {
-            for (let elementKey in element) {
+            let keys = Object.keys(element);
+            for (let elementKey of keys) {
                 if (elementKey === this.subNode1 && +element[elementKey] > this.subNode2) {
                     dataFiltered.push(element);
                 }

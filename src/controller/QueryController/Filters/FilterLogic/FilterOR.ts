@@ -60,18 +60,44 @@ export default class FilterOR implements IFilterLogic{
         }
     }
 
+    // not sure if there is need for parsing the data at all
     // filter data
+    // keep passing the data through each filter iteratively for and
     applyFilter(): any[] {
-                var dataFiltered: any[] = [];
-/*                let element: any;
-                for (element of this.data) {
-                    for (let elementKey in element) {
-                        if (elementKey === this.subNode1 && +element[elementKey] == this.subNode2) {
-                            dataFiltered.push(element);
-                        }
-                    }
-                }*/
-                return dataFiltered;
+        var dataFiltered: any[] = [];
+        return this.applyFilterHelper(this.filters, dataFiltered);
+    }
+
+    //TODO add AND/OR recursive implementation
+    // TODO need to check whether there is need to parse this into objects at all
+    // helper for recursive implementation
+    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
+        //base case for recursive implementation
+        //if (filters.length == 0) return results;
+        let element: any;
+        for (element of filters) {
+
+            // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
+            let elementNode1Value = Object.values(element)[1]
+            let elementNode2Value = Object.values(element)[2]
+            // do this to reference object key by variable instance
+            let filterObj:any = {};
+            filterObj[elementNode1Value] = elementNode2Value;
+
+            if (element instanceof FilterGT) {
+                let elementGT = new FilterLT(filterObj, this.data);
+                results = results.concat(elementGT.applyFilter());
+            } else if (element instanceof FilterLT) {
+
+                let elementLT = new FilterLT(filterObj, this.data);
+                results = results.concat(elementLT.applyFilter());
+            } else if (element instanceof FilterEQ) {
+
+                let elementEQ = new FilterEQ(filterObj, this.data);
+                results = results.concat(elementEQ.applyFilter());
+            }
+        }
+        return results;
     }
 }
 

@@ -22,7 +22,6 @@ export default class FilterAND implements IFilterLogic{
 
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
-        // console.log(objJSON)
         // the passed parameter might be an array, if the node above was AND/OR
         if (Array.isArray(objJSON)) {
             this.parseArray(objJSON);
@@ -62,18 +61,36 @@ export default class FilterAND implements IFilterLogic{
     }
 
 
+    // not sure if there is need for parsing the data at all
     // filter data
+    // keep passing the data through each filter iteratively for and
     applyFilter(): any[] {
-       var dataFiltered: any[] = [];
-/*        let element: any;
-        for (element of this.data) {
-            for (let elementKey in element) {
-                if (elementKey === this.subNode1 && +element[elementKey] == this.subNode2) {
-                    dataFiltered.push(element);
-                }
-            }
-        }*/
+        var dataFiltered: any[] = [];
+        this.applyFilterHelper(this.filters, dataFiltered);
         return dataFiltered;
+    }
+
+    // helper for recursive implmentation
+    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
+        if (filters.length == 0) return results;
+
+        let element: any;
+        for (element of this.filters) {
+            var key = Object.keys(element)[0];
+            if (key === "GT") {
+                let elementGT = new FilterGT(element, results);
+                results.concat(elementGT.applyFilter());
+            } else if (key === "LT") {
+                let elementLT = new FilterLT(element, results);
+                results.concat(elementLT.applyFilter());
+            } else if (key === "EQ") {
+                let elementEQ = new FilterEQ(element, results);
+                results.concat(elementEQ.applyFilter());
+            }
+
+            //this.applyFilterHelper(Object.values(element), results);
+        }
+
     }
 
 }
