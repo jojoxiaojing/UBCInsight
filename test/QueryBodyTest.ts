@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import QueryBody from "../src/controller/QueryController/QueryBody";
-import MockData from "./MockData";
+import MockData from "./MockDataTest";
 
 describe("QueryBody", function () {
     var testQuery: string =

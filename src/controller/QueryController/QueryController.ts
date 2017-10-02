@@ -1,6 +1,6 @@
 import QueryBody from "./QueryBody";
 import QueryOptions from "./QueryOptions";
-import MockData from "../../../test/MockData";
+import MockData from "../../../test/MockDataTest";
 
 interface IQueryController {
     query: JSON;
