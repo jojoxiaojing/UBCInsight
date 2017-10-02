@@ -41,12 +41,14 @@ export default class FilterEQ implements IFilterComparison {
 
     // filter data
     applyFilter(): any[] {
-        var dataFiltered = [];
+        let subNode1 = this.subNode1;
+        let subNode2 = this.subNode2;
+        let dataFiltered = [];
         let element: any;
         for (element of this.data) {
             let keys = Object.keys(element);
                 for (let elementKey of keys) {
-                    if (elementKey === this.subNode1 && +element[elementKey] == this.subNode2) {
+                    if (elementKey == subNode1 && +element[elementKey] === subNode2) {
                         dataFiltered.push(element);
                     }
                 }

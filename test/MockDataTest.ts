@@ -63,17 +63,23 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter2 = {courses_avg: 70};
     var filter3 = {courses_avg: 70};
     var filter4 = [{EQ: {courses_avg: 100}}, {LT: {courses_avg: 70}}];
+    var filter5 = [{EQ: {courses_audit: 5}}, {OR: [{EQ: {courses_avg: 90}}, {EQ: {courses_pass: 100}}]}];
+    var filter6 = [{EQ: {courses_audit: 5}}, {EQ: {courses_pass: 20}}, {EQ: {courses_fail: 0}}];
 
     var filterEQ: FilterEQ;
     var filterGT: FilterGT;
     var filterLT: FilterLT;
     var filterOR: FilterOR;
+    var filterORNested: FilterOR;
+    var filterORMultiple: FilterOR;
 
     beforeEach(function () {
         filterEQ = new FilterEQ(filter, data.getData())
         filterGT = new FilterGT(filter2, data.getData())
         filterLT = new FilterLT(filter3, data.getData())
         filterOR = new FilterOR(filter4, data.getData())
+        filterORNested = new FilterOR(filter5, data.getData())
+        filterORMultiple = new FilterOR(filter6, data.getData())
     });
 
     afterEach(function () {
@@ -81,6 +87,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterGT = null;
         filterLT = null;
         filterOR = null;
+        filterORNested = null;
+        filterORMultiple = null;
     });
 
 
@@ -103,5 +111,15 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     it("Test FilterOR on course_avg", function () {
         let queryResponse:any[] = filterOR.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
+    });
+
+    it("Test FilterOR with 3 choices, other attributes", function () {
+        let queryResponse:any[] = filterORMultiple.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Test FilterOR nested", function () {
+        let queryResponse:any[] = filterORNested.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
     });
 });

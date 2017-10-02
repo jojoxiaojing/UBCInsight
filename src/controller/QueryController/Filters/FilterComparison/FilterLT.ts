@@ -13,8 +13,7 @@ export default class FilterLT implements IFilterComparison {
     // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
-        for (var key in filter) {
-            let val = filter[key];
+
             // this is a workaround, as object passed to filter contains EQ
             let keys = Object.keys(filter);
             let vals = Object.values(filter);
@@ -24,7 +23,7 @@ export default class FilterLT implements IFilterComparison {
             this.subNode2 = vals[0];
             //console.log(this.subNode1)
             //console.log(this.subNode2)
-        }
+
     }
 
     // check if the subnode types are consistent with AST

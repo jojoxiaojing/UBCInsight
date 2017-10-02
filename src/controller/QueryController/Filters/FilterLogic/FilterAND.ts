@@ -63,7 +63,7 @@ export default class FilterAND implements IFilterLogic{
 
     // not sure if there is need for parsing the data at all
     // filter data
-    // keep passing the data through each filter iteratively for and
+    // pass results in the constructor
     applyFilter(): any[] {
         var dataFiltered: any[] = [];
         this.applyFilterHelper(this.filters, dataFiltered);

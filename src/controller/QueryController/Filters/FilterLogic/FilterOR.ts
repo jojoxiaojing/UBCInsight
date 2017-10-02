@@ -74,9 +74,9 @@ export default class FilterOR implements IFilterLogic{
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         //base case for recursive implementation
         //if (filters.length == 0) return results;
+
         let element: any;
         for (element of filters) {
-
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
             let elementNode1Value = Object.values(element)[1]
             let elementNode2Value = Object.values(element)[2]
@@ -86,18 +86,32 @@ export default class FilterOR implements IFilterLogic{
 
             if (element instanceof FilterGT) {
                 let elementGT = new FilterLT(filterObj, this.data);
-                results = results.concat(elementGT.applyFilter());
+                let tempResults = elementGT.applyFilter();
+                results = results.concat(tempResults);
             } else if (element instanceof FilterLT) {
 
                 let elementLT = new FilterLT(filterObj, this.data);
-                results = results.concat(elementLT.applyFilter());
+                let tempResults = elementLT.applyFilter();
+                results = results.concat(tempResults);
             } else if (element instanceof FilterEQ) {
 
                 let elementEQ = new FilterEQ(filterObj, this.data);
-                results = results.concat(elementEQ.applyFilter());
+                //console.log(elementEQ)
+                let tempResults = elementEQ.applyFilter();
+                results = results.concat(tempResults);
+                //console.log(results)
+
+            } else if (element instanceof FilterOR) {
+                let arrayValues = Object.values(element).slice(1)[0];
+
+                results = results.concat(this.applyFilterHelper(arrayValues, []));
+                // TODO figure out how to implement recursive OR, also what to do with repeated entries, maybe Set?
+                // need to iterate over an array
             }
         }
+        console.log(results)
         return results;
     }
+
 }
 
