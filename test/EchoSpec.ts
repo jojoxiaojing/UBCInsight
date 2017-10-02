@@ -96,6 +96,8 @@ describe("testAddData", function(){
 
             insightF.addDataset("Courses",data).then(function(zip:any){
                     let mm = zip["body"];
+                    let n = insightF.getValue();
+                    done();
 
 
             }).catch();

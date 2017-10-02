@@ -30,7 +30,6 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fullfill, reject) =>{
             JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
                 let promiseArr:Array<Promise<any>> = new Array();
-                let JSONarr:Array<any> = new Array();
                 let parseResult:any[] = new Array();
                 for(let key in zip.files){
                     if (zip.file(key)) {
@@ -45,18 +44,33 @@ export default class InsightFacade implements IInsightFacade {
                              parseResult.push(m);
                          }
                          catch(err){
-
+                             //TODO what should we do here when we catch errors
                          }
-
                      }
 
+                     for (let i of parseResult){
+                         let courseData:Array<any> = i.result;
+                         for(let c of courseData){
+                             let m:Course = {
+                                 courses_dept: c.Subject,
+                                 courses_id: c.Course,
+                                 courses_avg: c.Avg,
+                                 courses_instructor: c.Professor,
+                                 courses_title: c.Title,
+                                 courses_pass: c.Pass,
+                                 courses_fail: c.Fail,
+                                 courses_audit: c.Audit,
+                                 courses_uuid: c.id
+                             };
+                             dataStore.push(m);
+                         }
+                     }
                     let s = {
+                         //TODO what is code here
                         code: 1,
-                        body: {parseResult}
+                        body: {dataStore}
                     };
-                    fullfill(
-                        s
-                    );
+                    fullfill(s)
                 }).catch(function(err){
 
                 });
