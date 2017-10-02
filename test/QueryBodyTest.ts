@@ -1,5 +1,6 @@
 import {expect} from 'chai';
 import QueryBody from "../src/controller/QueryController/QueryBody";
+import MockData from "./MockData";
 
 describe("QueryBody", function () {
     var testQuery: string =
@@ -73,9 +74,11 @@ describe("QueryBody", function () {
     var qB: QueryBody = null;
     var qBBroken: QueryBody = null;
 
+    var data = new MockData();
+
     beforeEach(function () {
-        qB = new QueryBody(JSON.parse(testQuery));
-        qBBroken = new QueryBody(JSON.parse(testQueryBroken));
+        qB = new QueryBody(JSON.parse(testQuery), data.getData());
+        qBBroken = new QueryBody(JSON.parse(testQueryBroken), data.getData());
     });
 
     afterEach(function () {

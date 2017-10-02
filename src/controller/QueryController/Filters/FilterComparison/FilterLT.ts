@@ -7,13 +7,17 @@ export default class FilterLT implements IFilterComparison {
     subNode1: string;
     subNode2: number;
 
+    data: any[];
+
     // potential need to check beforehand if there is a single key-value pair,
     // otherwise throw an error before the constructor is called
-    constructor(filter: any) {
+    constructor(filter: any, data: any[]) {
+        this.data = data;
         for (var key in filter) {
             let val = filter[key];
-            this.subNode1 = key;
-            this.subNode2 = val;
+            // this is a workaround, as object passed to filter contains EQ
+            this.subNode1 = Object.keys(val)[0];
+            this.subNode2 = Object.values(val)[0];
         }
     }
 
@@ -33,5 +37,19 @@ export default class FilterLT implements IFilterComparison {
                 this.subNode1 === "courses_pass" || this.subNode1 === "courses_fail" || this.subNode1 === "courses_audit")) {
             return true;
         } else return false;
+    }
+
+    // filter data
+    applyFilter(): any[] {
+        var dataFiltered = [];
+        let element: any;
+        for (element of this.data) {
+            for (let elementKey in element) {
+                if (elementKey === this.subNode1 && +element[elementKey] < this.subNode2) {
+                    dataFiltered.push(element);
+                }
+            }
+        }
+        return dataFiltered;
     }
 }

@@ -4,5 +4,9 @@ import {IFilter} from "../IFilter";
 export interface IFilterLogic extends IFilter {
     type: "FilterLogic"
     subType: "FilterAND" | "FilterOR";
+    data: any[];
     parseLogicFilters(objJSON: any): void;
+
+    // actual logical filter model
+    applyFilter(): any[]
 }

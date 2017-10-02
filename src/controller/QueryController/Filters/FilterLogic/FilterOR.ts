@@ -10,9 +10,12 @@ export default class FilterOR implements IFilterLogic{
     subType: "FilterOR";
     filters: IFilter[];
 
+    data: any[];
+
     // potentially need to check beforehand if there is a single key-value pair,
     // otherwise throw an error before the constructor is called
-    constructor(filter: any) {
+    constructor(filter: any, data: any[]) {
+        this.data = data;
         this.filters = [];
         this.parseLogicFilters(filter);
     }
@@ -32,19 +35,19 @@ export default class FilterOR implements IFilterLogic{
 
                 var val = objJSON[key];
                 if (key === "OR") {
-                    var orFilter = new FilterOR(val);
+                    var orFilter = new FilterOR(val, this.data);
                     this.filters.push(orFilter);
                     this.parseLogicFilters(orFilter);
                 } else if (key === "AND") {
-                    var andFilter = new FilterAND(val);
+                    var andFilter = new FilterAND(val, this.data);
                     this.filters.push(andFilter);
                     this.parseLogicFilters(andFilter);
                 } else if (key === "GT") {
-                    this.filters.push(new FilterGT(val));
+                    this.filters.push(new FilterGT(val, this.data));
                 } else if (key === "LT") {
-                    this.filters.push(new FilterLT(val));
+                    this.filters.push(new FilterLT(val, this.data));
                 } else if (key === "EQ") {
-                    this.filters.push(new FilterEQ(val));
+                    this.filters.push(new FilterEQ(val, this.data));
                 }
             }
         }
@@ -55,6 +58,20 @@ export default class FilterOR implements IFilterLogic{
         for (let j of arrJSON) {
             this.parseLogicFilters(j);
         }
+    }
+
+    // filter data
+    applyFilter(): any[] {
+        /*        var dataFiltered = [];
+                let element: any;
+                for (element of this.data) {
+                    for (let elementKey in element) {
+                        if (elementKey === this.subNode1 && +element[elementKey] == this.subNode2) {
+                            dataFiltered.push(element);
+                        }
+                    }
+                }
+                return dataFiltered;*/
     }
 }
 

@@ -10,9 +10,12 @@ export default class QueryBody {
     body: JSON;
     filters: IFilter[];
 
-    constructor(body: any) {
+    data: any[];
+
+    constructor(body: any, data: any[]) {
         this.setBody(body);
         this.filters = [];
+        this.data = data;
     }
 
     // parse through JSON stored in query and construct the QueryOptions object
@@ -23,19 +26,19 @@ export default class QueryBody {
             // TODO: need to add more filter types
            // check if each filter is of type listed in AST, then push to the array of filters
             if (key === "OR") {
-                var orFilter = new FilterOR(val);
+                var orFilter = new FilterOR(val, this.data);
                 this.filters.push(orFilter);
                 orFilter.parseLogicFilters(orFilter);
             } else if (key === "AND"){
-                var andFilter = new FilterAND(val);
+                var andFilter = new FilterAND(val, this.data);
                 this.filters.push(val);
                 andFilter.parseLogicFilters(andFilter);
             } else if (key === "GT"){
-                this.filters.push(new FilterGT(val));
+                this.filters.push(new FilterGT(val, this.data));
             } else if (key === "LT"){
-                this.filters.push(new FilterLT(val));
+                this.filters.push(new FilterLT(val, this.data));
             } else if (key === "EQ"){
-                this.filters.push(new FilterEQ(val));
+                this.filters.push(new FilterEQ(val, this.data));
             }
         }
     }

@@ -93,5 +93,12 @@ describe("QueryController", function () {
         expect(countFilters).to.deep.equal(1);
     });
 
+    it("Test simple simple query", function () {
+        let qB = qC.getQueryObj();
+        qB.parseQueryFilters(qB.filters);
+        let countFilters = qB.filters.length;
+        expect(countFilters).to.deep.equal(1);
+    });
+
 
 });
