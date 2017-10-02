@@ -62,16 +62,16 @@ export default class FilterOR implements IFilterLogic{
 
     // filter data
     applyFilter(): any[] {
-        /*        var dataFiltered = [];
-                let element: any;
+                var dataFiltered: any[] = [];
+/*                let element: any;
                 for (element of this.data) {
                     for (let elementKey in element) {
                         if (elementKey === this.subNode1 && +element[elementKey] == this.subNode2) {
                             dataFiltered.push(element);
                         }
                     }
-                }
-                return dataFiltered;*/
+                }*/
+                return dataFiltered;
     }
 }
 
