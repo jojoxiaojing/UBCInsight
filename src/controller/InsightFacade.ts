@@ -68,6 +68,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
+        // set dataSet equal null?
         return null;
     }
 
