@@ -69,7 +69,6 @@ export default class FilterOR implements IFilterLogic{
         return this.applyFilterHelper(this.filters, dataFiltered);
     }
 
-//TODO add AND recursive implementation
     // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         let mySet = new Set(results);
@@ -78,8 +77,11 @@ export default class FilterOR implements IFilterLogic{
         for (element of filters) {
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
             // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
-            let elementNode1Value = Object.values(element)[1]
-            let elementNode2Value = Object.values(element)[2]
+            //let elementNode1Value = Object.values(element)[1]
+            //let elementNode2Value = Object.values(element)[2]
+            let elementNode1Value = Object.keys(element).map((k) => element[k])[1]
+            let elementNode2Value = Object.keys(element).map((k) => element[k])[2]
+
             // do this to reference object key by variable instance
             let filterObj:any = {};
             filterObj[elementNode1Value] = elementNode2Value;
@@ -103,11 +105,13 @@ export default class FilterOR implements IFilterLogic{
                 //console.log(results)
                 //console.log(tempResults)
             } else if (element instanceof FilterOR) {
-                let arrayValues = Object.values(element).slice(1)[0];
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
 
                 results = results.concat(this.applyFilterHelper(arrayValues, []));
             } else if (element instanceof FilterAND) {
-                let arrayValues = Object.values(element).slice(1)[0];
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
                 //elelment is of type FilterAND so apply that class's filter function
                 results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             }

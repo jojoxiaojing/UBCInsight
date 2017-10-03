@@ -16,9 +16,12 @@ export default class FilterLT implements IFilterComparison {
 
             // this is a workaround, as object passed to filter contains EQ
             let keys = Object.keys(filter);
-            let vals = Object.values(filter);
-            /*        console.log(keys)
-                    console.log(vals)*/
+            //let vals = Object.values(filter);
+
+            let vals = Object.keys(filter).map((k) => filter[k]);
+
+        /*        console.log(keys)
+                console.log(vals)*/
             this.subNode1 = keys[0];
             this.subNode2 = vals[0];
             //console.log(this.subNode1)

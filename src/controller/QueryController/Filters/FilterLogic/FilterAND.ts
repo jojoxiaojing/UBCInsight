@@ -75,8 +75,12 @@ export default class FilterAND implements IFilterLogic{
         for (element of this.filters) {
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
             // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
-            let elementNode1Value = Object.values(element)[1]
-            let elementNode2Value = Object.values(element)[2]
+            //let elementNode1Value = Object.values(element)[1]
+            //let elementNode2Value = Object.values(element)[2]
+            let elementNode1Value =  Object.keys(element).map((k) => element[k])[1];
+            let elementNode2Value =  Object.keys(element).map((k) => element[k])[2];
+
+
             // do this to reference object key by variable instance
             let filterObj: any = {};
             filterObj[elementNode1Value] = elementNode2Value;
@@ -95,12 +99,14 @@ export default class FilterAND implements IFilterLogic{
                 let tempResults = elementEQ.applyFilter();
                 results = tempResults;
             } else if (element instanceof FilterOR) {
-                let arrayValues = Object.values(element).slice(1)[0];
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
                 //elelment is of type FilterOR so apply that class's filter function
                 let tempResults = element.applyFilterHelper(arrayValues, []);
                 results = this.findArrayIntersection(results, tempResults);
             } else if (element instanceof FilterAND) {
-                let arrayValues = Object.values(element).slice(1)[0];
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
                 results = this.applyFilterHelper(arrayValues, results);
             }
         }
