@@ -87,6 +87,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     performQuery(query: any): Promise <InsightResponse> {
+        
         return null;
     }
 }
