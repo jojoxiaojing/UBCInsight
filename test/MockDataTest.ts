@@ -32,11 +32,11 @@ export default class MockData {
     data: DataEntry[]=[];
 
     constructor() {
-        this.data.push(new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1"));
-        this.data.push(new DataEntry("math", "102", 70, "Bob", 50, 50, 20, "B2"));
-        this.data.push(new DataEntry("math", "400", 80, "Steve", 100, 0, 10, "B3"));
-        this.data.push(new DataEntry("educ", "202", 90, "Alice", 20, 30, 50, "C5"));
-        this.data.push(new DataEntry("educ", "303", 100, "Steve", 70, 5, 20, "D0"));
+        this.data.push(new DataEntry("math", "101", 60, "Bob",    100,  10,    5, "A1"));
+        this.data.push(new DataEntry("math", "102", 70, "Bob",    50,   50,    20, "B2"));
+        this.data.push(new DataEntry("math", "400", 80, "Steve",  100,   0,    10, "B3"));
+        this.data.push(new DataEntry("educ", "202", 90, "Alice",  20,    30,   50, "C5"));
+        this.data.push(new DataEntry("educ", "303", 100, "Steve", 70,     5,   20, "D0"));
     }
 
     getData(): DataEntry[] {
@@ -68,6 +68,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter6 = [{EQ: {courses_audit: 5}}, {EQ: {courses_pass: 20}}, {EQ: {courses_fail: 0}}];
     var filter7 = [{GT: {courses_avg: 90}}, {EQ: {courses_fail: 5}}];
     var filter8 = [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}];
+    var filter9 = [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}];
 
 
 
@@ -79,6 +80,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterORMultiple: FilterOR;
     var filterAND: FilterAND;
     var filterANDOR1: FilterAND
+    var filterANDOR2: FilterOR
 
     beforeEach(function () {
         filterEQ = new FilterEQ(filter, data.getData())
@@ -89,6 +91,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterORMultiple = new FilterOR(filter6, data.getData())
         filterAND = new FilterAND(filter7, data.getData())
         filterANDOR1 = new FilterAND(filter8, data.getData())
+        filterANDOR2 = new FilterOR(filter9, data.getData())
     });
 
     afterEach(function () {
@@ -100,6 +103,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterORMultiple = null;
         filterAND = null;
         filterANDOR1 = null;
+        filterANDOR2 = null;
     });
 
 
@@ -155,6 +159,11 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
 
     it("Filter AND and OR: AND(..., OR(..., ....))", function () {
         let queryResponse = filterANDOR1.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Filter AND and OR:  OR(..., AND(..., ....))", function () {
+        let queryResponse = filterANDOR2.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 

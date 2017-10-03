@@ -109,7 +109,7 @@ export default class FilterOR implements IFilterLogic{
             } else if (element instanceof FilterAND) {
                 let arrayValues = Object.values(element).slice(1)[0];
                 //elelment is of type FilterAND so apply that class's filter function
-                //results = element.applyFilterHelper(arrayValues, results);
+                results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             }
         }
         //console.log(this.removeDuplicates(results))
