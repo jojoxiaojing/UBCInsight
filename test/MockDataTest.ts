@@ -3,6 +3,7 @@ import FilterEQ from "../src/controller/QueryController/Filters/FilterComparison
 import FilterGT from "../src/controller/QueryController/Filters/FilterComparison/FilterGT";
 import FilterLT from "../src/controller/QueryController/Filters/FilterComparison/FilterLT";
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
+import FilterAND from "../src/controller/QueryController/Filters/FilterLogic/FilterAND";
 
 class DataEntry {
     courses_dept: string;
@@ -65,6 +66,10 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter4 = [{EQ: {courses_avg: 100}}, {LT: {courses_avg: 70}}];
     var filter5 = [{EQ: {courses_audit: 5}}, {OR: [{EQ: {courses_avg: 90}}, {EQ: {courses_pass: 100}}]}];
     var filter6 = [{EQ: {courses_audit: 5}}, {EQ: {courses_pass: 20}}, {EQ: {courses_fail: 0}}];
+    var filter7 = [{GT: {courses_avg: 90}}, {EQ: {courses_fail: 5}}];
+    var filter8 = [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}];
+
+
 
     var filterEQ: FilterEQ;
     var filterGT: FilterGT;
@@ -72,6 +77,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterOR: FilterOR;
     var filterORNested: FilterOR;
     var filterORMultiple: FilterOR;
+    var filterAND: FilterAND;
+    var filterANDOR1: FilterAND
 
     beforeEach(function () {
         filterEQ = new FilterEQ(filter, data.getData())
@@ -80,6 +87,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterOR = new FilterOR(filter4, data.getData())
         filterORNested = new FilterOR(filter5, data.getData())
         filterORMultiple = new FilterOR(filter6, data.getData())
+        filterAND = new FilterAND(filter7, data.getData())
+        filterANDOR1 = new FilterAND(filter8, data.getData())
     });
 
     afterEach(function () {
@@ -89,6 +98,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterOR = null;
         filterORNested = null;
         filterORMultiple = null;
+        filterAND = null;
+        filterANDOR1 = null;
     });
 
 
@@ -137,6 +148,14 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         expect(filterOR.removeDuplicates(data.getData()).length).to.deep.equal(5);
     });
 
+    it("Filter AND", function () {
+        let queryResponse = filterAND.applyFilter();
+        expect(queryResponse.length).to.deep.equal(1);
+    });
 
+    it("Filter AND and OR: AND(..., OR(..., ....))", function () {
+        let queryResponse = filterANDOR1.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
 
-});
+    });

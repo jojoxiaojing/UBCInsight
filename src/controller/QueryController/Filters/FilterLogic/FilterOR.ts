@@ -72,8 +72,6 @@ export default class FilterOR implements IFilterLogic{
 //TODO add AND recursive implementation
     // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-        //base case for recursive implementation
-        //if (filters.length == 0) return results;
         let mySet = new Set(results);
 
         let element: any;
@@ -87,9 +85,10 @@ export default class FilterOR implements IFilterLogic{
             filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
-                let elementGT = new FilterLT(filterObj, this.data);
+                let elementGT = new FilterGT(filterObj, this.data);
                 let tempResults = elementGT.applyFilter();
                 results = results.concat(tempResults);
+                //console.log(tempResults)
             } else if (element instanceof FilterLT) {
 
                 let elementLT = new FilterLT(filterObj, this.data);
@@ -102,14 +101,18 @@ export default class FilterOR implements IFilterLogic{
                 let tempResults = elementEQ.applyFilter();
                 results = results.concat(tempResults);
                 //console.log(results)
-
+                //console.log(tempResults)
             } else if (element instanceof FilterOR) {
                 let arrayValues = Object.values(element).slice(1)[0];
 
                 results = results.concat(this.applyFilterHelper(arrayValues, []));
-                // TODO figure out how to implement recursive OR, also what to do with repeated entries, maybe Set?
+            } else if (element instanceof FilterAND) {
+                let arrayValues = Object.values(element).slice(1)[0];
+                //elelment is of type FilterAND so apply that class's filter function
+                //results = element.applyFilterHelper(arrayValues, results);
             }
         }
+        //console.log(this.removeDuplicates(results))
         return this.removeDuplicates(results);
     }
 
@@ -125,6 +128,7 @@ export default class FilterOR implements IFilterLogic{
         return results;
     }
 
+    //TODO move this to the data class
     // check if two data entires are equal, assume the same keys
     dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
         // keys are the same

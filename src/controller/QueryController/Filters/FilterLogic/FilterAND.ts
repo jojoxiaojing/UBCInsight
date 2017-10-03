@@ -65,32 +65,74 @@ export default class FilterAND implements IFilterLogic{
     // filter data
     // pass results in the constructor
     applyFilter(): any[] {
-        var dataFiltered: any[] = [];
-        this.applyFilterHelper(this.filters, dataFiltered);
-        return dataFiltered;
+        return this.applyFilterHelper(this.filters, this.data);
     }
 
     // helper for recursive implmentation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-        if (filters.length == 0) return results;
 
         let element: any;
         for (element of this.filters) {
-            var key = Object.keys(element)[0];
-            if (key === "GT") {
-                let elementGT = new FilterGT(element, results);
-                results.concat(elementGT.applyFilter());
-            } else if (key === "LT") {
-                let elementLT = new FilterLT(element, results);
-                results.concat(elementLT.applyFilter());
-            } else if (key === "EQ") {
-                let elementEQ = new FilterEQ(element, results);
-                results.concat(elementEQ.applyFilter());
+            // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
+            // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
+            let elementNode1Value = Object.values(element)[1]
+            let elementNode2Value = Object.values(element)[2]
+            // do this to reference object key by variable instance
+            let filterObj: any = {};
+            filterObj[elementNode1Value] = elementNode2Value;
+
+            if (element instanceof FilterGT) {
+                let elementGT = new FilterGT(filterObj, results);
+                let tempResults = elementGT.applyFilter();
+                results = tempResults;
+            } else if (element instanceof FilterLT) {
+                let elementLT = new FilterLT(filterObj, results);
+                let tempResults = elementLT.applyFilter();
+                //console.log(tempResults)
+                results = tempResults;
+            } else if (element instanceof FilterEQ) {
+                let elementEQ = new FilterEQ(filterObj, results);
+                let tempResults = elementEQ.applyFilter();
+                results = tempResults;
+            } else if (element instanceof FilterOR) {
+                let arrayValues = Object.values(element).slice(1)[0];
+                //elelment is of type FilterOR so apply that class's filter function
+                let tempResults = element.applyFilterHelper(arrayValues, []);
+                results = this.findArrayIntersection(results, tempResults);
+            } else if (element instanceof FilterAND) {
+                let arrayValues = Object.values(element).slice(1)[0];
+                results = this.applyFilterHelper(arrayValues, results);
             }
-
-            //this.applyFilterHelper(Object.values(element), results);
         }
+        console.log(results)
+        return results
+    }
 
+    findArrayIntersection(array1: any[], array2: any[]): any[] {
+        let results: any[] = [];
+        var len1 = array1.length;
+        var len2 =array2.length;
+        for(var key1 = 0; key1 < len1; key1 ++) for(var key2 = 0; key2 < len2; key2++)
+            if(this.dataEntriesEqual(array2[key2], array1[key1])){
+                results.push(array1[key1]);
+                array2.splice(key2,1);
+                key2--;
+                len2--;
+            }
+        return results;
+    }
+
+    //TODO move this to the data class
+    // check if two data entires are equal, assume the same keys
+    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
+        // keys are the same
+        let keys = Object.keys(dataEntry1);
+        let decision  = true;
+
+        for (let key of keys) {
+            if (dataEntry1[key] !== dataEntry2[key]) return false;
+        }
+        return true;
     }
 
 }
