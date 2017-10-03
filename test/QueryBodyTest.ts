@@ -1,5 +1,6 @@
 import {expect} from 'chai';
 import QueryBody from "../src/controller/QueryController/QueryBody";
+import MockData from "./MockDataTest";
 
 describe("QueryBody", function () {
     var testQuery: string =
@@ -73,9 +74,11 @@ describe("QueryBody", function () {
     var qB: QueryBody = null;
     var qBBroken: QueryBody = null;
 
+    var data = new MockData();
+
     beforeEach(function () {
-        qB = new QueryBody(JSON.parse(testQuery));
-        qBBroken = new QueryBody(JSON.parse(testQueryBroken));
+        qB = new QueryBody(JSON.parse(testQuery), data.getData());
+        qBBroken = new QueryBody(JSON.parse(testQueryBroken), data.getData());
     });
 
     afterEach(function () {
@@ -85,21 +88,21 @@ describe("QueryBody", function () {
 
 
     it("Test QueryBody Constructor", function () {
-        qB.parseQueryFilters();
+        qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
     });
 
     it("Test QueryBody Constructor with no valid body", function () {
-        qBBroken.parseQueryFilters();
+        qBBroken.parseQueryFilters(qBBroken.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(0);
     });
 
 /*    it("Test QueryBody Constructor, the right object is pushed in the attribute array", function () {
-        qB.parseQueryFilters();
+        qB.parseQueryFilters(qB.filters);
         let firstElement = qB.filters[0];
-        expect(firstElement.filters[0]).to.deep.equal("FilterLogic");
+        expect(typeof firstElement).to.deep.equal("FilterOR");
     })*/
 
 });

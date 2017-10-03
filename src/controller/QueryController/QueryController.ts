@@ -1,5 +1,6 @@
 import QueryBody from "./QueryBody";
 import QueryOptions from "./QueryOptions";
+import MockData from "../../../test/MockDataTest";
 
 interface IQueryController {
     query: JSON;
@@ -26,6 +27,10 @@ export default class QueryController implements IQueryController{
     hasWhere: boolean;
     hasOptions: boolean;
 
+    //TODO replace MockData by porting QueryController and DataController
+    // set data set to MockDate for testing purposes
+    data: MockData = new MockData();
+
     constructor(query: any) {
         this.query = JSON.parse(query);
         this.setHasWhere(false);
@@ -48,8 +53,10 @@ export default class QueryController implements IQueryController{
         }
         // throws an error if query parsing fails at any level
         if (this.getHasWhere() !== true) throw ("error: query is invalid");
+        //console.log(this.queryObj)
     }
 
+    //TODO: populate QueryOptions class with actual options and figure out how to pass processed data to QueryOptions
     // parse through JSON stored in query and construct the QueryOptions object
     parseQueryOptions(): void {
         var objJSON = this.getQuery()
@@ -67,8 +74,21 @@ export default class QueryController implements IQueryController{
         if (this.getHasOptions() !== true) throw ("error: query is invalid");
     }
 
+
+    // TODO figure out whether this method is necessary, and if so construct it
+    evaluateQuery(data: MockData): any[] {
+        let response: any[] = [];
+
+        for (let element of data.getData()) {
+ /*           if () {
+            }*/
+            return response
+        }
+    }
+
+
     setQueryObj(body: JSON): void {
-        this.queryObj = new QueryBody(body);
+        this.queryObj = new QueryBody(body, this.data.getData());
     }
 
     setQueryOpt(options: QueryOptions) : void {
