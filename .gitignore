@@ -2,6 +2,7 @@ src/*.js
 src/*.map
 src/**/*.js
 src/**/*.map
+src/controller/data/*.txt
 test/*.js
 test/*.map
 npm-debug.log
@@ -12,4 +13,3 @@ node_modules/
 coverage/
 ./idea
 .nyc_output
-/test/data/courses.zip
