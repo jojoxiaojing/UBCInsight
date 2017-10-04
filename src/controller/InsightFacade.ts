@@ -4,7 +4,6 @@
 import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
 var JSZip = require("jszip");
-<<<<<<< HEAD
 let dataInMemory:dataStore = {id:null,data:[]};
 var fs = require("fs");
 
@@ -12,8 +11,6 @@ interface dataStore {
     id: string;
     data:Course[];
 }
-=======
->>>>>>> 91f8dca3b44f3911351e17282d4cbc5b74315910
 
 interface Course {
     courses_dept: string;
@@ -28,15 +25,9 @@ interface Course {
 }
 
 export default class InsightFacade implements IInsightFacade {
-<<<<<<< HEAD
-    getValue() {
-        return dataInMemory;
-    }
-=======
 
     dataStore:Course[] = [];
 
->>>>>>> 91f8dca3b44f3911351e17282d4cbc5b74315910
     constructor() {
         Log.trace('InsightFacadeImpl::init()');
     }
@@ -81,7 +72,6 @@ export default class InsightFacade implements IInsightFacade {
                                  courses_audit: c.Audit,
                                  courses_uuid: c.id
                              };
-<<<<<<< HEAD
                              dataInMemory.data.push(m);
                          }
                      }
@@ -97,15 +87,6 @@ export default class InsightFacade implements IInsightFacade {
                     let s:InsightResponse = {
                         code: c,
                         body: {dataStore: dataInMemory}
-=======
-                             this.dataStore.push(m);
-                         }
-                     }
-                    let s = {
-                         //TODO what is code here
-                        code: 1,
-                        body: {}
->>>>>>> 91f8dca3b44f3911351e17282d4cbc5b74315910
                     };
                     //store the data into data/data.json
                     Log.trace(__dirname);
@@ -127,7 +108,6 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     performQuery(query: any): Promise <InsightResponse> {
-<<<<<<< HEAD
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             Log.trace("300: Check if data is in memory, otherwise read data from disk");
@@ -141,9 +121,6 @@ export default class InsightFacade implements IInsightFacade {
             }
 
         });
-=======
-        return null;
->>>>>>> 91f8dca3b44f3911351e17282d4cbc5b74315910
     }
 
     getValue() {
