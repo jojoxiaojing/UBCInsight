@@ -26,7 +26,7 @@ interface Course {
 
 export default class InsightFacade implements IInsightFacade {
 
-    dataStore:Course[] = [];
+
 
     constructor() {
         Log.trace('InsightFacadeImpl::init()');
@@ -124,6 +124,6 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     getValue() {
-        return this.dataStore;
+        return dataStore;
     }
 }
