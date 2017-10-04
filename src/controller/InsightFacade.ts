@@ -124,6 +124,6 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     getValue() {
-        return dataStore;
+        return dataInMemory;
     }
 }
