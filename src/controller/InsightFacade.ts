@@ -91,6 +91,6 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     getValue() {
-        return this.dataStore;
+        return dataStore;
     }
 }

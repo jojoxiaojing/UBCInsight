@@ -52,14 +52,12 @@ export default class QueryBody {
     }
 
 
-    // TODO figure out whether this method is necessary, and if so construct it
     applyFilter(): any[] {
         var results: any[] = []
         let element: any;
         for (element of this.filters) {
             results = element.applyFilter();
         }
-        //.log(results)
         return results
     }
 
