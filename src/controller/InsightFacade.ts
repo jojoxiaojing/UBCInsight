@@ -4,7 +4,13 @@
 import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
 var JSZip = require("jszip");
-let dataStore:Course[] = [];
+let dataInMemory:dataStore = {id:null,data:[]};
+var fs = require("fs");
+
+interface dataStore {
+    id: string;
+    data:Course[];
+}
 
 interface Course {
     courses_dept: string;
@@ -20,7 +26,7 @@ interface Course {
 
 export default class InsightFacade implements IInsightFacade {
     getValue() {
-        return dataStore;
+        return dataInMemory;
     }
     constructor() {
         Log.trace('InsightFacadeImpl::init()');
@@ -28,6 +34,7 @@ export default class InsightFacade implements IInsightFacade {
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
         return new Promise<InsightResponse>((fullfill, reject) =>{
+            Log.trace("100:Begin unzip and read the file");
             JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
                 let promiseArr:Array<Promise<any>> = new Array();
                 let parseResult:any[] = new Array();
@@ -36,7 +43,10 @@ export default class InsightFacade implements IInsightFacade {
                         let contentInFIle = zip.file(key).async("string");
                         promiseArr.push(contentInFIle);
                     }}
+                Log.trace("101:Begin promise all");
+
                 Promise.all(promiseArr).then(function(value:any){
+                    Log.trace("120:Begin json parse the data");
 
                      for (let i of value){
                          try{
@@ -47,7 +57,7 @@ export default class InsightFacade implements IInsightFacade {
                              //TODO what should we do here when we catch errors
                          }
                      }
-
+                    Log.trace("130:Begin to transform the data into Course Object");
                      for (let i of parseResult){
                          let courseData:Array<any> = i.result;
                          for(let c of courseData){
@@ -62,18 +72,29 @@ export default class InsightFacade implements IInsightFacade {
                                  courses_audit: c.Audit,
                                  courses_uuid: c.id
                              };
-                             dataStore.push(m);
+                             dataInMemory.data.push(m);
                          }
                      }
-                    let s = {
-                         //TODO what is code here
-                        code: 1,
-                        body: {dataStore}
+                    Log.trace("140:Begin returning InsightResponse");
+                     //decide return 201 or 204
+                    let c;
+                    if(id == dataInMemory.id){
+                         c = 201;
+                    }else{
+                         c = 204;
+                    }
+                    dataInMemory.id =id;
+                    let s:InsightResponse = {
+                        code: c,
+                        body: {dataStore: dataInMemory}
                     };
-                    fullfill(s)
+                    //store the data into data/data.json
+                    Log.trace(__dirname);
+                    fs.writeFileSync(__dirname + '/data/data.txt', JSON.stringify(dataInMemory), 'utf-8');
+                    fullfill(s);
                 }).catch(function(err){
-
                 });
+
 
             }).catch(function (err:any) {
                 reject(err);
@@ -87,7 +108,18 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     performQuery(query: any): Promise <InsightResponse> {
-        
-        return null;
+
+        return new Promise<InsightResponse>((fullfill, reject) =>{
+            Log.trace("300: Check if data is in memory, otherwise read data from disk");
+            if(dataInMemory.id === null){
+                Log.trace("301: Begin reading file");
+                fs.readFile(__dirname + '/data/data.txt','utf-8',function (err:any,data:any) {
+                    dataInMemory = JSON.parse(data);
+
+                });
+
+            }
+
+        });
     }
 }
