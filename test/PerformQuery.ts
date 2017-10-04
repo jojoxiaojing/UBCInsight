@@ -26,18 +26,7 @@ describe("testPerformQuery", function() {
 
     it("Test performQuery", function (done) {
 
-        fs.readFile('/Users/Jojo/Documents/9.UBC/Javascript/310/D1/cpsc310_team45/src/controller/data/data.txt', 'utf-8', function(err:any, data:string) {
-            let a = data;
 
-        });
-        // fs.readFile("/Users/Jojo/Documents/9.UBC/Javascript/310/D1/cpsc310_team45/src/controller/data/data.txt")
-        //     .then(function(data:any){
-        //         let a = data;
-        //         done();
-        //     }).catch(function(err:any){
-        //         let e = err;
-        //     done();
-        // });
         insightF.performQuery("111").then(function(value:any){
             let a = value;
             done();
