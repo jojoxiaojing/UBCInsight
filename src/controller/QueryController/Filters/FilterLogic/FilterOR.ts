@@ -71,14 +71,11 @@ export default class FilterOR implements IFilterLogic{
 
     // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-        let mySet = new Set(results);
 
         let element: any;
         for (element of filters) {
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
             // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
-            //let elementNode1Value = Object.values(element)[1]
-            //let elementNode2Value = Object.values(element)[2]
             let elementNode1Value = Object.keys(element).map((k) => element[k])[1]
             let elementNode2Value = Object.keys(element).map((k) => element[k])[2]
 
@@ -87,27 +84,17 @@ export default class FilterOR implements IFilterLogic{
             filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
-                let elementGT = new FilterGT(filterObj, this.data);
-                let tempResults = elementGT.applyFilter();
+                let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
-                //console.log(tempResults)
             } else if (element instanceof FilterLT) {
-
-                let elementLT = new FilterLT(filterObj, this.data);
-                let tempResults = elementLT.applyFilter();
+                let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
             } else if (element instanceof FilterEQ) {
-
-                let elementEQ = new FilterEQ(filterObj, this.data);
-                //console.log(elementEQ)
-                let tempResults = elementEQ.applyFilter();
+                let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
-                //console.log(results)
-                //console.log(tempResults)
             } else if (element instanceof FilterOR) {
                 //let arrayValues = Object.values(element).slice(1)[0];
                 let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
-
                 results = results.concat(this.applyFilterHelper(arrayValues, []));
             } else if (element instanceof FilterAND) {
                 //let arrayValues = Object.values(element).slice(1)[0];
@@ -116,7 +103,6 @@ export default class FilterOR implements IFilterLogic{
                 results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             }
         }
-        //console.log(this.removeDuplicates(results))
         return this.removeDuplicates(results);
     }
 

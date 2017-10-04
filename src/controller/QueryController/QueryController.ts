@@ -1,8 +1,17 @@
 import QueryBody from "./QueryBody";
 import QueryOptions from "./QueryOptions";
 import MockData from "../../../test/MockDataTest";
+import {IFilter} from "./Filters/IFilter";
+import FilterGT from "./Filters/FilterComparison/FilterGT";
+import FilterLT from "./Filters/FilterComparison/FilterLT";
+import FilterEQ from "./Filters/FilterComparison/FilterEQ";
+import FilterOR from "./Filters/FilterLogic/FilterOR";
+import FilterAND from "./Filters/FilterLogic/FilterAND";
 
 interface IQueryController {
+    // data set
+    data: any[];
+    // JSON that we feed in
     query: JSON;
     queryObj: QueryBody;
     queryOpt: QueryOptions;
@@ -19,6 +28,7 @@ interface IQueryController {
 
 export default class QueryController implements IQueryController{
 
+    data: any[];
     //query: {[key: string]: JSON};
     query: JSON;
     queryObj: QueryBody;
@@ -29,14 +39,17 @@ export default class QueryController implements IQueryController{
 
     //TODO replace MockData by porting QueryController and DataController
     // set data set to MockDate for testing purposes
-    data: MockData = new MockData();
 
     constructor(query: any) {
-        this.query = JSON.parse(query);
+        //this.query = JSON.parse(query);
+        this.query = query;
         this.setHasWhere(false);
         this.setHasOptions(false);
         this.parseQueryBody();
         this.parseQueryOptions();
+
+        // TODO replace this later with actual data
+        this.data = new MockData().getData();
     }
 
     // parse through JSON stored in query and construct the QueryBody object
@@ -75,20 +88,8 @@ export default class QueryController implements IQueryController{
     }
 
 
-    // TODO figure out whether this method is necessary, and if so construct it
-    evaluateQuery(data: MockData): any[] {
-        let response: any[] = [];
-
-        for (let element of data.getData()) {
- /*           if () {
-            }*/
-            return response
-        }
-    }
-
-
     setQueryObj(body: JSON): void {
-        this.queryObj = new QueryBody(body, this.data.getData());
+        this.queryObj = new QueryBody(body, this.data);
     }
 
     setQueryOpt(options: QueryOptions) : void {

@@ -16,6 +16,7 @@ export default class QueryBody {
         this.setBody(body);
         this.filters = [];
         this.data = data;
+        this.parseQueryFilters(this.body);
     }
 
     // parse through JSON stored in query and construct the QueryOptions object
@@ -31,7 +32,7 @@ export default class QueryBody {
                 orFilter.parseLogicFilters(orFilter);
             } else if (key === "AND"){
                 var andFilter = new FilterAND(val, this.data);
-                this.filters.push(val);
+                this.filters.push(andFilter);
                 andFilter.parseLogicFilters(andFilter);
             } else if (key === "GT"){
                 this.filters.push(new FilterGT(val, this.data));
@@ -48,6 +49,18 @@ export default class QueryBody {
     }
     setBody(body: any): void {
         this.body = body;
+    }
+
+
+    // TODO figure out whether this method is necessary, and if so construct it
+    applyFilter(): any[] {
+        var results: any[] = []
+        let element: any;
+        for (element of this.filters) {
+            results = element.applyFilter();
+        }
+        //.log(results)
+        return results
     }
 
 }

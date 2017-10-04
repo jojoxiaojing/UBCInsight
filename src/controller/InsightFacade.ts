@@ -4,7 +4,6 @@
 import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
 var JSZip = require("jszip");
-let dataStore:Course[] = [];
 
 interface Course {
     courses_dept: string;
@@ -19,9 +18,9 @@ interface Course {
 }
 
 export default class InsightFacade implements IInsightFacade {
-    getValue() {
-        return dataStore;
-    }
+
+    dataStore:Course[] = [];
+
     constructor() {
         Log.trace('InsightFacadeImpl::init()');
     }
@@ -62,13 +61,13 @@ export default class InsightFacade implements IInsightFacade {
                                  courses_audit: c.Audit,
                                  courses_uuid: c.id
                              };
-                             dataStore.push(m);
+                             this.dataStore.push(m);
                          }
                      }
                     let s = {
                          //TODO what is code here
                         code: 1,
-                        body: {dataStore}
+                        body: {}
                     };
                     fullfill(s)
                 }).catch(function(err){
@@ -87,7 +86,10 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     performQuery(query: any): Promise <InsightResponse> {
-        
         return null;
+    }
+
+    getValue() {
+        return this.dataStore;
     }
 }

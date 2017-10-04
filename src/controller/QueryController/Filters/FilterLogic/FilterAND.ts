@@ -4,6 +4,8 @@ import FilterOR from "./FilterOR";
 import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
+import DataEntry from "../../../DataEntry";
+
 
 export default class FilterAND implements IFilterLogic{
     type: "FilterLogic";
@@ -30,8 +32,6 @@ export default class FilterAND implements IFilterLogic{
         else {
             for (var key in objJSON) {
                 var val = objJSON[key];
-/*                console.log(key)
-                console.log(val)*/
                 if (key === "OR") {
                     var orFilter = new FilterOR(val, this.data);
                     //var orFilter = new FilterLogic(val);
@@ -86,18 +86,11 @@ export default class FilterAND implements IFilterLogic{
             filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
-                let elementGT = new FilterGT(filterObj, results);
-                let tempResults = elementGT.applyFilter();
-                results = tempResults;
+                results = element.applyFilter();
             } else if (element instanceof FilterLT) {
-                let elementLT = new FilterLT(filterObj, results);
-                let tempResults = elementLT.applyFilter();
-                //console.log(tempResults)
-                results = tempResults;
+                results = element.applyFilter();
             } else if (element instanceof FilterEQ) {
-                let elementEQ = new FilterEQ(filterObj, results);
-                let tempResults = elementEQ.applyFilter();
-                results = tempResults;
+                results = element.applyFilter();
             } else if (element instanceof FilterOR) {
                 //let arrayValues = Object.values(element).slice(1)[0];
                 let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
