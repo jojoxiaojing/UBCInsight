@@ -110,7 +110,7 @@ export default class FilterAND implements IFilterLogic{
     findArrayIntersection(array1: any[], array2: any[]): any[] {
         let results: any[] = [];
         var len1 = array1.length;
-        var len2 =array2.length;
+        var len2 = array2.length;
         for(var key1 = 0; key1 < len1; key1 ++) for(var key2 = 0; key2 < len2; key2++)
             if(this.dataEntriesEqual(array2[key2], array1[key1])){
                 results.push(array1[key1]);
