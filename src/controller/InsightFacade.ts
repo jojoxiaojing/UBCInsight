@@ -57,6 +57,7 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                     Log.trace("130:Begin to transform the data into Course Object");
+                    
                     for (let i of parseResult){
                         let courseData:Array<any> = i.result;
                         for(let c of courseData){
@@ -74,6 +75,7 @@ export default class InsightFacade implements IInsightFacade {
                             dataInMemory.data.push(m);
                         }
                     }
+
                     Log.trace("140:Begin returning InsightResponse");
                     //decide return 201 or 204
                     let c;
