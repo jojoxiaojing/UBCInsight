@@ -3,6 +3,7 @@ import FilterEQ from "../src/controller/QueryController/Filters/FilterComparison
 import FilterGT from "../src/controller/QueryController/Filters/FilterComparison/FilterGT";
 import FilterLT from "../src/controller/QueryController/Filters/FilterComparison/FilterLT";
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
+import FilterAND from "../src/controller/QueryController/Filters/FilterLogic/FilterAND";
 
 class DataEntry {
     courses_dept: string;
@@ -31,11 +32,11 @@ export default class MockData {
     data: DataEntry[]=[];
 
     constructor() {
-        this.data.push(new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1"));
-        this.data.push(new DataEntry("math", "102", 70, "Bob", 50, 50, 20, "B2"));
-        this.data.push(new DataEntry("math", "400", 80, "Steve", 100, 0, 10, "B3"));
-        this.data.push(new DataEntry("educ", "202", 90, "Alice", 20, 30, 50, "C5"));
-        this.data.push(new DataEntry("educ", "303", 100, "Steve", 70, 5, 20, "D0"));
+        this.data.push(new DataEntry("math", "101", 60, "Bob",    100,  10,    5, "A1"));
+        this.data.push(new DataEntry("math", "102", 70, "Bob",    50,   50,    20, "B2"));
+        this.data.push(new DataEntry("math", "400", 80, "Steve",  100,   0,    10, "B3"));
+        this.data.push(new DataEntry("educ", "202", 90, "Alice",  20,    30,   50, "C5"));
+        this.data.push(new DataEntry("educ", "303", 100, "Steve", 70,     5,   20, "D0"));
     }
 
     getData(): DataEntry[] {
@@ -65,6 +66,11 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter4 = [{EQ: {courses_avg: 100}}, {LT: {courses_avg: 70}}];
     var filter5 = [{EQ: {courses_audit: 5}}, {OR: [{EQ: {courses_avg: 90}}, {EQ: {courses_pass: 100}}]}];
     var filter6 = [{EQ: {courses_audit: 5}}, {EQ: {courses_pass: 20}}, {EQ: {courses_fail: 0}}];
+    var filter7 = [{GT: {courses_avg: 90}}, {EQ: {courses_fail: 5}}];
+    var filter8 = [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}];
+    var filter9 = [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}];
+
+
 
     var filterEQ: FilterEQ;
     var filterGT: FilterGT;
@@ -72,6 +78,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterOR: FilterOR;
     var filterORNested: FilterOR;
     var filterORMultiple: FilterOR;
+    var filterAND: FilterAND;
+    var filterANDOR1: FilterAND
+    var filterANDOR2: FilterOR
 
     beforeEach(function () {
         filterEQ = new FilterEQ(filter, data.getData())
@@ -80,6 +89,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterOR = new FilterOR(filter4, data.getData())
         filterORNested = new FilterOR(filter5, data.getData())
         filterORMultiple = new FilterOR(filter6, data.getData())
+        filterAND = new FilterAND(filter7, data.getData())
+        filterANDOR1 = new FilterAND(filter8, data.getData())
+        filterANDOR2 = new FilterOR(filter9, data.getData())
     });
 
     afterEach(function () {
@@ -89,6 +101,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterOR = null;
         filterORNested = null;
         filterORMultiple = null;
+        filterAND = null;
+        filterANDOR1 = null;
+        filterANDOR2 = null;
     });
 
 
@@ -122,4 +137,34 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         let queryResponse:any[] = filterORNested.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
-});
+
+    it("Data entries equal", function () {
+        let a: DataEntry = new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1");
+        let b: DataEntry = new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1");
+        let c: DataEntry = new DataEntry("math", "101", 60, "Bill", 10, 10, 5, "A1");
+        expect(filterOR.dataEntriesEqual(a, b)).to.deep.equal(true);
+        expect(filterOR.dataEntriesEqual(a, c)).to.deep.equal(false);
+    });
+
+    it("Remove duplicates", function () {
+        data.getData().push(new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1"));
+        data.getData().push(new DataEntry("educ", "202", 90, "Alice", 20, 30, 50, "C5"));
+        expect(filterOR.removeDuplicates(data.getData()).length).to.deep.equal(5);
+    });
+
+    it("Filter AND", function () {
+        let queryResponse = filterAND.applyFilter();
+        expect(queryResponse.length).to.deep.equal(1);
+    });
+
+    it("Filter AND and OR: AND(..., OR(..., ....))", function () {
+        let queryResponse = filterANDOR1.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Filter AND and OR:  OR(..., AND(..., ....))", function () {
+        let queryResponse = filterANDOR2.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    });

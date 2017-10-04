@@ -5,6 +5,7 @@ import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
 
+
 export default class FilterOR implements IFilterLogic{
     type: "FilterLogic";
     subType: "FilterOR";
@@ -60,7 +61,7 @@ export default class FilterOR implements IFilterLogic{
         }
     }
 
-    // not sure if there is need for parsing the data at all
+
     // filter data
     // keep passing the data through each filter iteratively for and
     applyFilter(): any[] {
@@ -68,26 +69,28 @@ export default class FilterOR implements IFilterLogic{
         return this.applyFilterHelper(this.filters, dataFiltered);
     }
 
-    //TODO add AND/OR recursive implementation
-    // TODO need to check whether there is need to parse this into objects at all
     // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-        //base case for recursive implementation
-        //if (filters.length == 0) return results;
+        let mySet = new Set(results);
 
         let element: any;
         for (element of filters) {
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
-            let elementNode1Value = Object.values(element)[1]
-            let elementNode2Value = Object.values(element)[2]
+            // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
+            //let elementNode1Value = Object.values(element)[1]
+            //let elementNode2Value = Object.values(element)[2]
+            let elementNode1Value = Object.keys(element).map((k) => element[k])[1]
+            let elementNode2Value = Object.keys(element).map((k) => element[k])[2]
+
             // do this to reference object key by variable instance
             let filterObj:any = {};
             filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
-                let elementGT = new FilterLT(filterObj, this.data);
+                let elementGT = new FilterGT(filterObj, this.data);
                 let tempResults = elementGT.applyFilter();
                 results = results.concat(tempResults);
+                //console.log(tempResults)
             } else if (element instanceof FilterLT) {
 
                 let elementLT = new FilterLT(filterObj, this.data);
@@ -100,17 +103,46 @@ export default class FilterOR implements IFilterLogic{
                 let tempResults = elementEQ.applyFilter();
                 results = results.concat(tempResults);
                 //console.log(results)
-
+                //console.log(tempResults)
             } else if (element instanceof FilterOR) {
-                let arrayValues = Object.values(element).slice(1)[0];
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
 
                 results = results.concat(this.applyFilterHelper(arrayValues, []));
-                // TODO figure out how to implement recursive OR, also what to do with repeated entries, maybe Set?
-                // need to iterate over an array
+            } else if (element instanceof FilterAND) {
+                //let arrayValues = Object.values(element).slice(1)[0];
+                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
+                //elelment is of type FilterAND so apply that class's filter function
+                results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             }
         }
-        console.log(results)
+        //console.log(this.removeDuplicates(results))
+        return this.removeDuplicates(results);
+    }
+
+    // returns array of unique values
+    removeDuplicates(results: any[]): any[] {
+        var len = results.length;
+        for(var key1 = 0; key1 < len; key1 ++) for(var key2 = key1 + 1; key2 < len; key2++)
+            if(this.dataEntriesEqual(results[key2], results[key1])){
+                results.splice(key2,1);
+                key2--;
+                len--;
+            }
         return results;
+    }
+
+    //TODO move this to the data class
+    // check if two data entires are equal, assume the same keys
+    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
+        // keys are the same
+        let keys = Object.keys(dataEntry1);
+        let decision  = true;
+
+        for (let key of keys) {
+            if (dataEntry1[key] !== dataEntry2[key]) return false;
+        }
+        return true;
     }
 
 }
