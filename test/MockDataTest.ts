@@ -4,29 +4,7 @@ import FilterGT from "../src/controller/QueryController/Filters/FilterComparison
 import FilterLT from "../src/controller/QueryController/Filters/FilterComparison/FilterLT";
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
 import FilterAND from "../src/controller/QueryController/Filters/FilterLogic/FilterAND";
-
-class DataEntry {
-    courses_dept: string;
-    courses_id: string;
-    courses_avg: number;
-    courses_instructor: string;
-    courses_pass: number;
-    courses_fail: number;
-    courses_audit: number;
-    courses_uuid: string;
-
-    constructor(crs_dept: string, crs_id: string, crs_avg: number, crs_inst: string,
-                crs_ps: number, crs_fl: number, crs_aud: number, crs_uuid: string) {
-        this.courses_dept = crs_dept;
-        this.courses_id = crs_id;
-        this.courses_avg = crs_avg;
-        this.courses_instructor = crs_inst;
-        this.courses_pass = crs_ps;
-        this.courses_fail = crs_fl;
-        this.courses_audit = crs_aud;
-        this.courses_uuid = crs_uuid;
-    }
-}
+import DataEntry from "../src/controller/DataEntry";
 
 export default class MockData {
     data: DataEntry[]=[];
@@ -159,11 +137,13 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
 
     it("Filter AND and OR: AND(..., OR(..., ....))", function () {
         let queryResponse = filterANDOR1.applyFilter();
+        //console.log(queryResponse)
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Filter AND and OR:  OR(..., AND(..., ....))", function () {
         let queryResponse = filterANDOR2.applyFilter();
+        //console.log(queryResponse)
         expect(queryResponse.length).to.deep.equal(3);
     });
 

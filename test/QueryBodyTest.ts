@@ -1,9 +1,10 @@
 import {expect} from 'chai';
 import QueryBody from "../src/controller/QueryController/QueryBody";
 import MockData from "./MockDataTest";
+import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
 
 describe("QueryBody", function () {
-    var testQuery: string =
+/*    var testQuery: string =
     "{\n" +
         "\n" +
         "     \"OR\":[\n" +
@@ -40,7 +41,7 @@ describe("QueryBody", function () {
         "\n" +
         "           \"EQ\":{\n" +
         "\n" +
-        "              \"courses_avg\":95\n" +
+        "              \"courses_avg\":50\n" +
         "\n" +
         "           }\n" +
         "\n" +
@@ -48,7 +49,11 @@ describe("QueryBody", function () {
         "\n" +
         "     ]\n" +
         "\n" +
-        "}"
+        "}"*/
+
+    var testQuery = {OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}
+
+    var testQuery2 = {AND: [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}]}
 
     var testQueryBroken: string =
         "{\n" +
@@ -68,41 +73,52 @@ describe("QueryBody", function () {
         "\n" +
         "}";
 
-    var testQueryBodyObject = JSON.parse(testQuery);
+    var testQueryBodyObject = testQuery;
     var testQueryBodyObjectBroken = JSON.parse(testQueryBroken);
 
     var qB: QueryBody = null;
+    var qB2: QueryBody = null
     var qBBroken: QueryBody = null;
 
     var data = new MockData();
 
     beforeEach(function () {
-        qB = new QueryBody(JSON.parse(testQuery), data.getData());
+        qB = new QueryBody(testQuery, data.getData());
+        qB2 =  new QueryBody(testQuery2, data.getData());
         qBBroken = new QueryBody(JSON.parse(testQueryBroken), data.getData());
     });
 
     afterEach(function () {
         qB = null;
+        qB2 = null;
         qBBroken = null;
     });
 
 
     it("Test QueryBody Constructor", function () {
-        qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
     });
 
     it("Test QueryBody Constructor with no valid body", function () {
-        qBBroken.parseQueryFilters(qBBroken.filters);
-        let countFilters = qB.filters.length;
-        expect(countFilters).to.deep.equal(0);
+        let countFilters = qBBroken.filters;
+        expect(countFilters.length).to.deep.equal(0);
     });
 
-/*    it("Test QueryBody Constructor, the right object is pushed in the attribute array", function () {
-        qB.parseQueryFilters(qB.filters);
+    it("Test QueryBody Constructor, the right object is pushed in the attribute array", function () {
         let firstElement = qB.filters[0];
-        expect(typeof firstElement).to.deep.equal("FilterOR");
-    })*/
+        expect(firstElement instanceof FilterOR).to.deep.equal(true);
+    })
+
+    it("Test QueryBody filter:  OR(..., AND(..., ....))", function () {
+        let output = qB.applyFilter();
+        expect(output.length).to.deep.equal(3);
+    })
+
+    it("Test QueryBody filter:  AND(..., OR(..., ....))", function () {
+        let output = qB2.applyFilter();
+        console.log(output)
+        expect(output.length).to.deep.equal(3);
+    })
 
 });
