@@ -14,6 +14,7 @@ describe("testPerformQuery", function() {
     beforeEach(function () {
         Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
+
     });
 
     after(function () {
@@ -25,6 +26,8 @@ describe("testPerformQuery", function() {
     });
 
     it("Test performQuery", function (done) {
+
+
 
 
         insightF.performQuery("111").then(function(value:any){
@@ -39,4 +42,26 @@ describe("testPerformQuery", function() {
 
 
     });
+
+
+    it("Test performQuery, real query", function (done) {
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
+            insightF.addDataset("Courses",data);
+            var testQuery = {AND: [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}]}
+            insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                done();
+
+
+            }).catch(function(err:any){
+
+
+            });
+
+        });
+
+
+
+    });
+
 })

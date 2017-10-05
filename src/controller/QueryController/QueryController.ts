@@ -40,16 +40,16 @@ export default class QueryController implements IQueryController{
     //TODO replace MockData by porting QueryController and DataController
     // set data set to MockDate for testing purposes
 
-    constructor(query: any) {
+    constructor(query: any, data: any[]) {
         //this.query = JSON.parse(query);
         this.query = query;
+        this.data = data;
         this.setHasWhere(false);
         this.setHasOptions(false);
         this.parseQueryBody();
         this.parseQueryOptions();
-
         // TODO replace this later with actual data
-        this.data = new MockData().getData();
+        //this.data = new MockData().getData();
     }
 
     // parse through JSON stored in query and construct the QueryBody object
@@ -65,7 +65,7 @@ export default class QueryController implements IQueryController{
             }
         }
         // throws an error if query parsing fails at any level
-        if (this.getHasWhere() !== true) throw ("error: query is invalid");
+       // if (this.getHasWhere() !== true) throw ("error: query is invalid");
         //console.log(this.queryObj)
     }
 
@@ -84,7 +84,7 @@ export default class QueryController implements IQueryController{
             }
         }
         // throws an error if query parsing fails at any level
-        if (this.getHasOptions() !== true) throw ("error: query is invalid");
+        //if (this.getHasOptions() !== true) throw ("error: query is invalid");
     }
 
 

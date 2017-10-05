@@ -3,6 +3,7 @@
  */
 import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
+import QueryController from "./QueryController/QueryController";
 var JSZip = require("jszip");
 let dataInMemory:dataStore = {id:null,data:[]};
 var fs = require("fs");
@@ -91,7 +92,7 @@ export default class InsightFacade implements IInsightFacade {
                     };
                     //store the data into data/data.json
                     Log.trace(__dirname);
-                    fs.writeFileSync(__dirname + '/data/data.txt', JSON.stringify(dataInMemory), 'utf-8');
+                    fs.writeFileSync(__dirname + '/data.txt', JSON.stringify(dataInMemory), 'utf-8');
                     fullfill(s);
                 }).catch(function(err){
                 });
@@ -114,11 +115,22 @@ export default class InsightFacade implements IInsightFacade {
             Log.trace("300: Check if data is in memory, otherwise read data from disk");
             if(dataInMemory.id === null){
                 Log.trace("301: Begin reading file");
-                fs.readFile(__dirname + '/data/data.txt','utf-8',function (err:any,data:any) {
+                fs.readFile(__dirname + '/data.txt','utf-8',function (err:any,data:any) {
                     dataInMemory = JSON.parse(data);
-
+                    let tempData = dataInMemory.data;
+                    var queryController = new QueryController(query, tempData);
+                    let s:InsightResponse = {code:204,body:{}};
+                    s.body = queryController.getQueryObj().applyFilter();
+                    fullfill(s);
                 });
+            }else {
+                Log.trace("310: If data is in memory, then just query perform");
 
+                let tempData = dataInMemory.data;
+                var queryController = new QueryController(query, tempData);
+                let s: InsightResponse = {code: 204, body: {}};
+                s.body = queryController.getQueryObj().applyFilter();
+                fullfill(s);
             }
 
         });

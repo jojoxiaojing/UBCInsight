@@ -1,5 +1,6 @@
 import {expect} from 'chai';
 import QueryController from "../src/controller/QueryController/QueryController";
+import MockData from "./MockDataTest";
 
 describe("QueryController", function () {
     var testQuery: string =
@@ -57,7 +58,7 @@ describe("QueryController", function () {
     var qCBroken: QueryController = null;
 
     beforeEach(function () {
-        qC = new QueryController(testQuery);
+        qC = new QueryController(testQuery, new MockData().getData());
     });
 
     afterEach(function () {
@@ -75,7 +76,7 @@ describe("QueryController", function () {
 
     it("Test QueryController constructor error", function () {
         try {
-            new QueryController(testQueryBroken);
+            new QueryController(testQueryBroken, new MockData().getData());
         } catch(err) {
             expect(err).to.deep.equal("error: query is invalid");
         }
