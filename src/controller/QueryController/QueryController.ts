@@ -61,8 +61,7 @@ export default class QueryController implements IQueryController{
         }
         // throws an error if query parsing fails at any level
        // if (this.getHasWhere() !== true) throw ("error: query is invalid");
-        //console.log(this.queryObj)
-    }
+}
 
     //TODO: populate QueryOptions class with actual options and figure out how to pass processed data to QueryOptions
     // parse through JSON stored in query and construct the QueryOptions object

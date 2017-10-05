@@ -23,15 +23,12 @@ export default class FilterOR implements IFilterLogic{
 
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
-        // console.log(objJSON)
         // the passed parameter might be an array, if the node above was AND/OR
         if (Array.isArray(objJSON)) {
             this.parseArray(objJSON);
         }
         // otherwise the object is JSON, e.g. GT/LT/EQ
         else {
-/*            console.log(key)
-            console.log(val)*/
             for (var key in objJSON) {
 
                 var val = objJSON[key];

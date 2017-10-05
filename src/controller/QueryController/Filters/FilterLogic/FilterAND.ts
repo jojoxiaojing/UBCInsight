@@ -100,7 +100,6 @@ export default class FilterAND implements IFilterLogic{
                 results = this.applyFilterHelper(arrayValues, results);
             }
         }
-        //console.log(results)
         return results
     }
 

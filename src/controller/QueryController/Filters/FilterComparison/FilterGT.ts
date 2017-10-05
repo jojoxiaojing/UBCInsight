@@ -17,12 +17,8 @@ export default class FilterGT implements IFilterComparison {
             let keys = Object.keys(filter);
             let vals = Object.keys(filter).map((k) => filter[k]);
 
-            /*        console.log(keys)
-                    console.log(vals)*/
             this.subNode1 = keys[0];
             this.subNode2 = vals[0];
-            //console.log(this.subNode1)
-            //console.log(this.subNode2)
 
     }
 
