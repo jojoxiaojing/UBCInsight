@@ -1,12 +1,6 @@
 import QueryBody from "./QueryBody";
 import QueryOptions from "./QueryOptions";
-import MockData from "../../../test/MockDataTest";
-import {IFilter} from "./Filters/IFilter";
-import FilterGT from "./Filters/FilterComparison/FilterGT";
-import FilterLT from "./Filters/FilterComparison/FilterLT";
-import FilterEQ from "./Filters/FilterComparison/FilterEQ";
-import FilterOR from "./Filters/FilterLogic/FilterOR";
-import FilterAND from "./Filters/FilterLogic/FilterAND";
+
 
 interface IQueryController {
     // data set
