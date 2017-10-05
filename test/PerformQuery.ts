@@ -8,21 +8,21 @@ describe("testPerformQuery", function() {
     this.timeout(1000000);
     var insightF: InsightFacade;
     before(function () {
-        Log.test('Before: ' + (<any>this).test.parent.title);
+        //Log.test('Before: ' + (<any>this).test.parent.title);
     });
 
     beforeEach(function () {
-        Log.test('BeforeTest: ' + (<any>this).currentTest.title);
+        //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
 
     });
 
     after(function () {
-        Log.test('After: ' + (<any>this).test.parent.title);
+        //Log.test('After: ' + (<any>this).test.parent.title);
     });
 
     afterEach(function () {
-        Log.test('AfterTest: ' + (<any>this).currentTest.title);
+        //Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
 /*    it("Test performQuery", function (done) {

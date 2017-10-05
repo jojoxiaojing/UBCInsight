@@ -8,10 +8,12 @@ import Log from "../src/Util";
 import {InsightResponse} from "../src/controller/IInsightFacade";
 import InsightFacade from "../src/controller/InsightFacade";
 var fs = require("fs");
+/*
 import chai = require('chai');
 import chaiHttp = require('chai-http');
 import Response = ChaiHttp.Response;
 import restify = require('restify');
+*/
 
 describe("EchoSpec", function () {
 
@@ -23,19 +25,19 @@ describe("EchoSpec", function () {
     }
 
     before(function () {
-        Log.test('Before: ' + (<any>this).test.parent.title);
+        //Log.test('Before: ' + (<any>this).test.parent.title);
     });
 
     beforeEach(function () {
-        Log.test('BeforeTest: ' + (<any>this).currentTest.title);
+        //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
     });
 
     after(function () {
-        Log.test('After: ' + (<any>this).test.parent.title);
+        //Log.test('After: ' + (<any>this).test.parent.title);
     });
 
     afterEach(function () {
-        Log.test('AfterTest: ' + (<any>this).currentTest.title);
+        //Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
     it("Should be able to echo", function () {
@@ -72,7 +74,7 @@ describe("EchoSpec", function () {
     });
 
     //free test to boost coverage of starter components
-    it("Test Server", function() {
+    /*it("Test Server", function() {
 
         // Init
         chai.use(chaiHttp);
@@ -110,7 +112,7 @@ describe("EchoSpec", function () {
         }).catch(function(err) {
             expect.fail();
         });
-    });
+    });*/
 
 });
 
