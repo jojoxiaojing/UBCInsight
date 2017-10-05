@@ -37,18 +37,13 @@ export default class QueryController implements IQueryController{
     hasWhere: boolean;
     hasOptions: boolean;
 
-    //TODO replace MockData by porting QueryController and DataController
-    // set data set to MockDate for testing purposes
-
     constructor(query: any, data: any[]) {
-        //this.query = JSON.parse(query);
         this.query = query;
         this.data = data;
         this.setHasWhere(false);
         this.setHasOptions(false);
         this.parseQueryBody();
         this.parseQueryOptions();
-        // TODO replace this later with actual data
         //this.data = new MockData().getData();
     }
 

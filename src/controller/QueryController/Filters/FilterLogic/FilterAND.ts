@@ -4,7 +4,6 @@ import FilterOR from "./FilterOR";
 import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
-import DataEntry from "../../../DataEntry";
 
 
 export default class FilterAND implements IFilterLogic{
