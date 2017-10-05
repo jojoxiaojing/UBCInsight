@@ -34,12 +34,10 @@ export default class FilterAND implements IFilterLogic{
                 var val = objJSON[key];
                 if (key === "OR") {
                     var orFilter = new FilterOR(val, this.data);
-                    //var orFilter = new FilterLogic(val);
                     this.filters.push(orFilter);
                     this.parseLogicFilters(orFilter);
                 } else if (key === "AND") {
                     var andFilter = new FilterAND(val, this.data);
-                    //var andFilter = new FilterLogic(val);
                     this.filters.push(andFilter);
                     this.parseLogicFilters(andFilter);
                 } else if (key === "GT") {
