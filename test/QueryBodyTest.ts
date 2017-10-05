@@ -117,7 +117,6 @@ describe("QueryBody", function () {
 
     it("Test QueryBody filter:  AND(..., OR(..., ....))", function () {
         let output = qB2.applyFilter();
-        console.log(output)
         expect(output.length).to.deep.equal(3);
     })
 

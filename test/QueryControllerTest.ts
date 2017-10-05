@@ -3,34 +3,7 @@ import QueryController from "../src/controller/QueryController/QueryController";
 import MockData from "./MockDataTest";
 
 describe("QueryController", function () {
-    var testQuery: string =
-        "{\n" +
-        "\n" +
-        "  \"WHERE\":{\n" +
-        "\n" +
-        "     \"GT\":{\n" +
-        "\n" +
-        "        \"courses_avg\":97\n" +
-        "\n" +
-        "     }\n" +
-        "\n" +
-        "  },\n" +
-        "\n" +
-        "  \"OPTIONS\":{\n" +
-        "\n" +
-        "     \"COLUMNS\":[\n" +
-        "\n" +
-        "        \"courses_dept\",\n" +
-        "\n" +
-        "        \"courses_avg\"\n" +
-        "\n" +
-        "     ],\n" +
-        "\n" +
-        "     \"ORDER\":\"courses_avg\"\n" +
-        "\n" +
-        "  }\n" +
-        "\n" +
-        "}";
+    var testQuery: any= {WHERE:{GT:{courses_avg :97}}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"]}};
 
     var testQueryBroken: string =
         "{\n" +
@@ -51,7 +24,7 @@ describe("QueryController", function () {
         "}";
 
 
-    var testQueryObject = JSON.parse(testQuery);
+    var testQueryObject = testQuery;
     var testQueryObjectBroken = JSON.parse(testQueryBroken);
 
     var qC: QueryController = null;
@@ -87,19 +60,11 @@ describe("QueryController", function () {
         expect(qC.getQueryObj().getBody()).to.have.property("GT");
     });
 
-    it("Test QueryBody Constructor", function () {
+    it("Test QueryBody Constructor, QueryObj", function () {
         let qB = qC.getQueryObj();
-        qB.parseQueryFilters(qB.filters);
+        //qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
     });
-
-    it("Test simple simple query", function () {
-        let qB = qC.getQueryObj();
-        qB.parseQueryFilters(qB.filters);
-        let countFilters = qB.filters.length;
-        expect(countFilters).to.deep.equal(3);
-    });
-
 
 });
