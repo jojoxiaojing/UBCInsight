@@ -38,7 +38,7 @@ describe("testAddData", function() {
                     let a = value;
                     done();
                 }).catch(function (err) {
-                    log.error("Error: " + err);
+                    //log.error("Error: " + err);
                     expect.fail();
                     done()
                 });
