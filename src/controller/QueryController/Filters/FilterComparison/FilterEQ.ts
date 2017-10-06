@@ -12,7 +12,6 @@ export default class FilterEQ implements IFilterComparison {
         this.data = data;
         // this is a workaround, as object passed to filter contains EQ
         let keys = Object.keys(filter);
-        //let vals = Object.values(filter);
         let vals =  Object.keys(filter).map((k) => filter[k]);
         this.subNode1 = keys[0];
         this.subNode2 = vals[0];
