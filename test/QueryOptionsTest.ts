@@ -20,13 +20,13 @@ describe("QueryBody", function () {
 
 
     it("Test QueryOptions Constructor/parseQueryOptions", function () {
-        queryOpt.parseQueryOptions();
+        //queryOpt.parseQueryOptions();
         expect(queryOpt.columns.length).to.deep.equal(2);
         expect(queryOpt.order).to.deep.equal("courses_avg");
     });
 
     it("Test applyQueryOptions to MockData", function () {
-        queryOpt.parseQueryOptions();
+        //queryOpt.parseQueryOptions();
         let response = queryOpt.applyOptions();
         expect(response[0].hasOwnProperty("courses_avg")).to.deep.equal(true);
         expect(response[0].hasOwnProperty("courses_fail")).to.deep.equal(false);
