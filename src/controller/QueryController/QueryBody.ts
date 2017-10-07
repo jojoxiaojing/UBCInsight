@@ -4,11 +4,13 @@ import FilterAND from "./Filters/FilterLogic/FilterAND";
 import FilterGT from "./Filters/FilterComparison/FilterGT";
 import FilterLT from "./Filters/FilterComparison/FilterLT";
 import FilterEQ from "./Filters/FilterComparison/FilterEQ";
+import QueryOptions from "./QueryOptions";
 
 export default class QueryBody {
 
     body: JSON;
     filters: IFilter[];
+    options: any;
 
     data: any[];
 
@@ -51,6 +53,14 @@ export default class QueryBody {
         this.body = body;
     }
 
+    setData(data: any[]) {
+        this.data = data;
+    }
+
+    setQueryOpt(options: any) {
+        this.options = options;
+    }
+
 
     applyFilter(): any[] {
         var results: any[] = []
@@ -58,7 +68,10 @@ export default class QueryBody {
         for (element of this.filters) {
             results = element.applyFilter();
         }
-        return results
+
+       // apply options to filtered results
+        var opt = new QueryOptions(this.options, results)
+        return opt.applyOptions();
     }
 
 }

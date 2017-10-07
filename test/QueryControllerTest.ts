@@ -23,28 +23,44 @@ describe("QueryController", function () {
         "\n" +
         "}";
 
+    var testQueryComplete = {WHERE: {AND: [{LT: {courses_audit: 30}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 50}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
 
     var testQueryObject = testQuery;
     var testQueryObjectBroken = JSON.parse(testQueryBroken);
 
     var qC: QueryController = null;
     var qCBroken: QueryController = null;
+    var qCComplete: QueryController = null;
 
     beforeEach(function () {
         qC = new QueryController(testQuery, new MockData().getData());
+        qCComplete = new QueryController(testQueryComplete, new MockData().getData());
     });
 
     afterEach(function () {
         qC = null;
+        qCComplete = null;
     });
 
-    it("Test QueryController constructor", function () {
+    it("Test QueryController constructor without Options", function () {
         let out = qC.getQuery();
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
         expect(out).to.deep.equal(testQueryObject);
         expect(qC.getHasWhere()).deep.equal(true);
-        expect(qC.getHasOptions()).deep.equal(true);
+        //expect(qC.getHasOptions()).deep.equal(true);
+    });
+
+    it("Test QueryController constructor with Options", function () {
+        let out = qCComplete.getQuery();
+        expect(out).to.have.property('WHERE');
+        expect(out).to.have.property('OPTIONS');
+        expect(out).to.deep.equal(testQueryComplete);
+        let out2 = qCComplete.getQueryBody();
+        let out3 = out2.applyFilter();
+        expect(out2.options).to.have.property("COLUMNS")
+        expect(out3[0].hasOwnProperty("courses_avg")).to.deep.equal(true)
+        //expect(qC.getHasOptions()).deep.equal(true);
     });
 
     it("Test QueryController constructor error", function () {
@@ -57,11 +73,11 @@ describe("QueryController", function () {
 
 
     it("Test QueryController constructor, test attributes properly initialized", function () {
-        expect(qC.getQueryObj().getBody()).to.have.property("GT");
+        expect(qC.getQueryBody().getBody()).to.have.property("GT");
     });
 
     it("Test QueryBody Constructor, QueryObj", function () {
-        let qB = qC.getQueryObj();
+        let qB = qC.getQueryBody();
         //qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);

@@ -120,7 +120,7 @@ export default class InsightFacade implements IInsightFacade {
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
                     let s:InsightResponse = {code:204,body:{}};
-                    s.body = queryController.getQueryObj().applyFilter();
+                    s.body = queryController.getQueryBody().applyFilter();
                     fullfill(s);
                 });
             }else {
@@ -128,8 +128,9 @@ export default class InsightFacade implements IInsightFacade {
 
                 let tempData = dataInMemory.data;
                 var queryController = new QueryController(query, tempData);
+                //queryController.getQueryOpt().applyOptions();
                 let s: InsightResponse = {code: 204, body: {}};
-                s.body = queryController.getQueryObj().applyFilter();
+                s.body = queryController.getQueryBody().applyFilter();
                 fullfill(s);
             }
 

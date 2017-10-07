@@ -49,7 +49,6 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter9 = [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}];
 
 
-
     var filterEQ: FilterEQ;
     var filterGT: FilterGT;
     var filterLT: FilterLT;
