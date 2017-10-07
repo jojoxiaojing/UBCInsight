@@ -4,6 +4,7 @@ import FilterOR from "./FilterOR";
 import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
+import FilterIS from "../FilterComparison/FilterIS";
 
 
 export default class FilterAND implements IFilterLogic{
@@ -45,6 +46,8 @@ export default class FilterAND implements IFilterLogic{
                     this.filters.push(new FilterLT(val, this.data));
                 } else if (key === "EQ") {
                     this.filters.push(new FilterEQ(val, this.data));
+                } else if (key === "IS") {
+                    this.filters.push(new FilterIS(val, this.data));
                 }
             }
         }
@@ -88,7 +91,9 @@ export default class FilterAND implements IFilterLogic{
                 results = element.applyFilter();
             } else if (element instanceof FilterEQ) {
                 results = element.applyFilter();
-            } else if (element instanceof FilterOR) {
+            } else if (element instanceof FilterIS) {
+                results = element.applyFilter();
+            }else if (element instanceof FilterOR) {
                 //let arrayValues = Object.values(element).slice(1)[0];
                 let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
                 //elelment is of type FilterOR so apply that class's filter function

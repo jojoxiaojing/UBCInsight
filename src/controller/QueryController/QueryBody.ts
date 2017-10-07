@@ -5,6 +5,7 @@ import FilterGT from "./Filters/FilterComparison/FilterGT";
 import FilterLT from "./Filters/FilterComparison/FilterLT";
 import FilterEQ from "./Filters/FilterComparison/FilterEQ";
 import QueryOptions from "./QueryOptions";
+import FilterIS from "./Filters/FilterComparison/FilterIS";
 
 export default class QueryBody {
 
@@ -42,6 +43,8 @@ export default class QueryBody {
                 this.filters.push(new FilterLT(val, this.data));
             } else if (key === "EQ"){
                 this.filters.push(new FilterEQ(val, this.data));
+            } else if (key === "IS") {
+                this.filters.push(new FilterIS(val, this.data));
             }
         }
     }

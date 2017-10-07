@@ -4,6 +4,7 @@ import FilterAND from "./FilterAND";
 import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
+import FilterIS from "../FilterComparison/FilterIS";
 
 
 export default class FilterOR implements IFilterLogic{
@@ -46,6 +47,8 @@ export default class FilterOR implements IFilterLogic{
                     this.filters.push(new FilterLT(val, this.data));
                 } else if (key === "EQ") {
                     this.filters.push(new FilterEQ(val, this.data));
+                } else if (key === "IS") {
+                    this.filters.push(new FilterIS(val, this.data));
                 }
             }
         }
@@ -87,6 +90,9 @@ export default class FilterOR implements IFilterLogic{
                 let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
             } else if (element instanceof FilterEQ) {
+                let tempResults = element.applyFilter();
+                results = results.concat(tempResults);
+            } else if (element instanceof FilterIS) {
                 let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
             } else if (element instanceof FilterOR) {
