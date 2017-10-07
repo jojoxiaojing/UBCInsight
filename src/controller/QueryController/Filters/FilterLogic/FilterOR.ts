@@ -5,6 +5,7 @@ import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
 import FilterIS from "../FilterComparison/FilterIS";
+import FilterNOT from "./FilterNOT";
 
 
 export default class FilterOR implements IFilterLogic{
@@ -104,6 +105,8 @@ export default class FilterOR implements IFilterLogic{
                 let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
                 //elelment is of type FilterAND so apply that class's filter function
                 results = results.concat(element.applyFilterHelper(arrayValues, this.data));
+            } else if (element instanceof FilterNOT) {
+                results = this.arrayDifference(results, element.applyFilter());
             }
         }
         return this.removeDuplicates(results);
@@ -126,7 +129,6 @@ export default class FilterOR implements IFilterLogic{
     dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
         // keys are the same
         let keys = Object.keys(dataEntry1);
-        let decision  = true;
 
         for (let key of keys) {
             if (dataEntry1[key] !== dataEntry2[key]) return false;
@@ -134,5 +136,15 @@ export default class FilterOR implements IFilterLogic{
         return true;
     }
 
+    arrayDifference(array1: any[], array2: any[]): any[] {
+
+        var len1 = array1.length;
+        var len2 = array2.length;
+        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
+            if(this.dataEntriesEqual(array2[key2], array1[key1])){
+                array1.splice(key1, 1);
+            }
+        return array1;
+    }
 }
 
