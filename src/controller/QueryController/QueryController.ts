@@ -1,5 +1,4 @@
 import QueryBody from "./QueryBody";
-import QueryOptions from "./QueryOptions";
 
 
 interface IQueryController {
@@ -7,26 +6,25 @@ interface IQueryController {
     data: any[];
     // JSON that we feed in
     query: JSON;
-    queryObj: QueryBody;
-    queryOpt: QueryOptions;
+    queryBody: QueryBody;
 
-    getQueryObj(): QueryBody;
-    getQueryOpt(): QueryOptions;
+    getQueryBody(): QueryBody;
+   // getQueryOpt(): QueryOptions;
     getQuery(): JSON;
     getHasWhere(): boolean;
-    getHasOptions(): boolean;
+   // getHasOptions(): boolean;
     setHasWhere(where: boolean): void;
-    setHasOptions(options: boolean): void;
-    setQueryObj(body: JSON): void;
+    //setHasOptions(options: boolean): void;
+    setQueryBody(body: JSON): void;
 }
 
+// need to pass options from parsing into query body to options field
 export default class QueryController implements IQueryController{
 
     data: any[];
     //query: {[key: string]: JSON};
     query: JSON;
-    queryObj: QueryBody;
-    queryOpt: QueryOptions;
+    queryBody: QueryBody;
     // flags for queries validity
     hasWhere: boolean;
     hasOptions: boolean;
@@ -35,7 +33,6 @@ export default class QueryController implements IQueryController{
         this.query = query;
         this.data = data;
         this.setHasWhere(false);
-        this.setHasOptions(false);
         this.parseQueryBody();
         this.parseQueryOptions();
         //this.data = new MockData().getData();
@@ -48,7 +45,7 @@ export default class QueryController implements IQueryController{
             let val = objJSON[key];
             // construct Query object and set WHERE flag on
             if (key ==="WHERE") {
-                this.setQueryObj(val);
+                this.setQueryBody(val);
                 // need to add an if statement for recursively checking validity of nested query components
                 this.setHasWhere(true);
             }
@@ -57,7 +54,6 @@ export default class QueryController implements IQueryController{
        // if (this.getHasWhere() !== true) throw ("error: query is invalid");
 }
 
-    //TODO: populate QueryOptions class with actual options and figure out how to pass processed data to QueryOptions
     // parse through JSON stored in query and construct the QueryOptions object
     parseQueryOptions(): void {
         var objJSON = this.getQuery()
@@ -66,9 +62,9 @@ export default class QueryController implements IQueryController{
 
             // construct Options object and set OPTIONS flag on
             if (key === "OPTIONS") {
-                this.setQueryOpt(val);
+                this.getQueryBody().setQueryOpt(val);
                 // need to add an if statement for recursively checking validity of nested query components
-                this.setHasOptions(true);
+                //this.setHasOptions(true);
             }
         }
         // throws an error if query parsing fails at any level
@@ -76,21 +72,21 @@ export default class QueryController implements IQueryController{
     }
 
 
-    setQueryObj(body: JSON): void {
-        this.queryObj = new QueryBody(body, this.data);
+    setQueryBody(body: JSON): void {
+        this.queryBody = new QueryBody(body, this.data);
     }
 
-    setQueryOpt(options: QueryOptions) : void {
-        this.queryOpt = new QueryOptions(options);
+/*    setQueryOpt(options: QueryOptions) : void {
+        this.queryOpt = new QueryOptions(options, this.data);
+    }*/
+
+    getQueryBody(): QueryBody {
+        return this.queryBody;
     }
 
-    getQueryObj(): QueryBody {
-        return this.queryObj;
-    }
-
-    getQueryOpt(): QueryOptions {
+/*    getQueryOpt(): QueryOptions {
         return this.queryOpt;
-    }
+    }*/
 
     getQuery(): any {
         return this.query;
@@ -100,14 +96,15 @@ export default class QueryController implements IQueryController{
         return this.hasWhere;
     }
 
-    getHasOptions(): boolean {
+  /*  getHasOptions(): boolean {
         return this.hasOptions;
-    }
+    }*/
 
     setHasWhere(where: boolean): void {
         this.hasWhere = where;
     }
-    setHasOptions(options: boolean): void {
+
+/*    setHasOptions(options: boolean): void {
         this.hasOptions = options;
-    }
+    }*/
 }

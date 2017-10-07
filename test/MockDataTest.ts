@@ -5,6 +5,8 @@ import FilterLT from "../src/controller/QueryController/Filters/FilterComparison
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
 import FilterAND from "../src/controller/QueryController/Filters/FilterLogic/FilterAND";
 import DataEntry from "../src/controller/DataEntry";
+import FilterIS from "../src/controller/QueryController/Filters/FilterComparison/FilterIS";
+import FilterNOT from "../src/controller/QueryController/Filters/FilterLogic/FilterNOT";
 
 export default class MockData {
     data: DataEntry[]=[];
@@ -47,6 +49,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter7 = [{GT: {courses_avg: 90}}, {EQ: {courses_fail: 5}}];
     var filter8 = [{LT: {courses_audit: 50}}, {OR: [{GT: {courses_fail: 10}}, {EQ: {courses_pass: 100}}]}];
     var filter9 = [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}];
+    var filter10 = {courses_instructor: "Bob"};
+    var filter11 = [{IS: {courses_instructor: "Bob"}}, {AND: [{EQ: {courses_avg: 60}}, {EQ: {courses_audit: 50}}]}];
+    var filter12 = {IS: {courses_instructor: "Bob"}};
 
 
 
@@ -59,6 +64,12 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterAND: FilterAND;
     var filterANDOR1: FilterAND
     var filterANDOR2: FilterOR
+    var filterIS: FilterIS
+    var filterANDORIS: FilterOR
+    var filterNOTIS: FilterNOT
+    var filterNOTNESTED: FilterNOT
+
+
 
     beforeEach(function () {
         filterEQ = new FilterEQ(filter, data.getData())
@@ -70,6 +81,10 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterAND = new FilterAND(filter7, data.getData())
         filterANDOR1 = new FilterAND(filter8, data.getData())
         filterANDOR2 = new FilterOR(filter9, data.getData())
+        filterIS = new FilterIS(filter10, data.getData())
+        filterANDORIS = new FilterOR(filter11, data.getData())
+        filterNOTIS = new FilterNOT(filter12, data.getData())
+        filterNOTNESTED = new FilterNOT(filter11, data.getData())
     });
 
     afterEach(function () {
@@ -82,6 +97,10 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterAND = null;
         filterANDOR1 = null;
         filterANDOR2 = null;
+        filterIS = null;
+        filterANDORIS = null;
+        filterNOTIS = null;
+        filterNOTNESTED = null;
     });
 
 
@@ -145,6 +164,27 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         let queryResponse = filterANDOR2.applyFilter();
         //console.log(queryResponse)
         expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Filter AND and OR:  OR(..., AND(..., ....)), with IS", function () {
+        let queryResponse = filterANDORIS.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+
+    it("Filter IS", function () {
+        let queryResponse = filterIS.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
+    });
+
+    it("Filter NOT IS", function () {
+        let queryResponse = filterNOTIS.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Filter NOT nested", function () {
+        let queryResponse = filterNOTNESTED.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
     });
 
     });

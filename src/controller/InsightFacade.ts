@@ -155,24 +155,29 @@ export default class InsightFacade implements IInsightFacade {
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //Log.trace("300: Check if data is in memory, otherwise read data from disk");
-            if(dataInMemory.id === null){
-                //Log.trace("301: Begin reading file");
-                fs.readFile(__dirname + '/data.txt','utf-8',function (err:any,data:any) {
-                    dataInMemory = JSON.parse(data);
+            try {
+                if (dataInMemory.id === null) {
+                    //Log.trace("301: Begin reading file");
+                    fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
+                        dataInMemory = JSON.parse(data);
+                        let tempData = dataInMemory.data;
+                        var queryController = new QueryController(query, tempData);
+                        let s: InsightResponse = {code: 204, body: {}};
+                        s.body = queryController.getQueryBody().applyFilter();
+                        fullfill(s);
+                    });
+                } else {
+                    //Log.trace("310: If data is in memory, then just query perform");
+
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
-                    let s:InsightResponse = {code:204,body:{}};
-                    s.body = queryController.getQueryObj().applyFilter();
+                    //queryController.getQueryOpt().applyOptions();
+                    let s: InsightResponse = {code: 204, body: {}};
+                    s.body = queryController.getQueryBody().applyFilter();
                     fullfill(s);
-                });
-            }else {
-                //Log.trace("310: If data is in memory, then just query perform");
-
-                let tempData = dataInMemory.data;
-                var queryController = new QueryController(query, tempData);
-                let s: InsightResponse = {code: 204, body: {}};
-                s.body = queryController.getQueryObj().applyFilter();
-                fullfill(s);
+                }
+            } catch (err){
+                reject(err);
             }
 
         });

@@ -5,12 +5,12 @@ import FilterGT from "../FilterComparison/FilterGT";
 import FilterLT from "../FilterComparison/FilterLT";
 import FilterEQ from "../FilterComparison/FilterEQ";
 import FilterIS from "../FilterComparison/FilterIS";
-import FilterNOT from "./FilterNOT";
+import FilterAND from "./FilterAND";
 
 
-export default class FilterAND implements IFilterLogic{
+export default class FilterNOT implements IFilterLogic{
     type: "FilterLogic";
-    subType: "FilterAND";
+    subType: "FilterNOT";
     filters: IFilter[];
 
     data: any[];
@@ -49,6 +49,8 @@ export default class FilterAND implements IFilterLogic{
                     this.filters.push(new FilterEQ(val, this.data));
                 } else if (key === "IS") {
                     this.filters.push(new FilterIS(val, this.data));
+                } else if (key === "NOT") {
+                    this.filters.push(new FilterNOT(val, this.data));
                 }
             }
         }
@@ -76,8 +78,7 @@ export default class FilterAND implements IFilterLogic{
         for (element of this.filters) {
             // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
             // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
-            //let elementNode1Value = Object.values(element)[1]
-            //let elementNode2Value = Object.values(element)[2]
+
             let elementNode1Value =  Object.keys(element).map((k) => element[k])[1];
             let elementNode2Value =  Object.keys(element).map((k) => element[k])[2];
 
@@ -87,23 +88,17 @@ export default class FilterAND implements IFilterLogic{
             filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
-                results = element.applyFilter();
+                results = this.arrayDifference(results, element.applyFilter());
             } else if (element instanceof FilterLT) {
-                results = element.applyFilter();
+                results = this.arrayDifference(results, element.applyFilter());
             } else if (element instanceof FilterEQ) {
-                results = element.applyFilter();
+                results = this.arrayDifference(results, element.applyFilter());
             } else if (element instanceof FilterIS) {
-                results = element.applyFilter();
+                results = this.arrayDifference(results, element.applyFilter());
             }else if (element instanceof FilterOR) {
-                //let arrayValues = Object.values(element).slice(1)[0];
-                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
-                //elelment is of type FilterOR so apply that class's filter function
-                let tempResults = element.applyFilterHelper(arrayValues, []);
-                results = this.findArrayIntersection(results, tempResults);
+                results = this.arrayDifference(results, element.applyFilter());
             } else if (element instanceof FilterAND) {
-                //let arrayValues = Object.values(element).slice(1)[0];
-                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
-                results = this.applyFilterHelper(arrayValues, results);
+                results = this.arrayDifference(results, element.applyFilter());
             } else if (element instanceof FilterNOT) {
                 results = this.arrayDifference(results, element.applyFilter());
             }
@@ -111,18 +106,15 @@ export default class FilterAND implements IFilterLogic{
         return results
     }
 
-    findArrayIntersection(array1: any[], array2: any[]): any[] {
-        let results: any[] = [];
+    arrayDifference(array1: any[], array2: any[]): any[] {
+
         var len1 = array1.length;
         var len2 = array2.length;
-        for(var key1 = 0; key1 < len1; key1 ++) for(var key2 = 0; key2 < len2; key2++)
+        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
             if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                results.push(array1[key1]);
-                array2.splice(key2,1);
-                key2--;
-                len2--;
+                array1.splice(key1, 1);
             }
-        return results;
+        return array1;
     }
 
     //TODO move this to the data class
@@ -135,17 +127,6 @@ export default class FilterAND implements IFilterLogic{
             if (dataEntry1[key] !== dataEntry2[key]) return false;
         }
         return true;
-    }
-
-    arrayDifference(array1: any[], array2: any[]): any[] {
-
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                array1.splice(key1, 1);
-            }
-        return array1;
     }
 
 }
