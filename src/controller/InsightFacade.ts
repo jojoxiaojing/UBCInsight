@@ -54,7 +54,7 @@ export default class InsightFacade implements IInsightFacade {
                             parseResult.push(m);
                         }
                         catch(err){
-                            //TODO what should we do here when we catch errors
+                            //do nothing here
                         }
                     }
                     //Log.trace("130:Begin to transform the data into Course Object");
@@ -95,18 +95,60 @@ export default class InsightFacade implements IInsightFacade {
                     fs.writeFileSync(__dirname + '/data.txt', JSON.stringify(dataInMemory), 'utf-8');
                     fullfill(s);
                 }).catch(function(err){
+                    throw new Error(err);
                 });
 
 
             }).catch(function (err:any) {
-                reject(err);
+                let s:InsightResponse = {
+                    code: 400,
+                    body: {"error":err.message}
+                };
+                reject(s);
             });
         });
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
-        // set dataSet equal null?
-        return null;
+        return new Promise<InsightResponse>((fullfill, reject) =>{
+            var exitOfFILE:Boolean = fs.existsSync(__dirname + '/data.txt');
+            let s: InsightResponse = {
+                code: 204,
+                body: {}
+            };
+            if(dataInMemory.id === null){
+                if(exitOfFILE) {
+                    fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
+                        dataInMemory = JSON.parse(data);
+                        if (dataInMemory.id == id) {
+                            dataInMemory.id = null;
+                            dataInMemory.data = [];
+                            fs.unlink(__dirname + '/data.txt');
+                            s.code = 204;
+                            fullfill(s);
+                        } else {
+                            s.code = 400;
+                            reject(s);
+                        }
+                    });
+                }else{
+                    s.code = 400;
+                    reject(s);
+                }
+            }else if(dataInMemory.id == id){
+                dataInMemory.id = null;
+                dataInMemory.data = [];
+                if(exitOfFILE){
+                    fs.unlink(__dirname + '/data.txt');
+                }
+                s.code = 204;
+                fullfill(s);
+            }else{
+                s.code = 400;
+                reject(s);
+            }
+
+        });
     }
 
     performQuery(query: any): Promise <InsightResponse> {
