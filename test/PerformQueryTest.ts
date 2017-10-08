@@ -40,7 +40,7 @@ describe("testPerformQuery", function() {
 
 
 
-    it("Catch invalid query", function () {
+/*    it("Catch invalid query", function () {
         return insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 2}}]}}
             ).then(function(response :InsightResponse){
             expect(response.code).to.equal(400);
@@ -48,14 +48,14 @@ describe("testPerformQuery", function() {
         }).catch(function (err) {
             expect(err).to.deep.equal('query invalid');
         });
-    });
+    });*/
 
 
 
 
 
 
-/*    it("Test performQuery, real query", function (done) {
+   it("Test performQuery, real query", function (done) {
         fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
             //insightF.addDataset("Courses",data);
             var testQuery = {WHERE: {AND: [{LT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
@@ -67,5 +67,5 @@ describe("testPerformQuery", function() {
 
             });
         });
-    });*/
+    });
 })
