@@ -36,7 +36,7 @@ describe("testAddData", function() {
                 var testQuery = {"WHERE": {GT: {courses_audit: 10}}, "OPTIONS": {"COLUMNS": ["courses_avg"]}}
                 insightF.performQuery(testQuery).then(function (value: any) {
                     let a = value;
-                    done();
+                    done()
                 }).catch(function (err) {
                     //log.error("Error: " + err);
                     expect.fail();
@@ -44,7 +44,24 @@ describe("testAddData", function() {
                 });
             });
         });
-
-
     });
+
+    it("Import empty.zip and store the data, it should return code 400", function (done) {
+
+
+        fs.readFile(__dirname + '/data/empty.zip', "base64", function (err: any, data: string) {
+
+            insightF.addDataset("Empty", data).then(function (value: any) {
+                    let a = value;
+                    expect(a.code).to.deep.equal(400);
+                    done()
+                }).catch(function (err) {
+                    Log.error("Error: " + err);
+                    expect.fail();
+                    done()
+                });
+            });
+        });
+
+
 })
