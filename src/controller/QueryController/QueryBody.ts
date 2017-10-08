@@ -12,7 +12,7 @@ export default class QueryBody {
 
     body: JSON;
     filters: IFilter[] = null;
-    options: any = null;
+    options: any;
 
     data: any[];
 
@@ -35,7 +35,6 @@ export default class QueryBody {
         var objJSON = this.getBody()
         for (var key in objJSON) {
             let val = objJSON[key];
-            // TODO: need to add more filter types
            // check if each filter is of type listed in AST, then push to the array of filters
             if (key === "OR") {
                 var orFilter = new FilterOR(val, this.data);
@@ -83,6 +82,10 @@ export default class QueryBody {
     getBody(): any {
         return this.body;
     }
+
+    getQueryOpt(): any {
+        return this.options;
+    }
     setBody(body: any): void {
         this.body = body;
     }
@@ -92,7 +95,7 @@ export default class QueryBody {
     }
 
     setQueryOpt(options: any) {
-        this.options = options;
+        this.options = new QueryOptions(options, this.data);
     }
 
 
@@ -104,8 +107,7 @@ export default class QueryBody {
         }
 
        // apply options to filtered results
-        var opt = new QueryOptions(this.options, results)
-        return opt.applyOptions();
+        return this.getQueryOpt().applyOptions();
     }
 
 }

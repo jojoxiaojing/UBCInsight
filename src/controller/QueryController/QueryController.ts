@@ -36,6 +36,7 @@ export default class QueryController implements IQueryController{
             this.parseQueryBody();
             this.getQueryBody().processQueryBody();
             this.parseQueryOptions();
+            this.getQueryBody().getQueryOpt().processQueryOptions();
         } else throw new Error('query invalid')
     }
 

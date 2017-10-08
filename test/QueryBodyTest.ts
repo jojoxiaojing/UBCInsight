@@ -104,7 +104,8 @@ describe("QueryBody", function () {
 
     it("Test QueryBody Constructor with no valid body", function () {
 
-       // expect.fail(qBBroken.processQueryBody());
+       //expect.fail(qBBroken.processQueryBody());
+       //expect(qBBroken.processQueryBody()).to.throw(Error);
 
         //expect(qBBroken.checkQueryValid()).to.deep.equal(false);
         //let countFilters = qBBroken.filters;
@@ -115,18 +116,6 @@ describe("QueryBody", function () {
         qB.processQueryBody();
         let firstElement = qB.filters[0];
         expect(firstElement instanceof FilterOR).to.deep.equal(true);
-    })
-
-    it("Test QueryBody filter:  OR(..., AND(..., ....))", function () {
-        qB.processQueryBody();
-        let output = qB.applyFilter();
-        expect(output.length).to.deep.equal(3);
-    })
-
-    it("Test QueryBody filter:  AND(..., OR(..., ....))", function () {
-        qB2.processQueryBody();
-        let output = qB2.applyFilter();
-        expect(output.length).to.deep.equal(3);
     })
 
 });

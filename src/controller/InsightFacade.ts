@@ -155,6 +155,7 @@ export default class InsightFacade implements IInsightFacade {
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //Log.trace("300: Check if data is in memory, otherwise read data from disk");
+            try {
                 if (dataInMemory.id === null) {
                     //Log.trace("301: Begin reading file");
                     fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
@@ -164,7 +165,7 @@ export default class InsightFacade implements IInsightFacade {
                         try {
                             queryController.processQuery();
                         } catch (err) {
-                            reject(err)
+                            reject(err);
                         }
                         let s: InsightResponse = {code: 204, body: {}};
                         s.body = queryController.getQueryBody().applyFilter();
@@ -178,13 +179,17 @@ export default class InsightFacade implements IInsightFacade {
                     try {
                         queryController.processQuery();
                     } catch (err) {
-                        reject(err)
+                        reject(err);
                     }
                     //queryController.getQueryOpt().applyOptions();
                     let s: InsightResponse = {code: 204, body: {}};
                     s.body = queryController.getQueryBody().applyFilter();
                     fullfill(s);
                 }
+            } catch (err){
+                reject(err);
+            }
+
         });
     }
 

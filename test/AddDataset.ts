@@ -2,6 +2,7 @@
 import {expect} from 'chai';
 import Log from "../src/Util";
 import InsightFacade from "../src/controller/InsightFacade";
+import {InsightResponse} from "../src/controller/IInsightFacade";
 var fs = require("fs");
 
 
@@ -46,22 +47,15 @@ describe("testAddData", function() {
         });
     });
 
-    it("Import empty.zip and store the data, it should return code 400", function (done) {
 
-
-        fs.readFile(__dirname + '/data/empty.zip', "base64", function (err: any, data: string) {
-
-            insightF.addDataset("Empty", data).then(function (value: any) {
-                    let a = value;
-                    expect(a.code).to.deep.equal(400);
-                    done()
-                }).catch(function (err) {
-                    Log.error("Error: " + err);
-                    expect.fail();
-                    done()
-                });
-            });
+    it("Import empty.zip and store the data, it should return code 400", function () {
+        var that = this;
+        return insightF.addDataset('courses', 'blah blah blah').then(function (response: InsightResponse) {
+            expect.fail();
+        }).catch(function (response: InsightResponse) {
+            //console.log(response.code)
+            expect(response.code).to.equal(400);
         });
-
+    });
 
 })

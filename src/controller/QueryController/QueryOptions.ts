@@ -6,7 +6,6 @@ export default class QueryOptions {
 
     constructor(options: any, data: any[]) {
         this.options = options;
-        this.parseQueryOptions();
         this.data = data;
     }
 
@@ -25,7 +24,6 @@ export default class QueryOptions {
                     this.columns.push(element);
                 }
             }
-            //remove last comma and add }
             if (key === "ORDER") {
                 let val = objJSON[key];
                 this.order = val;
@@ -49,6 +47,9 @@ export default class QueryOptions {
 
     // apply options to the currently stored data set
     applyOptions(): any[] {
+        if (this.columns.length == 0) {
+            this.parseQueryOptions();
+        }
         var tempData: any [] = [];
         for (let element of this.getData()) {
             let tempObj: any = {};

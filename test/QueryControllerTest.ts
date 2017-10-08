@@ -50,18 +50,15 @@ describe("QueryController", function () {
     });
 
     it("Test QueryController constructor with Options", function () {
+        qCComplete.processQuery();
         let out = qCComplete.getQuery();
-        qCComplete.parseQueryBody();
-        qCComplete.parseQueryOptions();
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
         expect(out).to.deep.equal(testQueryComplete);
-        qCComplete.getQueryBody().processQueryBody();
         let out2 = qCComplete.getQueryBody();
+        expect(out2.getQueryOpt().options.COLUMNS.length).to.deep.equal(2)
         let out3 = out2.applyFilter();
-        expect(out2.options).to.have.property("COLUMNS")
         expect(out3[0].hasOwnProperty("courses_avg")).to.deep.equal(true)
-        //expect(qC.getHasOptions()).deep.equal(true);
     });
 
     it("Test QueryController constructor error", function () {
