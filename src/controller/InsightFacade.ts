@@ -165,7 +165,7 @@ export default class InsightFacade implements IInsightFacade {
                         try {
                             queryController.processQuery();
                         } catch (err) {
-                            reject(err);
+                            reject({code: 400, body: {"error":err}});
                         }
                         let s: InsightResponse = {code: 204, body: {}};
                         s.body = queryController.getQueryBody().applyFilter();
@@ -179,17 +179,18 @@ export default class InsightFacade implements IInsightFacade {
                     try {
                         queryController.processQuery();
                     } catch (err) {
-                        reject(err);
+                        reject({code: 400, body: {"error":err}});
                     }
                     //queryController.getQueryOpt().applyOptions();
-                    let s: InsightResponse = {code: 204, body: {}};
+                    let s: InsightResponse = {code: 200, body: {}};
                     s.body = queryController.getQueryBody().applyFilter();
                     fullfill(s);
                 }
             } catch (err){
-                reject(err);
+                reject({code: 424, body: {"error":err}});
             }
 
+        }).catch(function(){
         });
     }
 
