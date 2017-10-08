@@ -47,15 +47,16 @@ describe("QueryController", function () {
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
         expect(out).to.deep.equal(testQueryObject);
-        expect(qC.getHasWhere()).deep.equal(true);
-        //expect(qC.getHasOptions()).deep.equal(true);
     });
 
     it("Test QueryController constructor with Options", function () {
         let out = qCComplete.getQuery();
+        qCComplete.parseQueryBody();
+        qCComplete.parseQueryOptions();
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
         expect(out).to.deep.equal(testQueryComplete);
+        qCComplete.getQueryBody().processQueryBody();
         let out2 = qCComplete.getQueryBody();
         let out3 = out2.applyFilter();
         expect(out2.options).to.have.property("COLUMNS")
@@ -73,10 +74,13 @@ describe("QueryController", function () {
 
 
     it("Test QueryController constructor, test attributes properly initialized", function () {
+        qC.parseQueryBody();
         expect(qC.getQueryBody().getBody()).to.have.property("GT");
     });
 
     it("Test QueryBody Constructor, QueryObj", function () {
+        qC.parseQueryBody()
+        qC.getQueryBody().processQueryBody();
         let qB = qC.getQueryBody();
         //qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;

@@ -8,12 +8,11 @@ import Log from "../src/Util";
 import {InsightResponse} from "../src/controller/IInsightFacade";
 import InsightFacade from "../src/controller/InsightFacade";
 var fs = require("fs");
-/*
 import chai = require('chai');
 import chaiHttp = require('chai-http');
 import Response = ChaiHttp.Response;
 import restify = require('restify');
-*/
+
 
 describe("EchoSpec", function () {
 
@@ -74,7 +73,7 @@ describe("EchoSpec", function () {
     });
 
     //free test to boost coverage of starter components
-    /*it("Test Server", function() {
+    it("Test Server", function() {
 
         // Init
         chai.use(chaiHttp);
@@ -112,7 +111,7 @@ describe("EchoSpec", function () {
         }).catch(function(err) {
             expect.fail();
         });
-    });*/
+    });
 
 });
 

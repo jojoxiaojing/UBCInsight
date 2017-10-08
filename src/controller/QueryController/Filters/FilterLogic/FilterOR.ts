@@ -11,16 +11,24 @@ import FilterNOT from "./FilterNOT";
 export default class FilterOR implements IFilterLogic{
     type: "FilterLogic";
     subType: "FilterOR";
+    // input array of JSON containing subnodes
+    filter: any;
     filters: IFilter[];
-
     data: any[];
 
     // potentially need to check beforehand if there is a single key-value pair,
     // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
+        this.filter = filter;
         this.filters = [];
-        this.parseLogicFilters(filter);
+        //this.parseLogicFilters(filter);
+    }
+
+    processQuery(): void {
+        if (this.checkQueryValid()) {
+            this.parseLogicFilters(this.filter);
+        } else throw new Error('query invalid')
     }
 
     // recursively parse JSON subnodes of logic filter
@@ -32,24 +40,31 @@ export default class FilterOR implements IFilterLogic{
         // otherwise the object is JSON, e.g. GT/LT/EQ
         else {
             for (var key in objJSON) {
-
                 var val = objJSON[key];
                 if (key === "OR") {
                     var orFilter = new FilterOR(val, this.data);
+                    orFilter.processQuery();
                     this.filters.push(orFilter);
-                    this.parseLogicFilters(orFilter);
                 } else if (key === "AND") {
                     var andFilter = new FilterAND(val, this.data);
+                    andFilter.processQuery();
                     this.filters.push(andFilter);
-                    this.parseLogicFilters(andFilter);
                 } else if (key === "GT") {
-                    this.filters.push(new FilterGT(val, this.data));
+                    var gtFilter = new FilterGT(val, this.data);
+                    gtFilter.processQuery();
+                    this.filters.push(gtFilter);
                 } else if (key === "LT") {
-                    this.filters.push(new FilterLT(val, this.data));
+                    var ltFilter = new FilterLT(val, this.data);
+                    ltFilter.processQuery();
+                    this.filters.push(ltFilter);
                 } else if (key === "EQ") {
-                    this.filters.push(new FilterEQ(val, this.data));
+                    var eqFilter  = new FilterEQ(val, this.data);
+                    eqFilter.processQuery();
+                    this.filters.push(eqFilter);
                 } else if (key === "IS") {
-                    this.filters.push(new FilterIS(val, this.data));
+                    var isFilter = new FilterIS(val, this.data)
+                    isFilter.processQuery();
+                    this.filters.push(isFilter);
                 }
             }
         }
@@ -62,10 +77,12 @@ export default class FilterOR implements IFilterLogic{
         }
     }
 
-
     // filter data
     // keep passing the data through each filter iteratively for and
     applyFilter(): any[] {
+        if (this.filters.length == 0) {
+            this.parseLogicFilters(this.filter);
+        }
         var dataFiltered: any[] = [];
         return this.applyFilterHelper(this.filters, dataFiltered);
     }
@@ -75,14 +92,6 @@ export default class FilterOR implements IFilterLogic{
 
         let element: any;
         for (element of filters) {
-            // unfortunately had to do this to construct a key-value pair - the input to comparison filter constructors
-            // this is only sed in FilterComparison type objects, where the first element is data field, the second is number
-            let elementNode1Value = Object.keys(element).map((k) => element[k])[1]
-            let elementNode2Value = Object.keys(element).map((k) => element[k])[2]
-
-            // do this to reference object key by variable instance
-            let filterObj:any = {};
-            filterObj[elementNode1Value] = elementNode2Value;
 
             if (element instanceof FilterGT) {
                 let tempResults = element.applyFilter();
@@ -97,12 +106,10 @@ export default class FilterOR implements IFilterLogic{
                 let tempResults = element.applyFilter();
                 results = results.concat(tempResults);
             } else if (element instanceof FilterOR) {
-                //let arrayValues = Object.values(element).slice(1)[0];
-                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
+                let arrayValues = element.filters;
                 results = results.concat(this.applyFilterHelper(arrayValues, []));
             } else if (element instanceof FilterAND) {
-                //let arrayValues = Object.values(element).slice(1)[0];
-                let arrayValues = Object.keys(element).map((k) => element[k]).slice(1)[0];
+                let arrayValues = element.filters;
                 //elelment is of type FilterAND so apply that class's filter function
                 results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             } else if (element instanceof FilterNOT) {
@@ -137,7 +144,6 @@ export default class FilterOR implements IFilterLogic{
     }
 
     arrayDifference(array1: any[], array2: any[]): any[] {
-
         var len1 = array1.length;
         var len2 = array2.length;
         for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
@@ -145,6 +151,20 @@ export default class FilterOR implements IFilterLogic{
                 array1.splice(key1, 1);
             }
         return array1;
+    }
+
+    checkQueryValid(): boolean {
+        for (let element of this.filter) {
+            let keys = Object.keys(element);
+            if (keys.length > 1) return false;
+            else {
+                let key = keys[0];
+                if (key !== "AND" && key !== "OR" && key !== "NOT" && key !== "IS" && key !== "EQ" && key !== "GT" && key !== "LT") {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 

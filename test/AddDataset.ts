@@ -33,7 +33,7 @@ describe("testAddData", function() {
             insightF.addDataset("Courses", data).then(function (value: any) {
                 let a = value;
                 expect(a.code).to.deep.equal(204);
-                var testQuery = {"WHERE": {GT: {courses_audit: 10}}}
+                var testQuery = {"WHERE": {GT: {courses_audit: 10}}, "OPTIONS": {"COLUMNS": ["courses_avg"]}}
                 insightF.performQuery(testQuery).then(function (value: any) {
                     let a = value;
                     done();

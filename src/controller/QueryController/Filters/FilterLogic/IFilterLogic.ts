@@ -9,6 +9,6 @@ export interface IFilterLogic extends IFilter {
 
     parseLogicFilters(objJSON: any): void;
 
-    // actual logical filter model
-    applyFilter(): void;
+    checkQueryValid(): boolean;
+    applyFilter(): any[];
 }

@@ -4,6 +4,7 @@ import {IFilterComparison} from "./IFilterComparison";
 export default class FilterLT implements IFilterComparison {
     type: "FilterComparison"
     subType: "FilterLT"
+    filter: any;
     subNode1: string;
     subNode2: number;
 
@@ -13,21 +14,23 @@ export default class FilterLT implements IFilterComparison {
     // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
+        this.filter = filter;
+    }
 
-            // this is a workaround, as object passed to filter contains EQ
-            let keys = Object.keys(filter);
-            //let vals = Object.values(filter);
-
-            let vals = Object.keys(filter).map((k) => filter[k]);
-
+    processQuery(): void {
+        if (this.checkQueryValid()) {
+            let keys = Object.keys(this.filter);
+            let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
             this.subNode1 = keys[0];
             this.subNode2 = vals[0];
-
+        } else throw new Error('query invalid')
     }
 
     // check if the subnode types are consistent with AST
-    isValidComparisonFilter(): boolean {
-        if (this.isValidComparisonString() && typeof this.subNode2 === "number") {
+    checkQueryValid(): boolean {
+        let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
+        let val = vals[0]
+        if (this.isValidComparisonString() && typeof val === "number") {
             return true;
         }
         else {
@@ -37,8 +40,12 @@ export default class FilterLT implements IFilterComparison {
 
     // helper to check if the first subNode in the comparison is a valid key of type string
     isValidComparisonString(): boolean {
-        if (typeof this.subNode1 === "string" && (this.subNode1 === "courses_avg" ||
-                this.subNode1 === "courses_pass" || this.subNode1 === "courses_fail" || this.subNode1 === "courses_audit")) {
+        let keys = Object.keys(this.filter);
+        let val = keys[0];
+        if (typeof val === "string" && (val === "courses_avg" ||
+                val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit"
+                || val  === "courses_dept" || val  === "courses_instructor" || val  === "courses_id"
+                || val === "courses_uuid")) {
             return true;
         } else return false;
     }

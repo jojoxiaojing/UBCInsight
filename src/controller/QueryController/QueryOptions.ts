@@ -10,6 +10,12 @@ export default class QueryOptions {
         this.data = data;
     }
 
+    processQueryOptions(): void {
+        if (this.checkOptionsValid()) {
+            this.parseQueryOptions();
+        } else throw new Error('query invalid')
+    }
+
     parseQueryOptions(): void {
         var objJSON = this.getOptions();
         for (var key in objJSON) {
@@ -25,7 +31,20 @@ export default class QueryOptions {
                 this.order = val;
             }
         }
+    }
 
+    // options are correct only if it includes valid column names and order is one of the columns listed
+    checkOptionsValid(): boolean {
+        for (let element of this.columns) {
+            if (element !== "courses_avg" &&
+                element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
+                && element !== "courses_dept" && element !== "courses_instructor" && element !== "courses_id"
+                && element !== "courses_uuid") {
+                return false;
+            }
+            if (this.columns.indexOf(this.order) == -1) return false;
+        }
+        return true;
     }
 
     // apply options to the currently stored data set
@@ -56,6 +75,5 @@ export default class QueryOptions {
     getData(): any {
         return this.data;
     }
-
 
 }
