@@ -28,34 +28,36 @@ describe("testPerformQuery", function() {
 
 
 
-    it("Test performQuery", function () {
+/*
+    it("Test performQuery, broken: without where/options", function () {
 
-        insightF.performQuery({OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}).then(function(value:any){
+       return insightF.performQuery({OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}).then(function(value:any){
             expect.fail();
-        }).catch(function(err:any){
-            expect(err).to.deep.equal('query invalid');
+        }).catch(function(response:any){
+            expect(response.code).to.equal(400);
         });
 
     });
+*/
 
+/*    it("Test performQuery", function (done) {
 
-
-/*    it("Catch invalid query", function () {
-        return insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 2}}]}}
-            ).then(function(response :InsightResponse){
-            expect(response.code).to.equal(400);
-            expect.fail();
-        }).catch(function (err) {
-            expect(err).to.deep.equal('query invalid');
+        insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 30}}, {OR: [{GT: {courses_fail: 10}},
+            {GT: {courses_pass: 50}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+        ).then(function(response: InsightResponse){
+                var a = response;
+                done()
+            //expect.fail();
+        }).catch(function(response: InsightResponse){
+            //expect(response.code).to.equal(200);
         });
+
     });*/
 
 
 
 
-
-
-   it("Test performQuery, real query", function (done) {
+  it("Test performQuery, real query", function (done) {
         fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
             //insightF.addDataset("Courses",data);
             var testQuery = {WHERE: {AND: [{LT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}

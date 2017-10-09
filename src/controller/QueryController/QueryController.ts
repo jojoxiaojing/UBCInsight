@@ -25,12 +25,14 @@ export default class QueryController implements IQueryController{
     constructor(query: any, data: any[]) {
         this.query = query;
         this.data = data;
-        //this.parseQueryBody();
-        //this.parseQueryOptions();
+       // this.parseQueryBody();
+     //   this.parseQueryOptions();
         //this.data = new MockData().getData();
     }
 
+    //TODO parsing will be done inside the constructor. processQuery will recursively check if nodes are valid
     // parse query: body and options if the query contains WHERE and OPTIONS fields
+    // will still need to check query string for WHERE and OPTIONS
     processQuery(): void {
         if (this.checkQueryValid()) {
             this.parseQueryBody();
