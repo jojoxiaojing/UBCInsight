@@ -58,7 +58,7 @@ export default class InsightFacade implements IInsightFacade {
                         }
                     }
                     //Log.trace("130:Begin to transform the data into Course Object");
-                    
+
                     for (let i of parseResult){
                         let courseData:Array<any> = i.result;
                         for(let c of courseData){
@@ -91,7 +91,7 @@ export default class InsightFacade implements IInsightFacade {
                         body: {dataStore: dataInMemory}
                     };
                     //store the data into data/data.json
-                   // Log.trace(__dirname);
+                    // Log.trace(__dirname);
                     fs.writeFileSync(__dirname + '/data.txt', JSON.stringify(dataInMemory), 'utf-8');
                     fullfill(s);
                 }).catch(function(err){
