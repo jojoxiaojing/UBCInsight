@@ -6,11 +6,12 @@ import FilterLT from "./Filters/FilterComparison/FilterLT";
 import FilterEQ from "./Filters/FilterComparison/FilterEQ";
 import QueryOptions from "./QueryOptions";
 import FilterIS from "./Filters/FilterComparison/FilterIS";
+import FilterNOT from "./Filters/FilterLogic/FilterNOT";
 
 export default class QueryBody {
 
     body: JSON;
-    filters: IFilter[];
+    filters: IFilter[] = null;
     options: any;
 
     data: any[];
@@ -19,7 +20,14 @@ export default class QueryBody {
         this.setBody(body);
         this.filters = [];
         this.data = data;
-        this.parseQueryFilters(this.body);
+        //this.parseQueryFilters(this.body);
+    }
+
+    // only parse JSON for query body if it passes validity check
+    processQueryBody(): void {
+        if (this.checkQueryValid()) {
+            this.parseQueryFilters(this.filters);
+        } else throw new Error('query invalid')
     }
 
     // parse through JSON stored in query and construct the QueryOptions object
@@ -27,30 +35,56 @@ export default class QueryBody {
         var objJSON = this.getBody()
         for (var key in objJSON) {
             let val = objJSON[key];
-            // TODO: need to add more filter types
            // check if each filter is of type listed in AST, then push to the array of filters
             if (key === "OR") {
                 var orFilter = new FilterOR(val, this.data);
+                orFilter.processQuery();
                 this.filters.push(orFilter);
-                orFilter.parseLogicFilters(orFilter);
             } else if (key === "AND"){
                 var andFilter = new FilterAND(val, this.data);
+                andFilter.processQuery();
                 this.filters.push(andFilter);
-                andFilter.parseLogicFilters(andFilter);
-            } else if (key === "GT"){
-                this.filters.push(new FilterGT(val, this.data));
+            } else if (key === "NOT") {
+                var notFilter = new FilterNOT(val, this.data);
+                notFilter.processQuery();
+                this.filters.push(notFilter);;
+            }else if (key === "GT"){
+                var gtFilter = new FilterGT(val, this.data);
+                gtFilter.processQuery();
+                this.filters.push(gtFilter);
             } else if (key === "LT"){
-                this.filters.push(new FilterLT(val, this.data));
+                var ltFilter = new FilterLT(val, this.data);
+                ltFilter.processQuery();
+                this.filters.push(ltFilter);
             } else if (key === "EQ"){
-                this.filters.push(new FilterEQ(val, this.data));
+                var eqFilter = new FilterEQ(val, this.data);
+                eqFilter.processQuery();
+                this.filters.push(eqFilter);
             } else if (key === "IS") {
-                this.filters.push(new FilterIS(val, this.data));
+                var isFilter = new FilterIS(val, this.data);
+                isFilter.processQuery();
+                this.filters.push(isFilter);
             }
         }
     }
 
+    // query is valid only if it contains query keywords specified in EBNF
+    checkQueryValid(): boolean {
+        var objJSON = this.getBody()
+        for (var key in objJSON) {
+            if (key !== "AND" && key !== "OR" && key!== "NOT" && key !== "IS" && key !== "EQ" && key !== "GT" && key !== "LT") {
+                return false;
+            }
+        }
+        return true;
+    }
+
     getBody(): any {
         return this.body;
+    }
+
+    getQueryOpt(): any {
+        return this.options;
     }
     setBody(body: any): void {
         this.body = body;
@@ -61,7 +95,7 @@ export default class QueryBody {
     }
 
     setQueryOpt(options: any) {
-        this.options = options;
+        this.options = new QueryOptions(options, this.data);
     }
 
 
@@ -73,8 +107,7 @@ export default class QueryBody {
         }
 
        // apply options to filtered results
-        var opt = new QueryOptions(this.options, results)
-        return opt.applyOptions();
+        return this.getQueryOpt().applyOptions();
     }
 
 }

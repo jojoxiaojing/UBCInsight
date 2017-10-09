@@ -2,4 +2,6 @@
 export interface IFilter {
     type: "FilterComparison" | "FilterLogic";
     data: any[];
+    checkQueryValid(): boolean;
+    applyFilter(): any[];
 }

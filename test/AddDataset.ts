@@ -33,6 +33,7 @@ describe("testAddData", function() {
             insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
                 let a = value;
                 expect(a.code).to.deep.equal(204);
+<<<<<<< HEAD
                 let m = fs.existsSync('./src/controller/data.txt');
                 expect(m).to.deep.equal(true);
                 let dataID = insightF.getValue().id;
@@ -42,6 +43,11 @@ describe("testAddData", function() {
                     expect(m.code).to.deep.equal(204);
                     let ifFileExist = fs.existsSync('./src/controller/data.txt');
                     expect(ifFileExist).to.deep.equal(false);
+=======
+                var testQuery = {"WHERE": {GT: {courses_audit: 10}}, "OPTIONS": {"COLUMNS": ["courses_avg"]}}
+                insightF.performQuery(testQuery).then(function (value: any) {
+                    let a = value;
+>>>>>>> 880c8eff2d10636074af8e86254eb6ea3f550714
                     done()
                 }).catch(function (value: InsightResponse) {
                     expect.fail();
@@ -54,6 +60,7 @@ describe("testAddData", function() {
         });
     });
 
+<<<<<<< HEAD
     it("Import course.zip ，store the data and remove unsuccessfully", function (done) {
 
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
@@ -82,6 +89,18 @@ describe("testAddData", function() {
 
     it("Import empty.zip, it should return code 400", function (done) {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {
+=======
+
+    it("Import empty.zip and store the data, it should return code 400", function () {
+        var that = this;
+        return insightF.addDataset('courses', 'blah blah blah').then(function (response: InsightResponse) {
+            expect.fail();
+        }).catch(function (response: InsightResponse) {
+            //console.log(response.code)
+            expect(response.code).to.equal(400);
+        });
+    });
+>>>>>>> 880c8eff2d10636074af8e86254eb6ea3f550714
 
             insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
 

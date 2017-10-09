@@ -4,9 +4,32 @@ import FilterGT from "../src/controller/QueryController/Filters/FilterComparison
 import FilterLT from "../src/controller/QueryController/Filters/FilterComparison/FilterLT";
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
 import FilterAND from "../src/controller/QueryController/Filters/FilterLogic/FilterAND";
-import DataEntry from "../src/controller/DataEntry";
 import FilterIS from "../src/controller/QueryController/Filters/FilterComparison/FilterIS";
 import FilterNOT from "../src/controller/QueryController/Filters/FilterLogic/FilterNOT";
+
+class DataEntry {
+    courses_dept: string;
+    courses_id: string;
+    courses_avg: number;
+    courses_instructor: string;
+    courses_pass: number;
+    courses_fail: number;
+    courses_audit: number;
+    courses_uuid: string;
+
+    constructor(crs_dept: string, crs_id: string, crs_avg: number, crs_inst: string,
+                crs_ps: number, crs_fl: number, crs_aud: number, crs_uuid: string) {
+        this.courses_dept = crs_dept;
+        this.courses_id = crs_id;
+        this.courses_avg = crs_avg;
+        this.courses_instructor = crs_inst;
+        this.courses_pass = crs_ps;
+        this.courses_fail = crs_fl;
+        this.courses_audit = crs_aud;
+        this.courses_uuid = crs_uuid;
+    }
+
+}
 
 export default class MockData {
     data: DataEntry[]=[];
@@ -105,32 +128,41 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
 
 
     it("Test FilterEQ on course_avg", function () {
+        filterEQ.processQuery();
+        expect(filterEQ.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterEQ.applyFilter();
        // expect(queryResponse[0].courses_instructor).to.deep.equal("Steve");
         expect(queryResponse.length).to.deep.equal(1);
     });
 
     it("Test FilterGT on course_avg", function () {
+        filterGT.processQuery();
+        expect(filterGT.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterGT.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Test FilterLT on course_avg", function () {
+        filterLT.processQuery();
+        expect(filterLT.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterLT.applyFilter();
         expect(queryResponse.length).to.deep.equal(1);
     });
 
     it("Test FilterOR on course_avg", function () {
+        filterOR.processQuery();
         let queryResponse:any[] = filterOR.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
     });
 
     it("Test FilterOR with 3 choices, other attributes", function () {
+        filterORMultiple.processQuery();
         let queryResponse:any[] = filterORMultiple.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Test FilterOR nested", function () {
+        filterORNested.processQuery();
         let queryResponse:any[] = filterORNested.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
@@ -150,6 +182,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     });
 
     it("Filter AND", function () {
+        filterAND.processQuery();
         let queryResponse = filterAND.applyFilter();
         expect(queryResponse.length).to.deep.equal(1);
     });
@@ -173,6 +206,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
 
 
     it("Filter IS", function () {
+        filterIS.processQuery();
         let queryResponse = filterIS.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
     });

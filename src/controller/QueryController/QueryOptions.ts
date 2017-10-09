@@ -6,8 +6,13 @@ export default class QueryOptions {
 
     constructor(options: any, data: any[]) {
         this.options = options;
-        this.parseQueryOptions();
         this.data = data;
+    }
+
+    processQueryOptions(): void {
+        if (this.checkOptionsValid()) {
+            this.parseQueryOptions();
+        } else throw new Error('query invalid')
     }
 
     parseQueryOptions(): void {
@@ -19,17 +24,32 @@ export default class QueryOptions {
                     this.columns.push(element);
                 }
             }
-            //remove last comma and add }
             if (key === "ORDER") {
                 let val = objJSON[key];
                 this.order = val;
             }
         }
+    }
 
+    // options are correct only if it includes valid column names and order is one of the columns listed
+    checkOptionsValid(): boolean {
+        for (let element of this.columns) {
+            if (element !== "courses_avg" &&
+                element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
+                && element !== "courses_dept" && element !== "courses_instructor" && element !== "courses_id"
+                && element !== "courses_uuid") {
+                return false;
+            }
+            if (this.columns.indexOf(this.order) == -1) return false;
+        }
+        return true;
     }
 
     // apply options to the currently stored data set
     applyOptions(): any[] {
+        if (this.columns.length == 0) {
+            this.parseQueryOptions();
+        }
         var tempData: any [] = [];
         for (let element of this.getData()) {
             let tempObj: any = {};
@@ -56,6 +76,5 @@ export default class QueryOptions {
     getData(): any {
         return this.data;
     }
-
 
 }

@@ -6,12 +6,9 @@ export interface IFilterComparison extends IFilter {
     subType: "FilterEQ" | "FilterGT" | "FilterLT" | "FilterIS";
     data: any[];
     // check if the subnode types are consistent with AST
-    isValidComparisonFilter(): boolean;
+    checkQueryValid(): boolean;
 
-    // helper to check if the first subNode in the comparison is a valid key of type string
-    isValidComparisonString(): boolean;
-
-    // actual comparison filter model
-    applyFilter(): any[]
+    checkQueryValid(): boolean;
+    applyFilter(): any[];
 
 }
