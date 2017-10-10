@@ -25,12 +25,6 @@ export default class QueryBody {
         if (this.checkQueryValid()) this.valid = true;
     }
 
-    // only parse JSON for query body if it passes validity check
-/*    processQueryBody(): void {
-        if (this.checkQueryValid()) {
-            this.parseQueryFilters(this.filters);
-        } else throw new Error('query invalid')
-    }*/
 
     // parse through JSON stored in query and construct the QueryOptions object
     parseQueryFilters(filters: any): void {
@@ -63,7 +57,6 @@ export default class QueryBody {
         }
     }
 
-    // TODO: check no fields are missing recursively
     checkQueryValid(): boolean {
         var bodyKeys = this.getBody()
         // query is valid only if it contains query keywords specified in EBNF
@@ -72,7 +65,7 @@ export default class QueryBody {
                 return false;
             }
         }
-        // value of each filter key must be a nonempt array
+        // value of each filter key must be a non-empty array
         var key:string;
         for (key of bodyKeys) {
             let val = this.options[key];

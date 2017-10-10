@@ -31,7 +31,6 @@ export default class FilterGT implements IFilterComparison {
         }
     }
     // helper to check if the first subNode in the comparison is a valid key of type string
-    // helper to check if the first subNode in the comparison is a valid key of type string
     isValidComparisonString(): boolean {
         let val = this.subNode1;
         if (!(typeof val === "string" && (val === "courses_avg" ||

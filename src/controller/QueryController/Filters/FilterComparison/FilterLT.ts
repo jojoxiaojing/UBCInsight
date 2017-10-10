@@ -1,4 +1,3 @@
-
 import {IFilterComparison} from "./IFilterComparison";
 
 export default class FilterLT implements IFilterComparison {
@@ -11,8 +10,6 @@ export default class FilterLT implements IFilterComparison {
 
     data: any[];
 
-    // potential need to check beforehand if there is a single key-value pair,
-    // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
         this.filter = filter;

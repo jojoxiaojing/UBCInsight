@@ -17,8 +17,6 @@ export default class FilterNOT implements IFilterLogic{
 
     data: any[];
 
-    // potentially need to check beforehand if there is a single key-value pair,
-    // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
         // input array of JSON containing subnodes
@@ -69,9 +67,6 @@ export default class FilterNOT implements IFilterLogic{
     }
 
 
-    // not sure if there is need for parsing the data at all
-    // filter data
-    // pass results in the constructor
     applyFilter(): any[] {
         if (this.filters.length == 0) {
             this.parseLogicFilters(this.filter);
