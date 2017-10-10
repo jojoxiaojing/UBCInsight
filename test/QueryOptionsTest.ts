@@ -24,7 +24,6 @@ describe("QueryOptions", function () {
 
 
     it("Test QueryOptions Constructor/parseQueryOptions", function () {
-        queryOpt.parseQueryOptions();
         expect(queryOpt.columns.length).to.deep.equal(2);
         expect(queryOpt.order).to.deep.equal("courses_avg");
         expect(queryOpt.checkOptionsValid()).to.deep.equal(true);

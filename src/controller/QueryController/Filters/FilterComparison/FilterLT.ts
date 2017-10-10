@@ -7,6 +7,7 @@ export default class FilterLT implements IFilterComparison {
     filter: any;
     subNode1: string;
     subNode2: number;
+    valid: boolean = false;
 
     data: any[];
 
@@ -15,20 +16,25 @@ export default class FilterLT implements IFilterComparison {
     constructor(filter: any, data: any[]) {
         this.data = data;
         this.filter = filter;
+        let keys = Object.keys(this.filter);
+        let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
+        this.subNode1 = keys[0];
+        this.subNode2 = vals[0];
+        if (this.checkQueryValid()) this.valid = true;
     }
 
-    processQuery(): void {
+/*    processQuery(): void {
         if (this.checkQueryValid()) {
             let keys = Object.keys(this.filter);
             let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
             this.subNode1 = keys[0];
             this.subNode2 = vals[0];
         } else throw new Error('query invalid')
-    }
+    }*/
 
     // check if the subnode types are consistent with AST
     checkQueryValid(): boolean {
-        let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
+        let vals = Object.keys(this.filter).map((k) => this.filter[k]);
         let val = vals[0]
         if (this.isValidComparisonString() && typeof val === "number") {
             return true;
@@ -63,5 +69,9 @@ export default class FilterLT implements IFilterComparison {
             }
         }
         return dataFiltered;
+    }
+
+    isValid(): boolean {
+        return this.valid;
     }
 }

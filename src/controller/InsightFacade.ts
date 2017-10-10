@@ -180,11 +180,7 @@ export default class InsightFacade implements IInsightFacade {
                         dataInMemory = JSON.parse(data);
                         let tempData = dataInMemory.data;
                         var queryController = new QueryController(query, tempData);
-                        try {
-                            queryController.processQuery();
-                        } catch (err) {
-                            reject({code: 400, body: {"error":err}});
-                        }
+                        if (!queryController.isValid()) reject({code: 400, body: {"error":"query invalid"}});
                         let s: InsightResponse = {code: 204, body: {}};
                         s.body = queryController.getQueryBody().applyFilter();
                         fullfill(s);
@@ -194,11 +190,8 @@ export default class InsightFacade implements IInsightFacade {
 
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
-                    try {
-                        queryController.processQuery();
-                    } catch (err) {
-                        reject({code: 400, body: {"error":err}});
-                    }
+                    if (!queryController.isValid()) reject({code: 400, body: {"error":"query invalid"}});
+
                     //queryController.getQueryOpt().applyOptions();
                     let s: InsightResponse = {code: 200, body: {}};
                     s.body = queryController.getQueryBody().applyFilter();

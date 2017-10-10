@@ -51,10 +51,7 @@ describe("testPerformQuery", function() {
         }).catch(function(response: InsightResponse){
             //expect(response.code).to.equal(200);
         });
-
     });*/
-
-
 
 
   it("Test performQuery, real query", function (done) {

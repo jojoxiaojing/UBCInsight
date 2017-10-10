@@ -15,6 +15,7 @@ export default class FilterOR implements IFilterLogic{
     filter: any;
     filters: IFilter[];
     data: any[];
+    valid: boolean = false;
 
     // potentially need to check beforehand if there is a single key-value pair,
     // otherwise throw an error before the constructor is called
@@ -22,14 +23,17 @@ export default class FilterOR implements IFilterLogic{
         this.data = data;
         this.filter = filter;
         this.filters = [];
-        //this.parseLogicFilters(filter);
+        this.parseLogicFilters(filter);
+        if (this.checkQueryValid()) this.valid = true;
     }
 
+/*
     processQuery(): void {
         if (this.checkQueryValid()) {
             this.parseLogicFilters(this.filter);
         } else throw new Error('query invalid')
     }
+*/
 
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
@@ -43,27 +47,21 @@ export default class FilterOR implements IFilterLogic{
                 var val = objJSON[key];
                 if (key === "OR") {
                     var orFilter = new FilterOR(val, this.data);
-                    orFilter.processQuery();
                     this.filters.push(orFilter);
                 } else if (key === "AND") {
                     var andFilter = new FilterAND(val, this.data);
-                    andFilter.processQuery();
                     this.filters.push(andFilter);
                 } else if (key === "GT") {
                     var gtFilter = new FilterGT(val, this.data);
-                    gtFilter.processQuery();
                     this.filters.push(gtFilter);
                 } else if (key === "LT") {
                     var ltFilter = new FilterLT(val, this.data);
-                    ltFilter.processQuery();
                     this.filters.push(ltFilter);
                 } else if (key === "EQ") {
                     var eqFilter  = new FilterEQ(val, this.data);
-                    eqFilter.processQuery();
                     this.filters.push(eqFilter);
                 } else if (key === "IS") {
                     var isFilter = new FilterIS(val, this.data)
-                    isFilter.processQuery();
                     this.filters.push(isFilter);
                 }
             }
@@ -154,8 +152,10 @@ export default class FilterOR implements IFilterLogic{
     }
 
     checkQueryValid(): boolean {
+        // query is valid only if it contains query keywords specified in EBNF
         for (let element of this.filter) {
             let keys = Object.keys(element);
+            // there can only be a single key
             if (keys.length > 1) return false;
             else {
                 let key = keys[0];
@@ -163,8 +163,23 @@ export default class FilterOR implements IFilterLogic{
                     return false;
                 }
             }
+            // every filter key of type AND, OR, NOT must contain array as its value
+            for (var key in keys) {
+                let val = element[key];
+                if (key === "AND" || key === "OR" || key === "NOT") {
+                    if (!Array.isArray(val) || val.length == 0) return false;
+                }
+            }
+        }
+        if (this.filters.length == 0) return false;
+        for (var element of this.filters) {
+            if (! element.isValid()) return false;
         }
         return true;
+    }
+
+    isValid(): boolean {
+        return this.valid;
     }
 }
 
