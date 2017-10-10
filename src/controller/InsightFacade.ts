@@ -147,7 +147,7 @@ export default class InsightFacade implements IInsightFacade {
                     });
                 }else{
                     s.code = 404;
-                    fullfill(s);
+                    reject(s);
                 }
             }else if(dataInMemory.id == id){
                 dataInMemory.id = null;
