@@ -6,7 +6,7 @@ export default class FilterIS implements IFilterComparison {
     filter: any;
     subNode1: string;
     subNode2: string;
-    valid: boolean = true;
+    valid: boolean = false;
 
     data: any[];
 
