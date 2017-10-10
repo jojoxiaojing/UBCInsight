@@ -39,13 +39,9 @@ export default class QueryOptions {
         let optionKeys = Object.keys(this.options);
         if (optionKeys.length === 0 || optionKeys.length > 2 ||
             (optionKeys.length === 1 && optionKeys[0] !== "COLUMNS") ||
-            (optionKeys.length === 2 && optionKeys[0] !== "COLUMNS" && optionKeys[1] !== "ORDER")) {
+            (optionKeys.length === 2 && (optionKeys[0] !== "COLUMNS" || optionKeys[1] !== "ORDER"))) {
             return false;
         }
-
-        // value of key COLUMNS must be a nonempty array
-        let val = this.options["COLUMNS"];
-        if (!Array.isArray(val) || val.length == 0) return false;
 
         // options are correct only if it includes valid column names and order is one of the columns listed
         for (let element of this.columns) {

@@ -55,13 +55,16 @@ export default class QueryController implements IQueryController{
 
     // parse through JSON stored in query and construct the QueryOptions object
     parseQueryOptions(): void {
-        var objJSON = this.getQuery()
-        for (var key in objJSON) {
-            let val = objJSON[key];
+        // check first to see if queryBody has been initialized
+        if (this.getQueryBody() != null) {
+            var objJSON = this.getQuery()
+            for (var key in objJSON) {
+                let val = objJSON[key];
 
-            // construct Options object, if OPTIONS is one of the keys
-            if (key === "OPTIONS") {
-                this.getQueryBody().setQueryOpt(val);
+                // construct Options object, if OPTIONS is one of the keys
+                if (key === "OPTIONS") {
+                    this.getQueryBody().setQueryOpt(val);
+                }
             }
         }
     }
@@ -69,14 +72,8 @@ export default class QueryController implements IQueryController{
     checkQueryValid(): boolean {
         let queryKeys = Object.keys(this.getQuery());
         // query is correct if its first JSON key is WHERE and second key is OPTIONS, only 2 keys are allowed
-        if (queryKeys.length !== 2 || (queryKeys.length === 2 && queryKeys[0] !== "WHERE" && queryKeys[1] !== "OPTIONS")) {
+        if (queryKeys.length !== 2 || (queryKeys.length === 2 && (queryKeys[0] !== "WHERE" || queryKeys[1] !== "OPTIONS"))) {
             return false;
-        }
-        // query is correct if WHERE/OPTIONS arrays of values are nonempty
-        for (var key in queryKeys) {
-            let val = this.getQuery()[key];
-            if (!Array.isArray(val)) return false;
-            if (Array.isArray(val) && val.length === 0 ) return false;
         }
             return true;
     }
