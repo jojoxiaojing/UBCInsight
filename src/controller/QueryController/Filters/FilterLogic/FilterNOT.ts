@@ -145,5 +145,9 @@ export default class FilterNOT implements IFilterLogic{
         return this.valid;
     }
 
+    setData(data: any[]): void {
+        this.data = data;
+    }
+
 }
 

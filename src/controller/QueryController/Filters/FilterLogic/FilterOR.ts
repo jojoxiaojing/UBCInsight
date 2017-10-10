@@ -181,5 +181,9 @@ export default class FilterOR implements IFilterLogic{
     isValid(): boolean {
         return this.valid;
     }
+
+    setData(data: any[]): void {
+        this.data = data;
+    }
 }
 

@@ -66,4 +66,8 @@ export default class FilterLT implements IFilterComparison {
     isValid(): boolean {
         return this.valid;
     }
+
+    setData(data: any[]): void {
+        this.data = data;
+    }
 }

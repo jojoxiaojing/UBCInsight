@@ -87,22 +87,31 @@ export default class FilterAND implements IFilterLogic{
         let element: any;
         for (element of this.filters) {
 
+            // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
+            // hence, reset data in each subnode; this is only necessary for AND filter
             if (element instanceof FilterGT) {
+                element.setData(results);
                 results = element.applyFilter();
             } else if (element instanceof FilterLT) {
+                element.setData(results);
                 results = element.applyFilter();
             } else if (element instanceof FilterEQ) {
+                element.setData(results);
                 results = element.applyFilter();
             } else if (element instanceof FilterIS) {
+                element.setData(results);
                 results = element.applyFilter();
             }else if (element instanceof FilterOR) {
+                element.setData(results);
                 let arrayValues = element.filters;
                 let tempResults = element.applyFilterHelper(arrayValues, []);
                 results = this.findArrayIntersection(results, tempResults);
             } else if (element instanceof FilterAND) {
+                element.setData(results);
                 let arrayValues = element.filters;
                 results = this.applyFilterHelper(arrayValues, results);
             } else if (element instanceof FilterNOT) {
+                element.setData(results);
                 results = this.arrayDifference(results, element.applyFilter());
             }
         }
@@ -176,6 +185,10 @@ export default class FilterAND implements IFilterLogic{
 
     isValid(): boolean {
         return this.valid;
+    }
+
+    setData(data: any[]): void {
+        this.data = data;
     }
 }
 

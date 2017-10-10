@@ -7,4 +7,5 @@ export interface IFilter {
 
     applyFilter(): any[];
     isValid(): boolean;
+    setData(data: any[]): void;
 }

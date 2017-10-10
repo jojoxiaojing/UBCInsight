@@ -98,4 +98,8 @@ export default class FilterIS implements IFilterComparison {
     isValid(): boolean {
         return this.valid;
     }
+
+    setData(data: any[]): void {
+        this.data = data;
+    }
 }
