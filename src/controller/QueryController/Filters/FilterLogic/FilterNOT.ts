@@ -128,8 +128,8 @@ export default class FilterNOT implements IFilterLogic{
             // every filter key of type AND, OR, NOT must contain array as its value
             for (var key in keys) {
                 let val = element[key];
-                if (key === "AND" || key === "OR" || key === "NOT") {
-                    if (!Array.isArray(val) || val.length == 0) return false;
+                if (key === "AND" || key === "OR") {
+                    if (!Array.isArray(val) || val.length == 0 || val.length == 1) return false;
                 }
             }
         }
