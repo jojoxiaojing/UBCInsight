@@ -20,7 +20,7 @@ export default class QueryController implements IQueryController{
     data: any[];
     //query: {[key: string]: JSON};
     query: JSON;
-    queryBody: QueryBody = null;
+    queryBody: QueryBody ;
     valid: boolean = false;
 
     constructor(query: any, data: any[]) {
@@ -31,7 +31,6 @@ export default class QueryController implements IQueryController{
         if (this.checkQueryValid()) this.valid = true;
         //this.data = new MockData().getData();
     }
-    //TODO write a method to check if valid == true in every node
 
     isValid(): boolean {
         if (this.valid === false) return false;

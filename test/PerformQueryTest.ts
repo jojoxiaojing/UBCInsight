@@ -56,7 +56,7 @@ describe("testPerformQuery", function() {
     it("Test performQuery, real query", function (done) {
         fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
             //insightF.addDataset("Courses",data);
-            var testQuery = {WHERE: {AND: [{LT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            var testQuery = {WHERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
             insightF.performQuery(testQuery).then(function(value:any){
                 let a = value;
                 done();

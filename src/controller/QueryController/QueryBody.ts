@@ -113,6 +113,7 @@ export default class QueryBody {
         }
 
        // apply options to filtered results
+        this.getQueryOpt().setData(results);
         return this.getQueryOpt().applyOptions();
     }
 

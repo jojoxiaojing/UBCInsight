@@ -25,6 +25,26 @@ describe("testAddData", function() {
         //Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
+    it("Import course.zip and store the data, it should return code 204", function (done) {
+
+
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
+
+            insightF.addDataset("Courses", data).then(function (value: any) {
+                let a = value;
+                expect(a.code).to.deep.equal(204);
+                var testQuery = {"WHERE": {GT: {courses_audit: 10}}, "OPTIONS": {"COLUMNS": ["courses_avg"]}}
+                insightF.performQuery(testQuery).then(function (value: any) {
+                    let a = value;
+                    done()
+                }).catch(function (err) {
+                    //log.error("Error: " + err);
+                    expect.fail();
+                    done()
+                });
+            });
+        });
+    });
 /*    it("Import course.zip ，store the data and remove successfully", function (done) {
 
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
@@ -84,7 +104,7 @@ describe("testAddData", function() {
         });
     });*/
 
-    it("Import empty.zip, it should return code 400", function (done) {
+ /*   it("Import empty.zip, it should return code 400", function (done) {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {
 
 
@@ -117,5 +137,5 @@ describe("testAddData", function() {
             expect(ifFileExist).to.deep.equal(false);
             done()
         });
-    });
+    });*/
 })
