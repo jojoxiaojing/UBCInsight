@@ -110,7 +110,8 @@ export default class InsightFacade implements IInsightFacade {
                         code: 400,
                         body: {"Error": "Dataset is invalid"}
                     };
-                    reject(s);
+                    this.removeDataset(id);
+                    fullfill(s);
                 }
             }).catch(function (err:any) {
                 let s:InsightResponse = {
@@ -141,7 +142,7 @@ export default class InsightFacade implements IInsightFacade {
                             fullfill(s);
                         } else {
                             s.code = 404;
-                            reject(s);
+                            fullfill(s);
                         }
                     });
                 }else{
