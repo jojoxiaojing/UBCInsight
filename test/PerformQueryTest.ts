@@ -41,25 +41,22 @@ describe("testPerformQuery", function() {
 
 
     it("Import course.zip and store the data, it should return code 204", function (done) {
-
-            }).catch(function(err:any){
-            });
-        });
-    });
-
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
 
             insightF.addDataset("Courses", data).then(function (value: any) {
                 let a = value;
                 expect(a.code).to.deep.equal(204);
-                    done();
-                }).catch(function (err) {
+                done();
+            }).catch(function (err) {
 
-                    expect.fail();
-                    done();
-                });
+                expect.fail();
+                done();
             });
         });
+    });
+
+
+
 
 
     it("Test performQuery, invalid query returning 400 code", function (done) {

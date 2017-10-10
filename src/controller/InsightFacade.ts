@@ -177,8 +177,7 @@ export default class InsightFacade implements IInsightFacade {
                         var queryController = new QueryController(query, tempData);
 
                             if (!queryController.isValid()) {
-                                s.code = 400;
-                                s.body = {"error":"query invalid"};
+                                let s = {code: 400, body: {"error":"query invalid"}};
                                 reject(s);
                             }
                                 else
