@@ -22,8 +22,6 @@ export default class FilterLT implements IFilterComparison {
 
     // check if the subnode types are consistent with AST
     checkQueryValid(): boolean {
-        //let vals = Object.keys(this.filter).map((k) => this.filter[k]);
-        //let val = vals[0]
         let val = this.subNode2;
         if (this.isValidComparisonString() && typeof val === "number") {
             return true;
@@ -35,8 +33,6 @@ export default class FilterLT implements IFilterComparison {
 
     // helper to check if the first subNode in the comparison is a valid key of type string
     isValidComparisonString(): boolean {
-        //let keys = Object.keys(this.filter);
-        //let val = keys[0];
         let val = this.subNode1;
         if (!(typeof val === "string" && (val === "courses_avg" ||
                 val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit"))) {
