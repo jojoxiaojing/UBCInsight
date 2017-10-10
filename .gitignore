@@ -14,3 +14,4 @@ coverage/
 ./idea
 .nyc_output
 /test/data/courses.zip
+InsightFacade.ts
