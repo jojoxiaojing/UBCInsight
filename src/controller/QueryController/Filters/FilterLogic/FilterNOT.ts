@@ -28,13 +28,6 @@ export default class FilterNOT implements IFilterLogic{
         if (this.checkQueryValid()) this.valid = true;
     }
 
-/*    processQuery(): void {
-        if (this.checkQueryValid()) {
-            this.parseLogicFilters(this.filter);
-            //this.applyFilter();
-        } else throw new Error('query invalid')
-    }*/
-
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
         // the passed parameter might be an array, if the node above was AND/OR
@@ -91,22 +84,9 @@ export default class FilterNOT implements IFilterLogic{
 
         let element: any;
         for (element of this.filters) {
-
-            if (element instanceof FilterGT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterLT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterEQ) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterIS) {
-                results = this.arrayDifference(results, element.applyFilter());
-            }else if (element instanceof FilterOR) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterAND) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterNOT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            }
+            // NOT filter treats every type filter the same, unlike other FilterLogic filters
+            // that might do smth different for each type
+            results = this.arrayDifference(results, element.applyFilter());
         }
         return results
     }

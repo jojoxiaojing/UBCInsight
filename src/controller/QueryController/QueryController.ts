@@ -46,7 +46,7 @@ export default class QueryController implements IQueryController{
         var objJSON = this.getQuery()
         for (var key in objJSON) {
             let val = objJSON[key];
-            // construct Query object and set WHERE flag on
+            // construct Query object, if WHERE is one of the keys
             if (key ==="WHERE") {
                 this.setQueryBody(val);
             }
@@ -60,7 +60,6 @@ export default class QueryController implements IQueryController{
             var objJSON = this.getQuery()
             for (var key in objJSON) {
                 let val = objJSON[key];
-
                 // construct Options object, if OPTIONS is one of the keys
                 if (key === "OPTIONS") {
                     this.getQueryBody().setQueryOpt(val);

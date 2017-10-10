@@ -75,6 +75,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter10 = {courses_instructor: "Bob"};
     var filter11 = [{IS: {courses_instructor: "Bob"}}, {AND: [{EQ: {courses_avg: 60}}, {EQ: {courses_audit: 50}}]}];
     var filter12 = {IS: {courses_instructor: "Bob"}};
+    var filter13 = {IS: {courses_instructor: "*ob"}};
+    var filter14 = {IS: {courses_instructor: "Alic*"}};
+    var filter15 = {IS: {courses_instructor: "*teve"}};
 
 
 
@@ -93,10 +96,14 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterNOTNESTED: FilterNOT
     var filterANDMultiple: FilterAND
     var filterNOTMultiple: FilterNOT
+    var filterNOTWild1: FilterNOT
+    var filterNOTWildL: FilterNOT
+    var filterNOTWild1L: FilterNOT
 
 
 
     beforeEach(function () {
+        var data = new MockData();
         filterEQ = new FilterEQ(filter, data.getData())
         filterGT = new FilterGT(filter2, data.getData())
         filterLT = new FilterLT(filter3, data.getData())
@@ -112,6 +119,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTNESTED = new FilterNOT(filter11, data.getData())
         filterANDMultiple = new FilterAND(filter6, data.getData())
         filterNOTMultiple = new FilterNOT(filter6, data.getData())
+        filterNOTWild1 = new FilterNOT(filter13, data.getData())
+        filterNOTWildL = new FilterNOT(filter14, data.getData())
+        filterNOTWild1L = new FilterNOT(filter15, data.getData())
     });
 
     afterEach(function () {
@@ -130,10 +140,13 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTNESTED = null;
         filterANDMultiple = null;
         filterNOTMultiple = null;
+        filterNOTWild1 = null;
+        filterNOTWildL = null;
+        filterNOTWild1L = null;
     });
 
 
-    it("Test FilterEQ on course_avg", function () {
+/*    it("Test FilterEQ on course_avg", function () {
         expect(filterEQ.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterEQ.applyFilter();
        // expect(queryResponse[0].courses_instructor).to.deep.equal("Steve");
@@ -238,6 +251,24 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         expect(filterANDMultiple.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDMultiple.applyFilter();
         expect(queryResponse.length).to.deep.equal(0);
+    });*/
+
+    it("Test FilterNOT IS, * at index 0", function () {
+        expect(filterNOTWild1.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTWild1.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
+    });
+
+    it("Test FilterNOT IS, * at index length-1", function () {
+        expect(filterNOTWildL.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTWildL.applyFilter();
+        expect(queryResponse.length).to.deep.equal(4);
+    });
+
+    it("Test FilterNOT IS, * at both index 0 and length-1", function () {
+        expect(filterNOTWild1L.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTWild1L.applyFilter();
+        expect(queryResponse.length).to.deep.equal(3);
     });
 
     });
