@@ -162,10 +162,15 @@ export default class InsightFacade implements IInsightFacade {
                         dataInMemory = JSON.parse(data);
                         let tempData = dataInMemory.data;
                         var queryController = new QueryController(query, tempData);
-
+                            if (!queryController.checkQueryValid()) {
+                                reject({code: 400, body: {"error":"query invalid"}});
+                            }
+                                else
+                        {
                             let s: InsightResponse = {code: 204, body: {}};
                             s.body = queryController.getQueryBody().applyFilter();
                             fullfill(s);
+                        }
 
                     });
                 } else {
@@ -173,11 +178,14 @@ export default class InsightFacade implements IInsightFacade {
 
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
-
+                    if (!queryController.checkQueryValid()) {
+                        reject({code: 400, body: {"error":"query invalid"}});
+                    } else {
                         //queryController.getQueryOpt().applyOptions();
                         let s: InsightResponse = {code: 200, body: {}};
                         s.body = queryController.getQueryBody().applyFilter();
                         fullfill(s);
+                    }
 
                 }
             } catch (err){
