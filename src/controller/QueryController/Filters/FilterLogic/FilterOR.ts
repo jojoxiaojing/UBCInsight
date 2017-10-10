@@ -69,9 +69,6 @@ export default class FilterOR implements IFilterLogic{
 
 
     applyFilter(): any[] {
-        if (this.filters.length == 0) {
-            this.parseLogicFilters(this.filter);
-        }
         var dataFiltered: any[] = [];
         return this.applyFilterHelper(this.filters, dataFiltered);
     }

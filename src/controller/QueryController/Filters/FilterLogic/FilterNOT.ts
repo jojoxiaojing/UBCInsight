@@ -68,9 +68,6 @@ export default class FilterNOT implements IFilterLogic{
 
 
     applyFilter(): any[] {
-        if (this.filters.length == 0) {
-            this.parseLogicFilters(this.filter);
-        }
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -79,6 +76,10 @@ export default class FilterNOT implements IFilterLogic{
 
         let element: any;
         for (element of this.filters) {
+            // shortcut to handle double negation
+            if (element instanceof FilterNOT) {
+                return results;
+            }
             // NOT filter treats every type filter the same, unlike other FilterLogic filters
             // that might do smth different for each type
             results = this.arrayDifference(results, element.applyFilter());

@@ -67,9 +67,6 @@ export default class FilterAND implements IFilterLogic{
 
 
     applyFilter(): any[] {
-        if (this.filters.length == 0) {
-            this.parseLogicFilters(this.filter);
-        }
         return this.applyFilterHelper(this.filters, this.data);
     }
 
