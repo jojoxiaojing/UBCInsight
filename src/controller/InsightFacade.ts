@@ -185,7 +185,7 @@ export default class InsightFacade implements IInsightFacade {
                         } catch (err) {
                             reject({code: 400, body: {"error":err}});
                         }
-                        let s: InsightResponse = {code: 204, body: {}};
+                        let s: InsightResponse = {code: 200, body: {}};
                         s.body = queryController.getQueryBody().applyFilter();
                         fullfill(s);
                     });
