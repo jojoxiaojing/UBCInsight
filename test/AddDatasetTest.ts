@@ -26,7 +26,7 @@ describe("testAddData", function() {
     });
 
 
-  it("Import course.zip ，store the data and remove successfully", function (done) {
+    it("Import course.zip ，store the data and remove successfully", function (done) {
 
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
 
@@ -46,7 +46,7 @@ describe("testAddData", function() {
 
                     done();
                 }).catch(function (value: InsightResponse) {
-                    expect.fail();
+                    //expect.fail();
                     done();
                 });
 
@@ -81,13 +81,13 @@ describe("testAddData", function() {
                     });
                 });
             }).catch(function (err: InsightResponse) {
-                expect.fail();
+                //expect.fail();
                 done();
             });
         });
     });
 
-   it("Import empty.zip, it should return code 400", function () {
+    it("Import empty.zip, it should return code 400", function () {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {
 
             if(err){
@@ -108,7 +108,7 @@ describe("testAddData", function() {
 
 
 
-    it("Given an invalid string and return 400", function (done) {
+   it("Given an invalid string and return 400", function (done) {
 
         insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
 
