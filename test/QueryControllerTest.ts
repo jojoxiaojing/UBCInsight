@@ -50,7 +50,6 @@ describe("QueryController", function () {
     });
 
     it("Test QueryController constructor with Options", function () {
-        qCComplete.processQuery();
         let out = qCComplete.getQuery();
         expect(out).to.have.property('WHERE');
         expect(out).to.have.property('OPTIONS');
@@ -77,7 +76,6 @@ describe("QueryController", function () {
 
     it("Test QueryBody Constructor, QueryObj", function () {
         qC.parseQueryBody()
-        qC.getQueryBody().processQueryBody();
         let qB = qC.getQueryBody();
         //qB.parseQueryFilters(qB.filters);
         let countFilters = qB.filters.length;

@@ -6,9 +6,10 @@ export interface IFilterLogic extends IFilter {
     subType: "FilterAND" | "FilterOR" | "FilterNOT";
     //input data array
     data: any[];
+    valid: boolean;
 
     parseLogicFilters(objJSON: any): void;
-
     checkQueryValid(): boolean;
     applyFilter(): any[];
+    isValid(): boolean;
 }

@@ -13,6 +13,7 @@ export default class QueryBody {
     body: JSON;
     filters: IFilter[] = null;
     options: any;
+    valid: boolean = false;
 
     data: any[];
 
@@ -20,15 +21,16 @@ export default class QueryBody {
         this.setBody(body);
         this.filters = [];
         this.data = data;
-        //this.parseQueryFilters(this.body);
+        this.parseQueryFilters(this.body);
+        if (this.checkQueryValid()) this.valid = true;
     }
 
     // only parse JSON for query body if it passes validity check
-    processQueryBody(): void {
+/*    processQueryBody(): void {
         if (this.checkQueryValid()) {
             this.parseQueryFilters(this.filters);
         } else throw new Error('query invalid')
-    }
+    }*/
 
     // parse through JSON stored in query and construct the QueryOptions object
     parseQueryFilters(filters: any): void {
@@ -38,43 +40,47 @@ export default class QueryBody {
            // check if each filter is of type listed in AST, then push to the array of filters
             if (key === "OR") {
                 var orFilter = new FilterOR(val, this.data);
-                orFilter.processQuery();
                 this.filters.push(orFilter);
             } else if (key === "AND"){
                 var andFilter = new FilterAND(val, this.data);
-                andFilter.processQuery();
                 this.filters.push(andFilter);
             } else if (key === "NOT") {
                 var notFilter = new FilterNOT(val, this.data);
-                notFilter.processQuery();
                 this.filters.push(notFilter);;
             }else if (key === "GT"){
                 var gtFilter = new FilterGT(val, this.data);
-                gtFilter.processQuery();
                 this.filters.push(gtFilter);
             } else if (key === "LT"){
                 var ltFilter = new FilterLT(val, this.data);
-                ltFilter.processQuery();
                 this.filters.push(ltFilter);
             } else if (key === "EQ"){
                 var eqFilter = new FilterEQ(val, this.data);
-                eqFilter.processQuery();
                 this.filters.push(eqFilter);
             } else if (key === "IS") {
                 var isFilter = new FilterIS(val, this.data);
-                isFilter.processQuery();
                 this.filters.push(isFilter);
             }
         }
     }
 
-    // query is valid only if it contains query keywords specified in EBNF
+    // TODO: check no fields are missing recursively
     checkQueryValid(): boolean {
-        var objJSON = this.getBody()
-        for (var key in objJSON) {
+        var bodyKeys = this.getBody()
+        // query is valid only if it contains query keywords specified in EBNF
+        for (var key in bodyKeys) {
             if (key !== "AND" && key !== "OR" && key!== "NOT" && key !== "IS" && key !== "EQ" && key !== "GT" && key !== "LT") {
                 return false;
             }
+        }
+        // value of each filter key must be a nonempt array
+        var key:string;
+        for (key of bodyKeys) {
+            let val = this.options[key];
+            if (!Array.isArray(val) || val.length == 0) return false;
+        }
+        // every filter in filters array must be valid
+        for (var element of this.filters) {
+            if (! element.isValid()) return false;
         }
         return true;
     }
@@ -107,7 +113,12 @@ export default class QueryBody {
         }
 
        // apply options to filtered results
+        this.getQueryOpt().setData(results);
         return this.getQueryOpt().applyOptions();
+    }
+
+    isValid(): boolean {
+        return this.valid;
     }
 
 }

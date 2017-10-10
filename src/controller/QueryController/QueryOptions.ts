@@ -3,17 +3,20 @@ export default class QueryOptions {
     data: any[];
     columns: string[] = [];
     order: string;
+    valid: boolean = false;
 
     constructor(options: any, data: any[]) {
         this.options = options;
         this.data = data;
+        this. parseQueryOptions();
+        if (this.checkOptionsValid()) this.valid = true;
     }
 
-    processQueryOptions(): void {
+ /*   processQueryOptions(): void {
         if (this.checkOptionsValid()) {
             this.parseQueryOptions();
         } else throw new Error('query invalid')
-    }
+    }*/
 
     parseQueryOptions(): void {
         var objJSON = this.getOptions();
@@ -31,8 +34,16 @@ export default class QueryOptions {
         }
     }
 
-    // options are correct only if it includes valid column names and order is one of the columns listed
     checkOptionsValid(): boolean {
+        // there can be either 1 or 2 keys, the first being COLUMNS, the second optional key is ORDER
+        let optionKeys = Object.keys(this.options);
+        if (optionKeys.length === 0 || optionKeys.length > 2 ||
+            (optionKeys.length === 1 && optionKeys[0] !== "COLUMNS") ||
+            (optionKeys.length === 2 && (optionKeys[0] !== "COLUMNS" || optionKeys[1] !== "ORDER"))) {
+            return false;
+        }
+
+        // options are correct only if it includes valid column names and order is one of the columns listed
         for (let element of this.columns) {
             if (element !== "courses_avg" &&
                 element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
@@ -73,8 +84,17 @@ export default class QueryOptions {
         return this.options;
     }
 
+    setData(data: any[]): void{
+        this.data = data;
+    }
+
     getData(): any {
         return this.data;
     }
+
+    isValid(): boolean {
+        return this.valid;
+    }
+
 
 }

@@ -96,7 +96,6 @@ describe("QueryBody", function () {
 
 
     it("Test QueryBody Constructor", function () {
-        qB.processQueryBody();
         expect(qB.checkQueryValid()).to.deep.equal(true);
         let countFilters = qB.filters.length;
         expect(countFilters).to.deep.equal(1);
@@ -113,7 +112,6 @@ describe("QueryBody", function () {
     });
 
     it("Test QueryBody Constructor, the right object is pushed in the attribute array", function () {
-        qB.processQueryBody();
         let firstElement = qB.filters[0];
         expect(firstElement instanceof FilterOR).to.deep.equal(true);
     })

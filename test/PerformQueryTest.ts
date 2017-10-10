@@ -28,44 +28,56 @@ describe("testPerformQuery", function() {
 
 
 
-    it("Test performQuery", function () {
-
-        insightF.performQuery({OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}).then(function(value:any){
-            expect.fail();
-        }).catch(function(err:any){
-            expect(err).to.deep.equal('query invalid');
+    /*
+        it("Test performQuery, broken: without where/options", function () {
+           return insightF.performQuery({OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}).then(function(value:any){
+                expect.fail();
+            }).catch(function(response:any){
+                expect(response.code).to.equal(400);
+            });
         });
+    */
 
-    });
-
-
-
-/*    it("Catch invalid query", function () {
-        return insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 2}}]}}
-            ).then(function(response :InsightResponse){
-            expect(response.code).to.equal(400);
-            expect.fail();
-        }).catch(function (err) {
-            expect(err).to.deep.equal('query invalid');
-        });
-    });*/
-
+    /*    it("Test performQuery", function (done) {
+            insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 30}}, {OR: [{GT: {courses_fail: 10}},
+                {GT: {courses_pass: 50}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            ).then(function(response: InsightResponse){
+                    var a = response;
+                    done()
+                //expect.fail();
+            }).catch(function(response: InsightResponse){
+                //expect(response.code).to.equal(200);
+            });
+        });*/
 
 
 
 
-
-   it("Test performQuery, real query", function (done) {
+    it("Test performQuery, invalid query returning 400 code", function (done) {
         fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
             //insightF.addDataset("Courses",data);
-            var testQuery = {WHERE: {AND: [{LT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            var testQuery = {THERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
             insightF.performQuery(testQuery).then(function(value:any){
                 let a = value;
+                expect(value.code).to.equal(400);
                 done();
 
             }).catch(function(err:any){
-
             });
         });
     });
+
+    it("Test performQuery, real query ", function (done) {
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
+            //insightF.addDataset("Courses",data);
+            var testQuery = {WHERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+                done();
+            }).catch(function(err:any){
+            });
+        });
+    });
+
 })
