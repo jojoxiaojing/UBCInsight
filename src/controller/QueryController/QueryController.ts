@@ -9,10 +9,9 @@ interface IQueryController {
     queryBody: QueryBody;
     valid: boolean
 
-    getQueryBody(): QueryBody;
-   // getQueryOpt(): QueryOptions;
-    getQuery(): JSON;
-    setQueryBody(body: JSON): void;
+    parseQueryBody(): void;
+    parseQueryOptions(): void;
+    checkQueryValid(): boolean;
 }
 
 // need to pass options from parsing into query body to options field
@@ -42,17 +41,6 @@ export default class QueryController implements IQueryController{
         return true;
     }
 
-    //TODO parsing will be done inside the constructor. processQuery will recursively check if nodes are valid
-    // parse query: body and options if the query contains WHERE and OPTIONS fields
-    // will still need to check query string for WHERE and OPTIONS
-/*    processQuery(): void {
-        if (this.checkQueryValid()) {
-            this.parseQueryBody();
-            this.getQueryBody().processQueryBody();
-            this.parseQueryOptions();
-            this.getQueryBody().getQueryOpt().processQueryOptions();
-        } else throw new Error('query invalid')
-    }*/
 
     // parse through JSON stored in query and construct the QueryBody object
     parseQueryBody(): void {
