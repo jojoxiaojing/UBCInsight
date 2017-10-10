@@ -81,7 +81,7 @@ export default class FilterNOT implements IFilterLogic{
         for (element of this.filters) {
             // shortcut to handle double negation
             if (element instanceof FilterNOT) {
-                return element.filters[0].applyFilter();
+                results = element.filters[0].applyFilter();
             }
             // NOT filter treats every other filter type the same, unlike other FilterLogic filters
             // that might do smth different for each type
