@@ -54,6 +54,9 @@ export default class FilterNOT implements IFilterLogic{
                 } else if (key === "IS") {
                     var isFilter = new FilterIS(val, this.data);
                     this.filters.push(isFilter);
+                } else if (key === "NOT") {
+                var notFilter = new FilterNOT(val, this.data);
+                    this.filters.push(notFilter);
                 }
             }
         }
@@ -78,9 +81,9 @@ export default class FilterNOT implements IFilterLogic{
         for (element of this.filters) {
             // shortcut to handle double negation
             if (element instanceof FilterNOT) {
-                return results;
+                return element.filters[0].applyFilter();
             }
-            // NOT filter treats every type filter the same, unlike other FilterLogic filters
+            // NOT filter treats every other filter type the same, unlike other FilterLogic filters
             // that might do smth different for each type
             results = this.arrayDifference(results, element.applyFilter());
         }
