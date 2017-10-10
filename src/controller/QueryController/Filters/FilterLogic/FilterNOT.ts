@@ -17,8 +17,6 @@ export default class FilterNOT implements IFilterLogic{
 
     data: any[];
 
-    // potentially need to check beforehand if there is a single key-value pair,
-    // otherwise throw an error before the constructor is called
     constructor(filter: any, data: any[]) {
         this.data = data;
         // input array of JSON containing subnodes
@@ -27,13 +25,6 @@ export default class FilterNOT implements IFilterLogic{
         this.parseLogicFilters(filter);
         if (this.checkQueryValid()) this.valid = true;
     }
-
-/*    processQuery(): void {
-        if (this.checkQueryValid()) {
-            this.parseLogicFilters(this.filter);
-            //this.applyFilter();
-        } else throw new Error('query invalid')
-    }*/
 
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
@@ -76,9 +67,6 @@ export default class FilterNOT implements IFilterLogic{
     }
 
 
-    // not sure if there is need for parsing the data at all
-    // filter data
-    // pass results in the constructor
     applyFilter(): any[] {
         if (this.filters.length == 0) {
             this.parseLogicFilters(this.filter);
@@ -91,22 +79,9 @@ export default class FilterNOT implements IFilterLogic{
 
         let element: any;
         for (element of this.filters) {
-
-            if (element instanceof FilterGT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterLT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterEQ) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterIS) {
-                results = this.arrayDifference(results, element.applyFilter());
-            }else if (element instanceof FilterOR) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterAND) {
-                results = this.arrayDifference(results, element.applyFilter());
-            } else if (element instanceof FilterNOT) {
-                results = this.arrayDifference(results, element.applyFilter());
-            }
+            // NOT filter treats every type filter the same, unlike other FilterLogic filters
+            // that might do smth different for each type
+            results = this.arrayDifference(results, element.applyFilter());
         }
         return results
     }
@@ -163,6 +138,10 @@ export default class FilterNOT implements IFilterLogic{
 
     isValid(): boolean {
         return this.valid;
+    }
+
+    setData(data: any[]): void {
+        this.data = data;
     }
 
 }

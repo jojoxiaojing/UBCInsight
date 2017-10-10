@@ -17,8 +17,7 @@ export default class FilterOR implements IFilterLogic{
     data: any[];
     valid: boolean = false;
 
-    // potentially need to check beforehand if there is a single key-value pair,
-    // otherwise throw an error before the constructor is called
+
     constructor(filter: any, data: any[]) {
         this.data = data;
         this.filter = filter;
@@ -27,13 +26,6 @@ export default class FilterOR implements IFilterLogic{
         if (this.checkQueryValid()) this.valid = true;
     }
 
-/*
-    processQuery(): void {
-        if (this.checkQueryValid()) {
-            this.parseLogicFilters(this.filter);
-        } else throw new Error('query invalid')
-    }
-*/
 
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
@@ -75,8 +67,7 @@ export default class FilterOR implements IFilterLogic{
         }
     }
 
-    // filter data
-    // keep passing the data through each filter iteratively for and
+
     applyFilter(): any[] {
         if (this.filters.length == 0) {
             this.parseLogicFilters(this.filter);
@@ -180,6 +171,10 @@ export default class FilterOR implements IFilterLogic{
 
     isValid(): boolean {
         return this.valid;
+    }
+
+    setData(data: any[]): void {
+        this.data = data;
     }
 }
 

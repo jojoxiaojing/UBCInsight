@@ -12,4 +12,5 @@ export interface IFilterLogic extends IFilter {
     checkQueryValid(): boolean;
     applyFilter(): any[];
     isValid(): boolean;
+    setData(data: any[]): void;
 }

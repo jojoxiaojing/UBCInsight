@@ -38,21 +38,14 @@ describe("testPerformQuery", function() {
         });
     */
 
-    /*    it("Test performQuery", function (done) {
-            insightF.performQuery({WHERE: {AND: [{LT: {courses_audit: 30}}, {OR: [{GT: {courses_fail: 10}},
-                {GT: {courses_pass: 50}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-            ).then(function(response: InsightResponse){
-                    var a = response;
-                    done()
-                //expect.fail();
-            }).catch(function(response: InsightResponse){
-                //expect(response.code).to.equal(200);
-            });
-        });*/
 
 
     it("Import course.zip and store the data, it should return code 204", function (done) {
 
+            }).catch(function(err:any){
+            });
+        });
+    });
 
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
 
@@ -82,6 +75,7 @@ describe("testPerformQuery", function() {
             });
 
     });
+
 
     it("Test performQuery, real query ", function (done) {
 

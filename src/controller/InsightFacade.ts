@@ -175,7 +175,7 @@ export default class InsightFacade implements IInsightFacade {
                         dataInMemory = JSON.parse(data);
                         let tempData = dataInMemory.data;
                         var queryController = new QueryController(query, tempData);
-                        let s: InsightResponse = {code: 0, body: {}};
+
                             if (!queryController.isValid()) {
                                 s.code = 400;
                                 s.body = {"error":"query invalid"};

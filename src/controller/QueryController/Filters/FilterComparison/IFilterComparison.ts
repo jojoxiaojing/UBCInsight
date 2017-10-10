@@ -12,6 +12,6 @@ export interface IFilterComparison extends IFilter {
     checkQueryValid(): boolean;
     applyFilter(): any[];
     isValid(): boolean;
-
+    setData(data: any[]): void;
 
 }

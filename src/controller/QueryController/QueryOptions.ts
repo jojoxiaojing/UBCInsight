@@ -12,11 +12,6 @@ export default class QueryOptions {
         if (this.checkOptionsValid()) this.valid = true;
     }
 
- /*   processQueryOptions(): void {
-        if (this.checkOptionsValid()) {
-            this.parseQueryOptions();
-        } else throw new Error('query invalid')
-    }*/
 
     parseQueryOptions(): void {
         var objJSON = this.getOptions();
@@ -67,7 +62,6 @@ export default class QueryOptions {
             for (let col of this.columns) {
                 if (element.hasOwnProperty(col)) {
                     tempObj[col] = element[col];
-                    //let tempObj = (({ a, c }) => ({ a, c }))(element);
                 }
             }
             tempData.push(tempObj);
@@ -95,6 +89,5 @@ export default class QueryOptions {
     isValid(): boolean {
         return this.valid;
     }
-
 
 }

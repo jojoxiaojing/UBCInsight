@@ -20,19 +20,9 @@ export default class FilterGT implements IFilterComparison {
         if (this.checkQueryValid()) this.valid = true;
     }
 
-/*    processQuery(): void {
-        if (this.checkQueryValid()) {
-            let keys = Object.keys(this.filter);
-            let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
-            this.subNode1 = keys[0];
-            this.subNode2 = vals[0];
-        } else throw new Error('query invalid')
-    }*/
-
     // check if the subnode types are consistent with AST
     checkQueryValid(): boolean {
-        let vals =  Object.keys(this.filter).map((k) => this.filter[k]);
-        let val = vals[0]
+        let val = this.subNode2;
         if (this.isValidComparisonString() && typeof val === "number") {
             return true;
         }
@@ -40,18 +30,14 @@ export default class FilterGT implements IFilterComparison {
             return false;
         }
     }
-
-    // helper to check if the first subNode in the comparison is a valid key of type string
     // helper to check if the first subNode in the comparison is a valid key of type string
     isValidComparisonString(): boolean {
-        let keys = Object.keys(this.filter);
-        let val = keys[0];
-        if (typeof val === "string" && (val === "courses_avg" ||
-                val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit"
-                || val  === "courses_dept" || val  === "courses_instructor" || val  === "courses_id"
-                || val === "courses_uuid")) {
-            return true;
-        } else return false;
+        let val = this.subNode1;
+        if (!(typeof val === "string" && (val === "courses_avg" ||
+                val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit"))) {
+            return false;
+        }
+        return true;
     }
 
     // filter data
@@ -71,5 +57,9 @@ export default class FilterGT implements IFilterComparison {
 
     isValid(): boolean {
         return this.valid;
+    }
+
+    setData(data: any[]): void {
+        this.data = data;
     }
 }
