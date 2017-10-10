@@ -91,6 +91,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterANDORIS: FilterOR
     var filterNOTIS: FilterNOT
     var filterNOTNESTED: FilterNOT
+    var filterANDMultiple: FilterAND
+    var filterNOTMultiple: FilterNOT
 
 
 
@@ -108,6 +110,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterANDORIS = new FilterOR(filter11, data.getData())
         filterNOTIS = new FilterNOT(filter12, data.getData())
         filterNOTNESTED = new FilterNOT(filter11, data.getData())
+        filterANDMultiple = new FilterAND(filter6, data.getData())
+        filterNOTMultiple = new FilterNOT(filter6, data.getData())
     });
 
     afterEach(function () {
@@ -124,6 +128,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterANDORIS = null;
         filterNOTIS = null;
         filterNOTNESTED = null;
+        filterANDMultiple = null;
+        filterNOTMultiple = null;
     });
 
 
@@ -152,11 +158,13 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     });
 
     it("Test FilterOR with 3 choices, other attributes", function () {
+        expect(filterORMultiple.checkQueryValid()).to.deep.equal(true)
         let queryResponse:any[] = filterORMultiple.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Test FilterOR nested", function () {
+        expect(filterORNested.checkQueryValid()).to.deep.equal(true)
         let queryResponse:any[] = filterORNested.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
@@ -176,41 +184,60 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     });
 
     it("Filter AND", function () {
+        expect(filterAND.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterAND.applyFilter();
         expect(queryResponse.length).to.deep.equal(1);
     });
 
     it("Filter AND and OR: AND(..., OR(..., ....))", function () {
+        expect(filterANDOR1.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDOR1.applyFilter();
         //console.log(queryResponse)
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Filter AND and OR:  OR(..., AND(..., ....))", function () {
+        expect(filterANDOR2.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDOR2.applyFilter();
         //console.log(queryResponse)
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Filter AND and OR:  OR(..., AND(..., ....)), with IS", function () {
+        expect(filterANDORIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDORIS.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 
 
     it("Filter IS", function () {
+        expect(filterIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterIS.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
     });
 
     it("Filter NOT IS", function () {
+        expect(filterNOTIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTIS.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
 
     it("Filter NOT nested", function () {
+        expect(filterNOTNESTED.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTNESTED.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
+    });
+
+    it("Filter NOT multiple", function () {
+        expect(filterNOTMultiple.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTMultiple.applyFilter();
+        expect(queryResponse.length).to.deep.equal(1);
+    });
+
+    it("Filter AND multiple", function () {
+        expect(filterANDMultiple.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterANDMultiple.applyFilter();
+        expect(queryResponse.length).to.deep.equal(0);
     });
 
     });

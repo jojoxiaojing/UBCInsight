@@ -123,6 +123,7 @@ export default class InsightFacade implements IInsightFacade {
                 };
                 reject(s);
             });
+        }).catch(function(){
         });
     }
 
@@ -166,6 +167,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(s);
             }
 
+        }).catch(function(){
         });
     }
 
@@ -181,9 +183,11 @@ export default class InsightFacade implements IInsightFacade {
                         let tempData = dataInMemory.data;
                         var queryController = new QueryController(query, tempData);
                         if (!queryController.isValid()) reject({code: 400, body: {"error":"query invalid"}});
-                        let s: InsightResponse = {code: 204, body: {}};
-                        s.body = queryController.getQueryBody().applyFilter();
-                        fullfill(s);
+                        else {
+                            let s: InsightResponse = {code: 204, body: {}};
+                            s.body = queryController.getQueryBody().applyFilter();
+                            fullfill(s);
+                        }
                     });
                 } else {
                     //Log.trace("310: If data is in memory, then just query perform");
@@ -191,11 +195,12 @@ export default class InsightFacade implements IInsightFacade {
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
                     if (!queryController.isValid()) reject({code: 400, body: {"error":"query invalid"}});
-
-                    //queryController.getQueryOpt().applyOptions();
-                    let s: InsightResponse = {code: 200, body: {}};
-                    s.body = queryController.getQueryBody().applyFilter();
-                    fullfill(s);
+                    else {
+                        //queryController.getQueryOpt().applyOptions();
+                        let s: InsightResponse = {code: 200, body: {}};
+                        s.body = queryController.getQueryBody().applyFilter();
+                        fullfill(s);
+                    }
                 }
             } catch (err){
                 reject({code: 424, body: {"error":err}});
