@@ -157,13 +157,13 @@ describe("testAddData", function() {
         insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
 
             expect.fail();
-            // done();
+            done();
         }).catch(function (err: InsightResponse) {
             let a = err;
             expect(a.code).to.deep.equal(400);
             let ifFileExist = fs.existsSync('./src/controller/data.txt');
             expect(ifFileExist).to.be.false;
-            // done();
+            done();
         });
     });
 })
