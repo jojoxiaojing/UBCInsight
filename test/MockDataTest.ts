@@ -79,6 +79,10 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter14 = {IS: {courses_instructor: "Alic*"}};
     var filter15 = {IS: {courses_instructor: "*teve"}};
     var filter16 =  {OR: [{IS: {courses_instructor: "Bob"}}, {AND: [{EQ: {courses_avg: 80}}, {EQ: {courses_audit: 10}}]}]};
+    var filter17 = {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}
+    var filter18 = {NOT: {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}}
+    var filter19 = [{NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}},
+        {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}]
 
 
 
@@ -100,6 +104,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterNOTWild1: FilterNOT
     var filterNOTWildL: FilterNOT
     var filterNOTWild1L: FilterNOT
+    var filterNOTNOT: FilterNOT
+    var filterNOTNOTNOTNOT: FilterNOT
+    var filterANDNOTNOT: FilterAND
 
 
 
@@ -123,6 +130,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTWild1 = new FilterNOT(filter13, data.getData())
         filterNOTWildL = new FilterNOT(filter14, data.getData())
         filterNOTWild1L = new FilterNOT(filter15, data.getData())
+        filterNOTNOT = new FilterNOT(filter17, data.getData())
+        filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData())
+        filterANDNOTNOT = new FilterAND(filter19, data.getData())
     });
 
     afterEach(function () {
@@ -144,6 +154,9 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTWild1 = null;
         filterNOTWildL = null;
         filterNOTWild1L = null;
+        filterNOTNOT = null;
+        filterNOTNOTNOTNOT = null;
+        filterANDNOTNOT = null;
     });
 
 
@@ -272,5 +285,23 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         let queryResponse = filterNOTWild1L.applyFilter();
         expect(queryResponse.length).to.deep.equal(3);
     });
+
+    it("Test FilterNOT NOT, double negation", function () {
+        expect(filterNOTNOT.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTNOT.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
+    });
+
+    it("Test FilterNOT NOT NOT NOT NOT, quadruple negation", function () {
+        expect(filterNOTNOTNOTNOT.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterNOTNOTNOTNOT.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
+    });
+
+/*    it("Test FilterAND with two double negations", function () {
+        expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterANDNOTNOT.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
+    });*/
 
     });

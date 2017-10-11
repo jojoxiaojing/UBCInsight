@@ -78,6 +78,22 @@ export default class QueryBody {
         return true;
     }
 
+    applyFilter(): any[] {
+        var results: any[] = []
+        let element: any;
+        for (element of this.filters) {
+            results = element.applyFilter();
+        }
+
+       // apply options to filtered results
+        this.getQueryOpt().setData(results);
+        return this.getQueryOpt().applyOptions();
+    }
+
+    isValid(): boolean {
+        return this.valid;
+    }
+
     getBody(): any {
         return this.body;
     }
@@ -95,23 +111,6 @@ export default class QueryBody {
 
     setQueryOpt(options: any) {
         this.options = new QueryOptions(options, this.data);
-    }
-
-
-    applyFilter(): any[] {
-        var results: any[] = []
-        let element: any;
-        for (element of this.filters) {
-            results = element.applyFilter();
-        }
-
-       // apply options to filtered results
-        this.getQueryOpt().setData(results);
-        return this.getQueryOpt().applyOptions();
-    }
-
-    isValid(): boolean {
-        return this.valid;
     }
 
 }

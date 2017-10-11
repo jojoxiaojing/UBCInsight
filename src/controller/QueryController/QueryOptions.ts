@@ -38,7 +38,7 @@ export default class QueryOptions {
             return false;
         }
 
-        // options are correct only if it includes valid column names and order is one of the columns listed
+        // options are correct only if they include valid column names
         for (let element of this.columns) {
             if (element !== "courses_avg" &&
                 element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
@@ -46,8 +46,11 @@ export default class QueryOptions {
                 && element !== "courses_uuid") {
                 return false;
             }
-            if (this.columns.indexOf(this.order) == -1) return false;
         }
+
+        // if ORDER is specified it is one of the columns listed
+        if (this.order != null && this.columns.indexOf(this.order) == -1) return false;
+
         return true;
     }
 

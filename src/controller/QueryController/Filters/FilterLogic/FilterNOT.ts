@@ -54,6 +54,9 @@ export default class FilterNOT implements IFilterLogic{
                 } else if (key === "IS") {
                     var isFilter = new FilterIS(val, this.data);
                     this.filters.push(isFilter);
+                } else if (key === "NOT") {
+                var notFilter = new FilterNOT(val, this.data);
+                    this.filters.push(notFilter);
                 }
             }
         }
@@ -68,9 +71,6 @@ export default class FilterNOT implements IFilterLogic{
 
 
     applyFilter(): any[] {
-        if (this.filters.length == 0) {
-            this.parseLogicFilters(this.filter);
-        }
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -79,7 +79,11 @@ export default class FilterNOT implements IFilterLogic{
 
         let element: any;
         for (element of this.filters) {
-            // NOT filter treats every type filter the same, unlike other FilterLogic filters
+            // shortcut to handle double negation
+            if (element instanceof FilterNOT) {
+                results = element.filters[0].applyFilter();
+            }
+            // NOT filter treats every other filter type the same, unlike other FilterLogic filters
             // that might do smth different for each type
             results = this.arrayDifference(results, element.applyFilter());
         }
@@ -124,8 +128,8 @@ export default class FilterNOT implements IFilterLogic{
             // every filter key of type AND, OR, NOT must contain array as its value
             for (var key in keys) {
                 let val = element[key];
-                if (key === "AND" || key === "OR" || key === "NOT") {
-                    if (!Array.isArray(val) || val.length == 0) return false;
+                if (key === "AND" || key === "OR") {
+                    if (!Array.isArray(val) || val.length == 0 || val.length == 1) return false;
                 }
             }
         }

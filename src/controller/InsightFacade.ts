@@ -110,7 +110,8 @@ export default class InsightFacade implements IInsightFacade {
                         code: 400,
                         body: {"Error": "Dataset is invalid"}
                     };
-                    reject(s);
+                    this.removeDataset(id);
+                    fullfill(s);
                 }
             }).catch(function (err:any) {
                 let s:InsightResponse = {
@@ -141,7 +142,7 @@ export default class InsightFacade implements IInsightFacade {
                             fullfill(s);
                         } else {
                             s.code = 404;
-                            reject(s);
+                            fullfill(s);
                         }
                     });
                 }else{
@@ -167,48 +168,45 @@ export default class InsightFacade implements IInsightFacade {
     performQuery(query: any): Promise <InsightResponse> {
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
-            //Log.trace("300: Check if data is in memory, otherwise read data from disk");
-            try {
-                if (dataInMemory.id === null) {
-                    //Log.trace("301: Begin reading file");
-                    fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
-                        dataInMemory = JSON.parse(data);
-                        let tempData = dataInMemory.data;
-                        var queryController = new QueryController(query, tempData);
-
-                            if (!queryController.isValid()) {
-                                let s = {code: 400, body: {"error":"query invalid"}};
-                                reject(s);
-                            }
-                                else
-                        {
-                            let s = {code: 200, body: {}};
-                            s.body = queryController.getQueryBody().applyFilter();
-                            fullfill(s);
-                        }
-
-                    });
-                } else {
-                    //Log.trace("310: If data is in memory, then just query perform");
-
+            //initialize response variable
+            var s: InsightResponse = {code: null, body: {}};
+            if (dataInMemory.id === null) {
+                fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
+                    if (err) {
+                        s.code = 424;
+                        s.body = {"error":"missing dataset"}
+                        fullfill(s);
+                    }
+                    dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
-                    let s: InsightResponse = {code: 0, body: {}};
                     if (!queryController.isValid()) {
                         s.code = 400;
                         s.body = {"error":"query invalid"};
-                        reject(s);
-                    } else {
-                        //queryController.getQueryOpt().applyOptions();
-                        let s: InsightResponse = {code: 200, body: {}};
+                        fullfill(s);
+                    } else
+                    {
+                        s.code = 200;
                         s.body = queryController.getQueryBody().applyFilter();
                         fullfill(s);
                     }
 
+                });
+            } else {
+                let tempData = dataInMemory.data;
+                var queryController = new QueryController(query, tempData);
+                if (!queryController.isValid()) {
+                    s.code = 400;
+                    s.body = {"error":"query invalid"};
+                    fullfill(s);
+                } else {
+                    s.code = 200;
+                    s.body = queryController.getQueryBody().applyFilter();
+                    fullfill(s);
                 }
-            } catch(err){
-                reject({code: 424, body: {"error":err.message}});
+
             }
+        }).catch(function(){
         });
     }
 

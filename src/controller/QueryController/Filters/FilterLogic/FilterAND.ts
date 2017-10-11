@@ -53,6 +53,9 @@ export default class FilterAND implements IFilterLogic{
                 } else if (key === "IS") {
                     var isFilter = new FilterIS(val, this.data)
                     this.filters.push(isFilter);
+                } else if (key === "NOT") {
+                    var notFilter = new FilterNOT(val, this.data)
+                    this.filters.push(notFilter);
                 }
             }
         }
@@ -67,9 +70,6 @@ export default class FilterAND implements IFilterLogic{
 
 
     applyFilter(): any[] {
-        if (this.filters.length == 0) {
-            this.parseLogicFilters(this.filter);
-        }
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -160,11 +160,11 @@ export default class FilterAND implements IFilterLogic{
                     return false;
                 }
             }
-            // every filter key of type AND, OR, NOT must contain array as its value
-            for (var key in keys) {
+            // every filter key of type AND, OR, NOT must contain array of length 2 as its value
+            for (var key of keys) {
                 let val = element[key];
-                if (key === "AND" || key === "OR" || key === "NOT") {
-                    if (!Array.isArray(val) || val.length == 0) return false;
+                if (key === "AND" || key === "OR") {
+                    if (!Array.isArray(val) || val.length == 0 || val.length == 1) return false;
                 }
             }
         }
