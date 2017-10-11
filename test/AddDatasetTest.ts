@@ -88,15 +88,15 @@ describe("testAddData", function() {
         });
     });
 
-<<<<<<< HEAD
+
     it("Run this test and remove data.text", function () {
         if(fs.existsSync('./src/controller/data.txt')){
             fs.unlink('./src/controller/data.txt');
         }
     });
 
-=======
->>>>>>> 74748322e70ec5e0c9da8099399cc0c12736de5e
+
+
     it("Import empty.zip, it should return code 400", function () {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {
 
@@ -117,44 +117,42 @@ describe("testAddData", function() {
     });
 
 
-
-<<<<<<< HEAD
-   it("Import invalid.zip, it should return code 400", function (done) {
-       console.log("text begin");
-        fs.readFile(__dirname + '/data/invalid.zip', "base64", function (err: any, data: string) {
-
-            insightF.addDataset("Invalid", data).then(function (value: InsightResponse) {
-                let m = value;
-                console.log("add data set begin");
-
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.be.true;
-                expect.fail();
-                done();
-            }).catch(function (err: any) {
-                console.log("check error");
-
-                let a = err;
-                if(err.message === "expect.fail()"){
-                    expect.fail();
-                    done();
-                }
-                expect(a.code).to.deep.equal(400);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.be.false;
-                done();
-            });
-         });
-    });
-
-
+   //
+   //
+   // it("Import invalid.zip, it should return code 400", function (done) {
+   //     console.log("text begin");
+   //      fs.readFile(__dirname + '/data/invalid.zip', "base64", function (err: any, data: string) {
+   //
+   //          insightF.addDataset("Invalid", data).then(function (value: InsightResponse) {
+   //              let m = value;
+   //              console.log("add data set begin");
+   //
+   //              let ifFileExist = fs.existsSync('./src/controller/data.txt');
+   //              expect(ifFileExist).to.be.true;
+   //              expect.fail();
+   //              done();
+   //          }).catch(function (err: any) {
+   //              console.log("check error");
+   //
+   //              let a = err;
+   //              if(err.message === "expect.fail()"){
+   //                  expect.fail();
+   //                  done();
+   //              }
+   //              expect(a.code).to.deep.equal(400);
+   //              let ifFileExist = fs.existsSync('./src/controller/data.txt');
+   //              expect(ifFileExist).to.be.false;
+   //              done();
+   //          });
+   //       });
+   //  });
 
 
 
-    it("Given an invalid string and return 400", function (done) {
-=======
+
+
+
    it("Given an invalid string and return 400", function (done) {
->>>>>>> 74748322e70ec5e0c9da8099399cc0c12736de5e
 
         insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
 
