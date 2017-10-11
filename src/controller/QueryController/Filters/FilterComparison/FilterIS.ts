@@ -53,34 +53,30 @@ export default class FilterIS implements IFilterComparison {
         let element: any;
         for (element of this.data) {
             //console.log(element)
-            let keys = Object.keys(element);
-            for (let elementKey of keys) {
-                let tempVar = element[elementKey]
+
                 // no wildcards case
                 if (this.subNode2.indexOf("*") == -1) {
-                    if (elementKey === subNode1 && tempVar === subNode2) {
+                    if (element[this.subNode1] === subNode2) {
                         dataFiltered.push(element);
                     }
 
                     //wildcard both at the beginning and in the end
                 } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.indexOf("*") == (this.subNode2.length - 1)) {
-                    if (elementKey === subNode1 && this.stringContainsSubstring(element[elementKey], this.subNode2.slice(1, this.subNode2.length-1))) {
+                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1, this.subNode2.length-1))) {
                         dataFiltered.push(element);
                     }
                 }
                 //wildcard in the beginning of the string
                 else if (this.subNode2.indexOf("*") == 0) {
-                    if (elementKey === subNode1 && this.stringContainsSubstring(element[elementKey], this.subNode2.slice(1))) {
+                    if (this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1))) {
                         dataFiltered.push(element);
                     }
                     //wildcard in the end of the string
                 } else if (this.subNode2.indexOf("*") == this.subNode2.length - 1) {
-                    if (elementKey === subNode1 && this.stringContainsSubstring(element[elementKey], this.subNode2.slice(0, this.subNode2.length-1))) {
+                    if (this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(0, this.subNode2.length-1))) {
                         dataFiltered.push(element);
                     }
                 }
-
-            }
         }
         return dataFiltered;
     }

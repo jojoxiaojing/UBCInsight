@@ -16,6 +16,7 @@ export default class FilterAND implements IFilterLogic{
     filters: IFilter[];
     data: any[];
     valid: boolean = false;
+    subtotal: any [] = [];
 
     constructor(filter: any, data: any[]) {
         this.data = data;

@@ -16,6 +16,7 @@ export default class FilterOR implements IFilterLogic{
     filters: IFilter[];
     data: any[];
     valid: boolean = false;
+    subtotal: any[] = [];
 
 
     constructor(filter: any, data: any[]) {
@@ -102,6 +103,7 @@ export default class FilterOR implements IFilterLogic{
                 //elelment is of type FilterAND so apply that class's filter function
                 results = results.concat(element.applyFilterHelper(arrayValues, this.data));
             } else if (element instanceof FilterNOT) {
+                //TODO check whether results should be this.data
                 results = this.arrayDifference(results, element.applyFilter());
             }
         }

@@ -57,6 +57,7 @@ export default class QueryBody {
         }
     }
 
+    // TODO chenge valid to not array for types other than AND/OR
     checkQueryValid(): boolean {
         var bodyKeys = this.getBody()
         // query is valid only if it contains query keywords specified in EBNF

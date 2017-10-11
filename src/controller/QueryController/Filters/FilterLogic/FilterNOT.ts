@@ -16,6 +16,7 @@ export default class FilterNOT implements IFilterLogic{
     valid: boolean = false;
 
     data: any[];
+    subtotal: any[];
 
     constructor(filter: any, data: any[]) {
         this.data = data;

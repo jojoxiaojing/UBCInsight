@@ -46,12 +46,9 @@ export default class FilterLT implements IFilterComparison {
         var dataFiltered = [];
         let element: any;
         for (element of this.data) {
-            let keys = Object.keys(element);
-            for (let elementKey of keys) {
-                if (elementKey === this.subNode1 && +element[elementKey] < this.subNode2) {
+                if (+element[this.subNode1 ] < this.subNode2) {
                     dataFiltered.push(element);
                 }
-            }
         }
         return dataFiltered;
     }
