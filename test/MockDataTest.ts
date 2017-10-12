@@ -92,48 +92,48 @@ describe("Testing Logic Operators", function () {
     var filterORNested: FilterOR;
     var filterORMultiple: FilterOR;
     var filterAND: FilterAND;
-    var filterANDOR1: FilterAND
-    var filterANDOR2: FilterOR
-    var filterIS: FilterIS
-    var filterANDORIS: FilterOR
-    var filterNOTIS: FilterNOT
-    var filterNOTNESTED: FilterNOT
-    var filterANDMultiple: FilterAND
-    var filterNOTMultiple: FilterNOT
-    var filterNOTWild1: FilterNOT
-    var filterNOTWildL: FilterNOT
-    var filterNOTWild1L: FilterNOT
-    var filterNOTNOT: FilterNOT
-    var filterNOTNOTNOTNOT: FilterNOT
-    var filterANDNOTNOT: FilterAND
-    var filter4ANDNESTED: FilterAND
+    var filterANDOR1: FilterAND;
+    var filterANDOR2: FilterOR;
+    var filterIS: FilterIS;
+    var filterANDORIS: FilterOR;
+    var filterNOTIS: FilterNOT;
+    var filterNOTNESTED: FilterNOT;
+    var filterANDMultiple: FilterAND;
+    var filterNOTMultiple: FilterNOT;
+    var filterNOTWild1: FilterNOT;
+    var filterNOTWildL: FilterNOT;
+    var filterNOTWild1L: FilterNOT;
+    var filterNOTNOT: FilterNOT;
+    var filterNOTNOTNOTNOT: FilterNOT;
+    var filterANDNOTNOT: FilterAND;
+    var filter4ANDNESTED: FilterAND;
 
 
 
     beforeEach(function () {
         var data = new MockData();
-        filterEQ = new FilterEQ(filter, data.getData())
-        filterGT = new FilterGT(filter2, data.getData())
-        filterLT = new FilterLT(filter3, data.getData())
-        filterOR = new FilterOR(filter4, data.getData())
-        filterORNested = new FilterOR(filter5, data.getData())
-        filterORMultiple = new FilterOR(filter6, data.getData())
-        filterAND = new FilterAND(filter7, data.getData())
-        filterANDOR1 = new FilterAND(filter8, data.getData())
-        filterANDOR2 = new FilterOR(filter9, data.getData())
-        filterIS = new FilterIS(filter10, data.getData())
-        filterANDORIS = new FilterOR(filter11, data.getData())
-        filterNOTIS = new FilterNOT(filter12, data.getData())
-        filterNOTNESTED = new FilterNOT(filter16, data.getData())
-        filterANDMultiple = new FilterAND(filter6, data.getData())
-        filterNOTMultiple = new FilterNOT(filter6, data.getData())
-        filterNOTWild1 = new FilterNOT(filter13, data.getData())
-        filterNOTWildL = new FilterNOT(filter14, data.getData())
-        filterNOTWild1L = new FilterNOT(filter15, data.getData())
-        filterNOTNOT = new FilterNOT(filter17, data.getData())
-        filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData())
-        filterANDNOTNOT = new FilterAND(filter19, data.getData())
-        filter4ANDNESTED = new FilterAND(filter20, data.getData())
+        filterEQ = new FilterEQ(filter, data.getData());
+        filterGT = new FilterGT(filter2, data.getData());
+        filterLT = new FilterLT(filter3, data.getData());
+        filterOR = new FilterOR(filter4, data.getData());
+        filterORNested = new FilterOR(filter5, data.getData());
+        filterORMultiple = new FilterOR(filter6, data.getData());
+        filterAND = new FilterAND(filter7, data.getData());
+        filterANDOR1 = new FilterAND(filter8, data.getData());
+        filterANDOR2 = new FilterOR(filter9, data.getData());
+        filterIS = new FilterIS(filter10, data.getData());
+        filterANDORIS = new FilterOR(filter11, data.getData());
+        filterNOTIS = new FilterNOT(filter12, data.getData());
+        filterNOTNESTED = new FilterNOT(filter16, data.getData());
+        filterANDMultiple = new FilterAND(filter6, data.getData());
+        filterNOTMultiple = new FilterNOT(filter6, data.getData());
+        filterNOTWild1 = new FilterNOT(filter13, data.getData());
+        filterNOTWildL = new FilterNOT(filter14, data.getData());
+        filterNOTWild1L = new FilterNOT(filter15, data.getData());
+        filterNOTNOT = new FilterNOT(filter17, data.getData());
+        filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData());
+        filterANDNOTNOT = new FilterAND(filter19, data.getData());
+        filter4ANDNESTED = new FilterAND(filter20, data.getData());
     });
 
     afterEach(function () {
@@ -300,8 +300,10 @@ describe("Testing Logic Operators", function () {
         expect(queryResponse.length).to.deep.equal(2);
     });
 
-/*    it("Test FilterAND: 4 ANDs nested", function () {
-        expect( filter4ANDNESTED.checkQueryValid()).to.deep.equal(true)
+    it("Test FilterAND: 4 ANDs nested", function () {
+        let m = filter4ANDNESTED.checkQueryValid();
+
+        expect( m).to.deep.equal(true)
         let queryResponse =  filter4ANDNESTED.applyFilter();
         expect(queryResponse.length).to.deep.equal(1);
     });
@@ -310,6 +312,6 @@ describe("Testing Logic Operators", function () {
         expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDNOTNOT.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
-    });*/
+    });
 
     });
