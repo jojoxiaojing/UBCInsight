@@ -26,6 +26,7 @@ export default class FilterAND implements IFilterLogic{
         if (this.checkQueryValid()) this.valid = true;
     }
 
+
     // recursively parse JSON subnodes of logic filter
     parseLogicFilters(objJSON: any): void {
         // the passed parameter might be an array, if the node above was AND/OR
@@ -76,25 +77,15 @@ export default class FilterAND implements IFilterLogic{
 
     // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-
         let element: any;
         for (element of this.filters) {
-
             // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
             // hence, reset data in each subnode; this is only necessary for AND filter
-            if (element instanceof FilterGT) {
+            if (element instanceof FilterGT || element instanceof FilterLT ||
+                element instanceof FilterEQ || element instanceof FilterIS) {
                 element.setData(results);
                 results = element.applyFilter();
-            } else if (element instanceof FilterLT) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterEQ) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterIS) {
-                element.setData(results);
-                results = element.applyFilter();
-            }else  {
+            }else if (element instanceof FilterAND || element instanceof FilterOR || element instanceof FilterNOT)  {
                 results = this.findArrayIntersection(element.applyFilter(), results);
             }
         }
@@ -102,7 +93,9 @@ export default class FilterAND implements IFilterLogic{
     }
 
 
-    findArrayIntersection(array1: any[], array2: any[]): any[] {
+    findArrayIntersection(a1: any[], a2: any[]): any[] {
+        let array1 = a1.slice();
+        let array2 = a2.slice();
         let results: any[] = [];
         var len1 = array1.length;
         var len2 = array2.length;
@@ -128,16 +121,6 @@ export default class FilterAND implements IFilterLogic{
         return true;
     }
 
-    arrayDifference(array1: any[], array2: any[]): any[] {
-
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                array1.splice(key1, 1);
-            }
-        return array1;
-    }
 
     // TODO check if this.filters is empty and its size
     checkQueryValid(): boolean {

@@ -300,7 +300,7 @@ describe("Testing Logic Operators", function () {
         expect(queryResponse.length).to.deep.equal(2);
     });
 
-/*    it("Test FilterAND: 4 ANDs nested", function () {
+    it("Test FilterAND: 4 ANDs nested", function () {
         expect( filter4ANDNESTED.checkQueryValid()).to.deep.equal(true)
         let queryResponse =  filter4ANDNESTED.applyFilter();
         expect(queryResponse.length).to.deep.equal(1);
@@ -310,6 +310,6 @@ describe("Testing Logic Operators", function () {
         expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDNOTNOT.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
-    });*/
+    });
 
     });
