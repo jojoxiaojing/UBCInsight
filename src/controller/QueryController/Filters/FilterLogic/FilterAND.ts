@@ -81,6 +81,7 @@ export default class FilterAND implements IFilterLogic{
         for (element of this.filters) {
             let tempResults = element.applyFilter();
 
+
             var stringifyTempResults = tempResults.map(function(x: any) {
                 return JSON.stringify(x);
             });
@@ -89,6 +90,8 @@ export default class FilterAND implements IFilterLogic{
             results = results.filter(function(x) {
                 return stringifyTempResults.indexOf(JSON.stringify(x)) !== -1;
             });
+
+
 
         }
         return results

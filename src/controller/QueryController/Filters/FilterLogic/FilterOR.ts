@@ -85,32 +85,13 @@ export default class FilterOR implements IFilterLogic{
             results = results.concat(element.applyFilter());
 
         }
-        return this.removeDuplicates(results);
-    }
 
+        // remove duplicates
+        results = results.filter(function(elem, index, self) {
+            return index == self.indexOf(elem);
+        })
 
-    // returns array of unique values
-    removeDuplicates(results: any[]): any[] {
-        var len = results.length;
-        for(var key1 = 0; key1 < len; key1 ++) for(var key2 = key1 + 1; key2 < len; key2++)
-            if(this.dataEntriesEqual(results[key2], results[key1])){
-                results.splice(key2,1);
-                key2--;
-                len--;
-            }
         return results;
-    }
-
-    //TODO move this to the data class
-    // check if two data entires are equal, assume the same keys
-    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
-        // keys are the same
-        let keys = Object.keys(dataEntry1);
-
-        for (let key of keys) {
-            if (dataEntry1[key] !== dataEntry2[key]) return false;
-        }
-        return true;
     }
 
 

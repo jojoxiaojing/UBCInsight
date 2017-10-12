@@ -91,7 +91,7 @@ describe("testAddData", function() {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {
 
             if(err){
-                console.log(err);
+                //console.log(err);
             }
             insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
                 expect.fail();
