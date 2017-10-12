@@ -16,7 +16,7 @@ export default class FilterNOT implements IFilterLogic{
     valid: boolean = false;
 
     data: any[];
-    subtotal: any[];
+    subtotal: any[] = [];
 
     constructor(filter: any, data: any[]) {
         this.data = data;
@@ -72,6 +72,20 @@ export default class FilterNOT implements IFilterLogic{
 
 
     applyFilter(): any[] {
+        var results: any[] = [];
+        let element: any;
+        for (element of this.filters) {
+            this.subtotal.push(element.applyFilter());
+        }
+        for (let element of this.subtotal) {
+            results = results.concat(element);
+        }
+       //results = this.removeDuplicates(results);
+       results = this.arrayDifference(this.data, results);
+       return results;
+    }
+
+/*    applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -89,7 +103,7 @@ export default class FilterNOT implements IFilterLogic{
             results = this.arrayDifference(results, element.applyFilter());
         }
         return results
-    }
+    }*/
 
     arrayDifference(array1: any[], array2: any[]): any[] {
 

@@ -69,8 +69,19 @@ export default class FilterAND implements IFilterLogic{
         }
     }
 
-
     applyFilter(): any[] {
+        var results: any[] = this.data;
+        let element: any;
+        for (element of this.filters) {
+            this.subtotal.push(element.applyFilter());
+        }
+        for (let element of this.subtotal) {
+            results = this.findArrayIntersection(results, element);;
+        }
+       return results;
+    }
+
+ /*   applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -109,7 +120,7 @@ export default class FilterAND implements IFilterLogic{
             }
         }
         return results
-    }
+    }*/
 
     findArrayIntersection(array1: any[], array2: any[]): any[] {
         let results: any[] = [];

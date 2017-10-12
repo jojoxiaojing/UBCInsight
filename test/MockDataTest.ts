@@ -298,10 +298,10 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         expect(queryResponse.length).to.deep.equal(2);
     });
 
-/*    it("Test FilterAND with two double negations", function () {
+    it("Test FilterAND with two double negations", function () {
         expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDNOTNOT.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
-    });*/
+    });
 
     });
