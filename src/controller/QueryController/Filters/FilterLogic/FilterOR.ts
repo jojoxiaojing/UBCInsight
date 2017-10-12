@@ -16,7 +16,7 @@ export default class FilterOR implements IFilterLogic{
     filters: IFilter[];
     data: any[];
     valid: boolean = false;
-    subtotal: any[] = [];
+    //subtotal: any[] = [];
 
 
     constructor(filter: any, data: any[]) {
@@ -71,6 +71,8 @@ export default class FilterOR implements IFilterLogic{
         }
     }
 
+
+/*
     applyFilter(): any[] {
         var results: any[] = [];
         let element: any;
@@ -79,6 +81,25 @@ export default class FilterOR implements IFilterLogic{
         }
         for (let element of this.subtotal) {
             results = results.concat(element);
+        }
+        return this.removeDuplicates(results);
+    }
+*/
+
+
+    applyFilter(): any[] {
+        var dataFiltered: any[] = [];
+        return this.applyFilterHelper(this.filters, dataFiltered);
+    }
+
+    // helper for recursive implementation
+    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
+
+        let element: any;
+        for (element of filters) {
+
+            results = results.concat(element.applyFilter());
+
         }
         return this.removeDuplicates(results);
     }

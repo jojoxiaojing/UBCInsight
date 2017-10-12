@@ -71,7 +71,7 @@ export default class FilterNOT implements IFilterLogic{
     }
 
 
-    applyFilter(): any[] {
+/*    applyFilter(): any[] {
         var results: any[] = [];
         let element: any;
         for (element of this.filters) {
@@ -83,9 +83,9 @@ export default class FilterNOT implements IFilterLogic{
        //results = this.removeDuplicates(results);
        results = this.arrayDifference(this.data, results);
        return results;
-    }
+    }*/
 
-/*    applyFilter(): any[] {
+    applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }
 
@@ -103,7 +103,7 @@ export default class FilterNOT implements IFilterLogic{
             results = this.arrayDifference(results, element.applyFilter());
         }
         return results
-    }*/
+    }
 
     arrayDifference(array1: any[], array2: any[]): any[] {
 

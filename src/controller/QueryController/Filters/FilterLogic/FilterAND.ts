@@ -69,7 +69,8 @@ export default class FilterAND implements IFilterLogic{
         }
     }
 
-    applyFilter(): any[] {
+
+/*    applyFilter(): any[] {
         var results: any[] = this.data;
         let element: any;
         for (element of this.filters) {
@@ -79,13 +80,42 @@ export default class FilterAND implements IFilterLogic{
             results = this.findArrayIntersection(results, element);;
         }
        return results;
-    }
+    }*/
 
- /*   applyFilter(): any[] {
+
+    applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }
 
     // helper for recursive implementation
+    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
+
+        let element: any;
+        for (element of this.filters) {
+
+            // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
+            // hence, reset data in each subnode; this is only necessary for AND filter
+            if (element instanceof FilterGT) {
+                element.setData(results);
+                results = element.applyFilter();
+            } else if (element instanceof FilterLT) {
+                element.setData(results);
+                results = element.applyFilter();
+            } else if (element instanceof FilterEQ) {
+                element.setData(results);
+                results = element.applyFilter();
+            } else if (element instanceof FilterIS) {
+                element.setData(results);
+                results = element.applyFilter();
+            }else  {
+                results = this.findArrayIntersection(element.applyFilter(), results);
+            }
+        }
+        return results
+    }
+
+
+/*    // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
 
         let element: any;
@@ -113,7 +143,7 @@ export default class FilterAND implements IFilterLogic{
             } else if (element instanceof FilterAND) {
                 element.setData(results);
                 let arrayValues = element.filters;
-                results = this.applyFilterHelper(arrayValues, results);
+                results = this.applyFilterHelper(arrayValues, []);
             } else if (element instanceof FilterNOT) {
                 element.setData(results);
                 results = this.arrayDifference(results, element.applyFilter());

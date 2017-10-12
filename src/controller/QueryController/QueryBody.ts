@@ -66,11 +66,11 @@ export default class QueryBody {
                 return false;
             }
         }
-        // value of each filter key must be a non-empty array
+        // value of filter keys AND/OR must be a non-empty array
         var key:string;
         for (key of bodyKeys) {
             let val = this.options[key];
-            if (!Array.isArray(val) || val.length == 0) return false;
+            if ((key == "AND" || key == "OR") && (!Array.isArray(val) || val.length == 0)) return false;
         }
         // every filter in filters array must be valid
         for (var element of this.filters) {

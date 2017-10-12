@@ -59,7 +59,7 @@ export default class MockData {
         }*/
 }
 
-describe("Simple filter tests, i.e., at most 1 and/or", function () {
+describe("Testing Logic Operators", function () {
 
 
     var data = new MockData();
@@ -81,9 +81,8 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filter16 =  {OR: [{IS: {courses_instructor: "Bob"}}, {AND: [{EQ: {courses_avg: 80}}, {EQ: {courses_audit: 10}}]}]};
     var filter17 = {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}
     var filter18 = {NOT: {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}}
-    var filter19 = [{NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}},
-        {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}]
-
+    var filter19 = [{NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}, {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}]
+    var filter20 = [{AND: [{AND: [{EQ: {courses_avg: 60}}, {IS: {courses_instructor: "Bob"}}]}, {IS: {courses_dept: "math"}}]}, {EQ: {courses_audit: 5}}]
 
 
     var filterEQ: FilterEQ;
@@ -107,6 +106,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
     var filterNOTNOT: FilterNOT
     var filterNOTNOTNOTNOT: FilterNOT
     var filterANDNOTNOT: FilterAND
+    var filter4ANDNESTED: FilterAND
 
 
 
@@ -133,6 +133,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTNOT = new FilterNOT(filter17, data.getData())
         filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData())
         filterANDNOTNOT = new FilterAND(filter19, data.getData())
+        filter4ANDNESTED = new FilterAND(filter20, data.getData())
     });
 
     afterEach(function () {
@@ -157,6 +158,7 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         filterNOTNOT = null;
         filterNOTNOTNOTNOT = null;
         filterANDNOTNOT = null;
+        filter4ANDNESTED = null;
     });
 
 
@@ -298,10 +300,16 @@ describe("Simple filter tests, i.e., at most 1 and/or", function () {
         expect(queryResponse.length).to.deep.equal(2);
     });
 
+/*    it("Test FilterAND: 4 ANDs nested", function () {
+        expect( filter4ANDNESTED.checkQueryValid()).to.deep.equal(true)
+        let queryResponse =  filter4ANDNESTED.applyFilter();
+        expect(queryResponse.length).to.deep.equal(1);
+    });
+
     it("Test FilterAND with two double negations", function () {
         expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDNOTNOT.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
-    });
+    });*/
 
     });
