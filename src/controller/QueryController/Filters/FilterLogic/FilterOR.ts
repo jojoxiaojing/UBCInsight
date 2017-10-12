@@ -72,21 +72,6 @@ export default class FilterOR implements IFilterLogic{
     }
 
 
-/*
-    applyFilter(): any[] {
-        var results: any[] = [];
-        let element: any;
-        for (element of this.filters) {
-            this.subtotal.push(element.applyFilter());
-        }
-        for (let element of this.subtotal) {
-            results = results.concat(element);
-        }
-        return this.removeDuplicates(results);
-    }
-*/
-
-
     applyFilter(): any[] {
         var dataFiltered: any[] = [];
         return this.applyFilterHelper(this.filters, dataFiltered);

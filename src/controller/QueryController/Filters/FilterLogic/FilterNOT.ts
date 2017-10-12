@@ -71,20 +71,6 @@ export default class FilterNOT implements IFilterLogic{
     }
 
 
-/*    applyFilter(): any[] {
-        var results: any[] = [];
-        let element: any;
-        for (element of this.filters) {
-            this.subtotal.push(element.applyFilter());
-        }
-        for (let element of this.subtotal) {
-            results = results.concat(element);
-        }
-       //results = this.removeDuplicates(results);
-       results = this.arrayDifference(this.data, results);
-       return results;
-    }*/
-
     applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }

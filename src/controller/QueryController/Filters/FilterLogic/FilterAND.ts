@@ -70,19 +70,6 @@ export default class FilterAND implements IFilterLogic{
     }
 
 
-/*    applyFilter(): any[] {
-        var results: any[] = this.data;
-        let element: any;
-        for (element of this.filters) {
-            this.subtotal.push(element.applyFilter());
-        }
-        for (let element of this.subtotal) {
-            results = this.findArrayIntersection(results, element);;
-        }
-       return results;
-    }*/
-
-
     applyFilter(): any[] {
         return this.applyFilterHelper(this.filters, this.data);
     }
@@ -114,43 +101,6 @@ export default class FilterAND implements IFilterLogic{
         return results
     }
 
-
-/*    // helper for recursive implementation
-    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-
-        let element: any;
-        for (element of this.filters) {
-
-            // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
-            // hence, reset data in each subnode; this is only necessary for AND filter
-            if (element instanceof FilterGT) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterLT) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterEQ) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterIS) {
-                element.setData(results);
-                results = element.applyFilter();
-            }else if (element instanceof FilterOR) {
-                element.setData(results);
-                let arrayValues = element.filters;
-                let tempResults = element.applyFilterHelper(arrayValues, []);
-                results = this.findArrayIntersection(results, tempResults);
-            } else if (element instanceof FilterAND) {
-                element.setData(results);
-                let arrayValues = element.filters;
-                results = this.applyFilterHelper(arrayValues, []);
-            } else if (element instanceof FilterNOT) {
-                element.setData(results);
-                results = this.arrayDifference(results, element.applyFilter());
-            }
-        }
-        return results
-    }*/
 
     findArrayIntersection(array1: any[], array2: any[]): any[] {
         let results: any[] = [];
