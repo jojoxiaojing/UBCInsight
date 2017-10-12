@@ -56,6 +56,38 @@ describe("testAddData", function() {
         });
     });
 
+    it("Import valid.zip ，store the data and remove successfully", function (done) {
+
+        fs.readFile(__dirname + '/data/valid.zip', "base64", function (err: any, data: string) {
+
+            insightF.addDataset("valid", data).then(function (value: InsightResponse) {
+                let a = value;
+                expect(a.code).to.deep.equal(204);
+
+                let m = fs.existsSync('./src/controller/data.txt');
+                expect(m).to.be.true;
+                let dataID = insightF.getValue().id;
+                expect(dataID).to.deep.equal("Courses");
+                insightF.removeDataset("Courses").then(function (value: InsightResponse) {
+                    let m = value;
+                    expect(m.code).to.deep.equal(204);
+                    let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                    expect(ifFileExist).to.be.false;
+
+                    done();
+                }).catch(function (value: InsightResponse) {
+                    expect.fail();
+                    done();
+                });
+
+            }).catch(function (err: InsightResponse) {
+                expect.fail();
+                done();
+
+            });
+        });
+    });
+
 
     it("Import course.zip ，store the data and remove unsuccessfully", function (done) {
 
@@ -106,6 +138,29 @@ describe("testAddData", function() {
         });
     });
 
+    it("run this and remove data.txt",function(){
+        if(fs.existsSync('./src/controller/data.txt')){
+            fs.unlink('./src/controller/data.txt');
+        }
+    });
+
+    it("Import invalid.zip, it should return code 400", function () {
+        fs.readFile(__dirname + '/data/invalid.zip', "base64", function (err: any, data: string) {
+
+
+            insightF.addDataset("invalid", data).then(function (value: any) {
+                let a = value;
+                expect.fail();
+                // done();
+            }).catch(function (err: any) {
+                let a = err;
+                expect(a.code).to.deep.equal(400);
+                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                expect(ifFileExist).to.deep.equal(false);
+                // done();
+            });
+        });
+    });
 
 
     it("Given an invalid string and return 400", function (done) {
