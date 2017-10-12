@@ -84,36 +84,22 @@ export default class FilterNOT implements IFilterLogic{
             if (element instanceof FilterNOT) {
                 results = element.filters[0].applyFilter();
             }
-            results = this.arrayDifference(results, element.applyFilter());
+            //results = this.arrayDifference(results, element.applyFilter());
+            let tempResults = element.applyFilter();
+
+            var stringifyTempResults = tempResults.map(function(x: any) {
+                return JSON.stringify(x);
+            });
+
+            results = results.filter(function(x) {
+                return stringifyTempResults.indexOf(JSON.stringify(x)) === -1;
+            });
+
         }
         return results
     }
 
-    arrayDifference(a1: any[], a2: any[]): any[] {
-        if (a1 == null || a1.length == 0) return [];
-        let array1 = a1.slice();
-        let array2 = a2
-        //let array2 = a2.slice();
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                array1.splice(key1, 1);
-            }
-        return array1;
-    }
 
-    //TODO move this to the data class
-    // check if two data entires are equal, assume the same keys
-    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
-        // keys are the same
-        let keys = Object.keys(dataEntry1);
-
-        for (let key of keys) {
-            if (dataEntry1[key] !== dataEntry2[key]) return false;
-        }
-        return true;
-    }
 
     checkQueryValid(): boolean {
         // query is valid only if it contains query keywords specified in EBNF

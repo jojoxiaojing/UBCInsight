@@ -79,43 +79,21 @@ export default class FilterAND implements IFilterLogic{
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         let element: any;
         for (element of this.filters) {
-                results = this.findArrayIntersection(element.applyFilter(), results);
+            let tempResults = element.applyFilter();
 
-               // results  = results.filter((val) => this.dataEntriesEqual(element.applyFilter(), results))
+            var stringifyTempResults = tempResults.map(function(x: any) {
+                return JSON.stringify(x);
+            });
+
+            // array intersection
+            results = results.filter(function(x) {
+                return stringifyTempResults.indexOf(JSON.stringify(x)) !== -1;
+            });
+
         }
         return results
     }
 
-
-    findArrayIntersection(a1: any[], a2: any[]): any[] {
-        let array1 = a1;
-        //let array1 = a1.slice();
-        if (a2 == null || a2.length == 0) return [];
-        let array2 = a2.slice();
-        let results: any[] = [];
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = 0; key1 < len1; key1 ++) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                results.push(array1[key1]);
-                array2.splice(key2,1);
-                key2--;
-                len2--;
-            }
-        return results;
-    }
-
-    //TODO move this to the data class
-    // check if two data entires are equal, assume the same keys
-    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
-        // keys are the same
-        let keys = Object.keys(dataEntry1);
-
-        for (let key of keys) {
-            if (dataEntry1[key] !== dataEntry2[key]) return false;
-        }
-        return true;
-    }
 
 
     checkQueryValid(): boolean {
