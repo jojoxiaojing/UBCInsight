@@ -86,7 +86,8 @@ export default class FilterAND implements IFilterLogic{
 
 
     findArrayIntersection(a1: any[], a2: any[]): any[] {
-        let array1 = a1.slice();
+        let array1 = a1;
+        //let array1 = a1.slice();
         let array2 = a2.slice();
         let results: any[] = [];
         var len1 = array1.length;

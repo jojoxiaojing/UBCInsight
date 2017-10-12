@@ -93,7 +93,8 @@ export default class FilterNOT implements IFilterLogic{
 
     arrayDifference(a1: any[], a2: any[]): any[] {
         let array1 = a1.slice();
-        let array2 = a2.slice();
+        let array2 = a2
+        //let array2 = a2.slice();
         var len1 = array1.length;
         var len2 = array2.length;
         for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
