@@ -79,15 +79,7 @@ export default class FilterAND implements IFilterLogic{
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         let element: any;
         for (element of this.filters) {
-            // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
-            // hence, reset data in each subnode; this is only necessary for AND filter
-            if (element instanceof FilterGT || element instanceof FilterLT ||
-                element instanceof FilterEQ || element instanceof FilterIS) {
-                element.setData(results);
-                results = element.applyFilter();
-            }else if (element instanceof FilterAND || element instanceof FilterOR || element instanceof FilterNOT)  {
                 results = this.findArrayIntersection(element.applyFilter(), results);
-            }
         }
         return results
     }
@@ -122,7 +114,6 @@ export default class FilterAND implements IFilterLogic{
     }
 
 
-    // TODO check if this.filters is empty and its size
     checkQueryValid(): boolean {
         // query is valid only if it contains query keywords specified in EBNF
         for (let element of this.filter) {
