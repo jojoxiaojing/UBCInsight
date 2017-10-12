@@ -80,6 +80,8 @@ export default class FilterAND implements IFilterLogic{
         let element: any;
         for (element of this.filters) {
                 results = this.findArrayIntersection(element.applyFilter(), results);
+
+               // results  = results.filter((val) => this.dataEntriesEqual(element.applyFilter(), results))
         }
         return results
     }
@@ -88,6 +90,7 @@ export default class FilterAND implements IFilterLogic{
     findArrayIntersection(a1: any[], a2: any[]): any[] {
         let array1 = a1;
         //let array1 = a1.slice();
+        if (a2 == null || a2.length == 0) return [];
         let array2 = a2.slice();
         let results: any[] = [];
         var len1 = array1.length;

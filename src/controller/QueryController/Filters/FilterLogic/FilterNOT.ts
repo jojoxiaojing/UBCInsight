@@ -90,6 +90,7 @@ export default class FilterNOT implements IFilterLogic{
     }
 
     arrayDifference(a1: any[], a2: any[]): any[] {
+        if (a1 == null || a1.length == 0) return [];
         let array1 = a1.slice();
         let array2 = a2
         //let array2 = a2.slice();
