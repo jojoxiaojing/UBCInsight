@@ -20,7 +20,7 @@ export default class QueryBody {
     constructor(body: any, data: any[]) {
         this.setBody(body);
         this.filters = [];
-        this.data = data;
+        this.setData(data);
         this.parseQueryFilters(this.body);
         if (this.checkQueryValid()) this.valid = true;
     }

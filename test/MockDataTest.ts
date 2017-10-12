@@ -199,20 +199,6 @@ describe("Testing Logic Operators", function () {
         expect(queryResponse.length).to.deep.equal(3);
     });
 
-    it("Data entries equal", function () {
-        let a: DataEntry = new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1");
-        let b: DataEntry = new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1");
-        let c: DataEntry = new DataEntry("math", "101", 60, "Bill", 10, 10, 5, "A1");
-        expect(filterOR.dataEntriesEqual(a, b)).to.deep.equal(true);
-        expect(filterOR.dataEntriesEqual(a, c)).to.deep.equal(false);
-    });
-
-    it("Remove duplicates", function () {
-        data.getData().push(new DataEntry("math", "101", 60, "Bob", 100, 10, 5, "A1"));
-        data.getData().push(new DataEntry("educ", "202", 90, "Alice", 20, 30, 50, "C5"));
-        expect(filterOR.removeDuplicates(data.getData()).length).to.deep.equal(5);
-    });
-
     it("Filter AND", function () {
         expect(filterAND.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterAND.applyFilter();
