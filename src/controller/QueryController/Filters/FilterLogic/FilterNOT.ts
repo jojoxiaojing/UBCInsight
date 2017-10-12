@@ -84,8 +84,6 @@ export default class FilterNOT implements IFilterLogic{
             if (element instanceof FilterNOT) {
                 results = element.filters[0].applyFilter();
             }
-            // NOT filter treats every other filter type the same, unlike other FilterLogic filters
-            // that might do smth different for each type
             results = this.arrayDifference(results, element.applyFilter());
         }
         return results
