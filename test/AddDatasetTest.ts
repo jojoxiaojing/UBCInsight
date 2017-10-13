@@ -6,7 +6,7 @@ var fs = require("fs");
 
 
 describe("testAddData", function() {
-    this.timeout(1000000);
+    this.timeout(5000);
     var insightF: InsightFacade;
     before(function () {
         //Log.test('Before: ' + (<any>this).test.parent.title);
@@ -67,8 +67,8 @@ describe("testAddData", function() {
                 let m = fs.existsSync('./src/controller/data.txt');
                 expect(m).to.be.true;
                 let dataID = insightF.getValue().id;
-                expect(dataID).to.deep.equal("Courses");
-                insightF.removeDataset("Courses").then(function (value: InsightResponse) {
+                expect(dataID).to.deep.equal("valid");
+                insightF.removeDataset("valid").then(function (value: InsightResponse) {
                     let m = value;
                     expect(m.code).to.deep.equal(204);
                     let ifFileExist = fs.existsSync('./src/controller/data.txt');
@@ -113,7 +113,7 @@ describe("testAddData", function() {
                     });
                 });
             }).catch(function (err: InsightResponse) {
-                //expect.fail();
+                expect.fail();
                 done();
             });
         });
