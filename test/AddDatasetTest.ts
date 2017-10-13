@@ -122,7 +122,7 @@ describe("testAddData", function() {
 
     });
 
-    it("Import empty.zip, it should return code 400", function () {
+    it("Import invalid.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/emptyFolder.zip', "base64");
 
 
