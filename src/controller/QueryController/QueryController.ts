@@ -89,4 +89,9 @@ export default class QueryController implements IQueryController{
         return this.query;
     }
 
+    setData(data: any): void {
+        this.data = data;
+        //this.getQueryBody().setData(data);
+    }
+
 }

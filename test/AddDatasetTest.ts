@@ -26,7 +26,7 @@ describe("testAddData", function() {
     });
 
 
-    it("Import course.zip ，store the data and remove successfully", function (done) {
+    /*it("Import course.zip ，store the data and remove successfully", function (done) {
 
         fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
 
@@ -85,7 +85,7 @@ describe("testAddData", function() {
                 done();
             });
         });
-    });
+    });*/
 
     it("Import empty.zip, it should return code 400", function () {
         fs.readFile(__dirname + '/data/emptyFolder.zip', "base64", function (err: any, data: string) {

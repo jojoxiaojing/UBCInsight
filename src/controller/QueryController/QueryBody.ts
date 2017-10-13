@@ -86,11 +86,11 @@ export default class QueryBody {
             results = element.applyFilter();
         }
 
-        var s: any = {result: []}
+        //var s: any = {result: []}
         // apply options to filtered results
         this.getQueryOpt().setData(results);
-        s.result = this.getQueryOpt().applyOptions();
-        return s
+        //s.result = this.getQueryOpt().applyOptions();
+        return results
     }
 
     isValid(): boolean {
@@ -108,8 +108,11 @@ export default class QueryBody {
         this.body = body;
     }
 
-    setData(data: any[]) {
+    setData(data: any[]): void {
         this.data = data;
+/*        for (let i of this.filters) {
+            i.setData(data);
+        }*/
     }
 
     setQueryOpt(options: any) {

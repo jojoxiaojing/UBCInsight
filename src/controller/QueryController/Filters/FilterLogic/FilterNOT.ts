@@ -127,6 +127,9 @@ export default class FilterNOT implements IFilterLogic{
 
     setData(data: any[]): void {
         this.data = data;
+        for (let i of this.filters) {
+            i.setData(data);
+        }
     }
 
 }

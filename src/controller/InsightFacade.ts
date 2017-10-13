@@ -124,7 +124,8 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return null;
+/*        return new Promise<InsightResponse>((fullfill, reject) =>{
             var exitOfFILE:Boolean = fs.existsSync(__dirname + '/data.txt');
             let s: InsightResponse = {
                 code: 204,
@@ -162,7 +163,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(s);
             }
 
-        });
+        });*/
     }
 
     performQuery(query: any): Promise <InsightResponse> {
