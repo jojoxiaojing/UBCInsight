@@ -6,7 +6,7 @@ var fs = require("fs");
 
 
 describe("testAddData", function() {
-    this.timeout(30000);
+    this.timeout(5000);
     var insightF: InsightFacade;
     before(function () {
         //Log.test('Before: ' + (<any>this).test.parent.title);
@@ -37,15 +37,15 @@ describe("testAddData", function() {
             let a = value;
             expect(a.code).to.deep.equal(204);
 
-            let m = fs.existsSync('./src/controller/data.txt');
+            let m = fs.existsSync('./src/controller/Courses');
             expect(m).to.be.true;
-            let dataID = insightF.getValue().id;
-            expect(dataID).to.deep.equal("Courses");
+            let dataID = insightF.getValue().has("Courses");
+            expect(dataID).to.be.true;
             return insightF.removeDataset("Courses").then(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(204);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.deep.equal(false);
+                let ifFileExist = fs.existsSync('./src/controller/Courses');
+                expect(ifFileExist).to.be.false;
             }).catch(function (value: InsightResponse) {
                 expect.fail();
             });
@@ -60,17 +60,17 @@ describe("testAddData", function() {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
-        return insightF.addDataset("valid", data).then(function (value: InsightResponse) {
+        return insightF.addDataset("smallValid", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
-            let m = fs.existsSync('./src/controller/data.txt');
+            let m = fs.existsSync('./src/controller/smallValid');
             expect(m).to.be.true;
-            let dataID = insightF.getValue().id;
-            expect(dataID).to.deep.equal("valid");
-            return insightF.removeDataset("valid").then(function (value: InsightResponse) {
+            let dataID = insightF.getValue().has("smallValid");
+            expect(dataID).to.be.true;
+            return insightF.removeDataset("smallValid").then(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(204);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                let ifFileExist = fs.existsSync('./src/controller/smallValid');
                 expect(ifFileExist).to.be.false;
             }).catch(function (value: InsightResponse) {
                 expect.fail();
@@ -90,17 +90,17 @@ describe("testAddData", function() {
         return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
-            let m = fs.existsSync('./src/controller/data.txt');
+            let m = fs.existsSync('./src/controller/Courses');
             expect(m).to.be.true;
-            let dataID = insightF.getValue().id;
-            expect(dataID).to.deep.equal("Courses");
+            let dataID = insightF.getValue().has("Courses");
+            expect(dataID).to.be.true;
             return insightF.removeDataset("Empty").then(function (value: InsightResponse) {
                 expect.fail();
 
             }).catch(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(404);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                let ifFileExist = fs.existsSync('./src/controller/Courses');
                 expect(ifFileExist).to.be.true;
                 return insightF.removeDataset("Courses").then(function (value:InsightResponse) {
                     expect(value.code).to.deep.equal(204);
@@ -129,7 +129,7 @@ describe("testAddData", function() {
         }).catch(function (err: InsightResponse) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/Empty');
             expect(ifFileExist).to.be.false;
         });
 
@@ -146,7 +146,7 @@ describe("testAddData", function() {
         }).catch(function (err: InsightResponse) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/biginvalid');
             expect(ifFileExist).to.be.false;
         });
 
@@ -162,7 +162,7 @@ describe("testAddData", function() {
         }).catch(function (err: InsightResponse) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/Empty');
             expect(ifFileExist).to.be.false;
         });
 
@@ -185,7 +185,7 @@ describe("testAddData", function() {
         }).catch(function (err: any) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/invalid');
             expect(ifFileExist).to.be.false;
 
         });
@@ -195,14 +195,14 @@ describe("testAddData", function() {
         let data = fs.readFileSync(__dirname + '/data/figure1.zip', "base64");
 
 
-        return insightF.addDataset("invalid", data).then(function (value: any) {
+        return insightF.addDataset("figure1", data).then(function (value: any) {
             let a = value;
             expect.fail();
 
         }).catch(function (err: any) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/figure1');
             expect(ifFileExist).to.be.false;
 
         });
@@ -212,14 +212,14 @@ describe("testAddData", function() {
         let data = fs.readFileSync(__dirname + '/data/figure1.png', "base64");
 
 
-        return insightF.addDataset("invalid", data).then(function (value: any) {
+        return insightF.addDataset("figure1", data).then(function (value: any) {
             let a = value;
             expect.fail();
 
         }).catch(function (err: any) {
             let a = err;
             expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            let ifFileExist = fs.existsSync('./src/controller/figure1');
             expect(ifFileExist).to.be.false;
 
         });
@@ -244,14 +244,13 @@ describe("testAddData", function() {
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
         return insightF.addDataset("valid", data).then(function (value: InsightResponse) {
-            insightF.getValue().id = null;
-            insightF.getValue().data = [];
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+
+            let ifFileExist = fs.existsSync('./src/controller/valid');
             expect(ifFileExist).to.be.true;
             return insightF.removeDataset("valid").then(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(204);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                let ifFileExist = fs.existsSync('./src/controller/valid');
                 expect(ifFileExist).to.be.false;
             }).catch(function (value: InsightResponse) {
                 expect.fail();
@@ -262,8 +261,7 @@ describe("testAddData", function() {
     });
 
     it("Test remove when not in memory and file does not exist", function () {
-        insightF.getValue().id = null;
-        insightF.getValue().data = [];
+
         if(fs.existsSync('./src/controller/data.txt')){
             fs.unlinkSync('./src/controller/data.txt');
         }
@@ -273,7 +271,7 @@ describe("testAddData", function() {
             }).catch(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(404);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                let ifFileExist = fs.existsSync('./src/controller/valid');
                 expect(ifFileExist).to.be.false;
             });
 

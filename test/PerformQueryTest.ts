@@ -15,8 +15,6 @@ describe("testPerformQuery", function() {
     beforeEach(function () {
         //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
-        insightF.getValue().id = null;
-        insightF.getValue().data = [];
 
     });
 
@@ -278,8 +276,7 @@ describe("testPerformQuery", function() {
     //Test if there is no such dataset
 
     it("If file does not exit, it should return 424 ", function () {
-        insightF.getValue().id = null;
-        insightF.getValue().data = [];
+
 
         if(fs.existsSync('./src/controller/data.txt')){
             fs.unlinkSync('./src/controller/data.txt');
