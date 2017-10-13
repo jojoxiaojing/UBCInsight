@@ -15,6 +15,8 @@ describe("testPerformQuery", function() {
     beforeEach(function () {
         //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
+        insightF.getValue().id = null;
+        insightF.getValue().data = [];
 
     });
 
@@ -256,12 +258,12 @@ describe("testPerformQuery", function() {
 
     //Test if there is no such dataset
 
-/*    it("If file does not exit, it should return 424 ", function () {
+   it("If file does not exit, it should return 424 ", function () {
         insightF.getValue().id = null;
         insightF.getValue().data = [];
 
         if(fs.existsSync('./src/controller/data.txt')){
-            fs.unlink('./src/controller/data.txt');
+            fs.unlinkSync('./src/controller/data.txt');
         }
         var testQuery = {WHERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
         return insightF.performQuery(testQuery).then(function(value:any){
@@ -272,7 +274,7 @@ describe("testPerformQuery", function() {
             expect(a.code).to.equal(424);
         });
 
-    });*/
+    });
 
 
 

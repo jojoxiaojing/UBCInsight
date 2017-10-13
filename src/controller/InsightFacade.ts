@@ -50,7 +50,6 @@ export default class InsightFacade implements IInsightFacade {
 
 
 
-                if(promiseArr.length !== 0){
                     Promise.all(promiseArr).then(function(value:any){
                         //Log.trace("120:Begin json parse the data");
 
@@ -118,14 +117,7 @@ export default class InsightFacade implements IInsightFacade {
                         let a = err;
                         throw new Error(a.message);
                     });
-                }else{
-                    let s:InsightResponse = {
-                        code: 400,
-                        body: {"Error": "Dataset is invalid"}
-                    };
-                    this.removeDataset(id);
-                    reject(s);
-                }
+
             }).
             catch(function (err:any) {
                 let s:InsightResponse = {
