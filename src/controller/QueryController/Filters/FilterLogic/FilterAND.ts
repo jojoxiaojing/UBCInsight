@@ -74,78 +74,27 @@ export default class FilterAND implements IFilterLogic{
         return this.applyFilterHelper(this.filters, this.data);
     }
 
-    // helper for recursive implementation
+
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-
         let element: any;
-        for (element of this.filters) {
+        for (element of filters) {
+            let tempResults = element.applyFilter();
 
-            // need to pass the outcome of previous AST sub filter in AND as input to the next sub filter,
-            // hence, reset data in each subnode; this is only necessary for AND filter
-            if (element instanceof FilterGT) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterLT) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterEQ) {
-                element.setData(results);
-                results = element.applyFilter();
-            } else if (element instanceof FilterIS) {
-                element.setData(results);
-                results = element.applyFilter();
-            }else if (element instanceof FilterOR) {
-                element.setData(results);
-                let arrayValues = element.filters;
-                let tempResults = element.applyFilterHelper(arrayValues, []);
-                results = this.findArrayIntersection(results, tempResults);
-            } else if (element instanceof FilterAND) {
-                element.setData(results);
-                let arrayValues = element.filters;
-                results = this.applyFilterHelper(arrayValues, results);
-            } else if (element instanceof FilterNOT) {
-                element.setData(results);
-                results = this.arrayDifference(results, element.applyFilter());
-            }
+
+            let stringifyTempResults = tempResults.map(function(x: any) {
+                return JSON.stringify(x);
+            });
+
+            // array intersection
+            results = results.filter(function(x, i) {
+                //console.log(i);
+                let temp = JSON.stringify(x);
+                let temp2 = stringifyTempResults.indexOf(temp);
+                return temp2 !== -1;
+            });
+
         }
         return results
-    }
-
-    findArrayIntersection(array1: any[], array2: any[]): any[] {
-        let results: any[] = [];
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = 0; key1 < len1; key1 ++) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                results.push(array1[key1]);
-                array2.splice(key2,1);
-                key2--;
-                len2--;
-            }
-        return results;
-    }
-
-    //TODO move this to the data class
-    // check if two data entires are equal, assume the same keys
-    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
-        // keys are the same
-        let keys = Object.keys(dataEntry1);
-
-        for (let key of keys) {
-            if (dataEntry1[key] !== dataEntry2[key]) return false;
-        }
-        return true;
-    }
-
-    arrayDifference(array1: any[], array2: any[]): any[] {
-
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                array1.splice(key1, 1);
-            }
-        return array1;
     }
 
     // TODO check if this.filters is empty and its size
