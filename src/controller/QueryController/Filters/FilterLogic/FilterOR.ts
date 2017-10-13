@@ -83,66 +83,18 @@ export default class FilterOR implements IFilterLogic{
         let element: any;
         for (element of filters) {
 
-            if (element instanceof FilterGT) {
-                let tempResults = element.applyFilter();
-                results = results.concat(tempResults);
-            } else if (element instanceof FilterLT) {
-                let tempResults = element.applyFilter();
-                results = results.concat(tempResults);
-            } else if (element instanceof FilterEQ) {
-                let tempResults = element.applyFilter();
-                results = results.concat(tempResults);
-            } else if (element instanceof FilterIS) {
-                let tempResults = element.applyFilter();
-                results = results.concat(tempResults);
-            } else if (element instanceof FilterOR) {
-                let arrayValues = element.filters;
-                results = results.concat(this.applyFilterHelper(arrayValues, []));
-            } else if (element instanceof FilterAND) {
-                let arrayValues = element.filters;
-                //elelment is of type FilterAND so apply that class's filter function
-                results = results.concat(element.applyFilterHelper(arrayValues, this.data));
-            } else if (element instanceof FilterNOT) {
-                //TODO check whether results should be this.data
-                results = this.arrayDifference(results, element.applyFilter());
-            }
-        }
-        return this.removeDuplicates(results);
-    }
+            results = results.concat(element.applyFilter());
 
-    // returns array of unique values
-    removeDuplicates(results: any[]): any[] {
-        var len = results.length;
-        for(var key1 = 0; key1 < len; key1 ++) for(var key2 = key1 + 1; key2 < len; key2++)
-            if(this.dataEntriesEqual(results[key2], results[key1])){
-                results.splice(key2,1);
-                key2--;
-                len--;
-            }
+        }
+
+        // remove duplicates
+        results = results.filter(function(elem, index, self) {
+            return index == self.indexOf(elem);
+        })
+
         return results;
     }
-
-    //TODO move this to the data class
-    // check if two data entires are equal, assume the same keys
-    dataEntriesEqual(dataEntry1: any, dataEntry2: any): boolean {
-        // keys are the same
-        let keys = Object.keys(dataEntry1);
-
-        for (let key of keys) {
-            if (dataEntry1[key] !== dataEntry2[key]) return false;
-        }
-        return true;
-    }
-
-    arrayDifference(array1: any[], array2: any[]): any[] {
-        var len1 = array1.length;
-        var len2 = array2.length;
-        for(var key1 = len1 - 1; key1 >= 0; key1 --) for(var key2 = 0; key2 < len2; key2++)
-            if(this.dataEntriesEqual(array2[key2], array1[key1])){
-                array1.splice(key1, 1);
-            }
-        return array1;
-    }
+    
 
     checkQueryValid(): boolean {
         // query is valid only if it contains query keywords specified in EBNF
