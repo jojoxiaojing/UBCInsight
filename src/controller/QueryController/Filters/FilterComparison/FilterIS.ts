@@ -58,32 +58,32 @@ export default class FilterIS implements IFilterComparison {
         for (element of this.data) {
             //console.log(element)
 
-                // no wildcards case
-                if (this.subNode2.indexOf("*") == -1) {
-                    if (element[this.subNode1] === subNode2) {
-                        dataFiltered.push(element);
-                    }
+            // no wildcards case
+            if (this.subNode2.indexOf("*") == -1) {
+                if (element[this.subNode1] === subNode2) {
+                    dataFiltered.push(element);
+                }
 
-                    //wildcard both at the beginning and in the end
-                } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (nodeLength - 2)) {
-                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, nodeLength - 2))) {
-                        dataFiltered.push(element);
-                        continue;
-                    }
+                //wildcard both at the beginning and in the end
+            } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (nodeLength - 2)) {
+                if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, nodeLength - 2))) {
+                    dataFiltered.push(element);
+                    continue;
                 }
-                //wildcard in the beginning of the string
-                else if (this.subNode2.indexOf("*") == 0) {
-                    if (this.stringContainsSubstring(element[this.subNode1].slice(element[this.subNode1].length - nodeLength + 1,
-                            element[this.subNode1].length), this.subNode2.slice(1))) {
-                        dataFiltered.push(element);
-                    }
-                    //wildcard in the end of the string
-                } else if (this.subNode2.indexOf("*") == nodeLength - 1) {
-                    if (this.stringContainsSubstring(element[this.subNode1].slice(0, nodeLength-1),
-                            this.subNode2.slice(0, nodeLength - 1))) {
-                        dataFiltered.push(element);
-                    }
+            }
+            //wildcard in the beginning of the string
+            else if (this.subNode2.indexOf("*") == 0) {
+                if (this.stringContainsSubstring(element[this.subNode1].slice(element[this.subNode1].length - nodeLength + 1,
+                        element[this.subNode1].length), this.subNode2.slice(1))) {
+                    dataFiltered.push(element);
                 }
+                //wildcard in the end of the string
+            } else if (this.subNode2.indexOf("*") == nodeLength - 1) {
+                if (this.stringContainsSubstring(element[this.subNode1].slice(0, nodeLength-1),
+                        this.subNode2.slice(0, nodeLength - 1))) {
+                    dataFiltered.push(element);
+                }
+            }
         }
         return dataFiltered;
     }
