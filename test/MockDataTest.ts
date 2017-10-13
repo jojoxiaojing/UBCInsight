@@ -165,10 +165,10 @@ describe("Testing Logic Operators", function () {
     });
 
 
-   it("Test FilterEQ on course_avg", function () {
+    it("Test FilterEQ on course_avg", function () {
         expect(filterEQ.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterEQ.applyFilter();
-       // expect(queryResponse[0].courses_instructor).to.deep.equal("Steve");
+        // expect(queryResponse[0].courses_instructor).to.deep.equal("Steve");
         expect(queryResponse.length).to.deep.equal(1);
     });
 
@@ -289,24 +289,20 @@ describe("Testing Logic Operators", function () {
         expect(queryResponse.length).to.deep.equal(2);
     });
 
-/*    it("Test FilterAND: 4 ANDs nested", function () {
-        let m = filter4ANDNESTED.checkQueryValid();
-
-        expect( m).to.deep.equal(true)
-        let queryResponse =  filter4ANDNESTED.applyFilter();
-        expect(queryResponse.length).to.deep.equal(1);
-    });
-
-    it("Test FilterAND with two double negations", function () {
-        expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
-        let queryResponse = filterANDNOTNOT.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
-    });
-
-    it("Test FilterAND with 2 NOT IS", function () {
-        expect(filterANDNOTIS.checkQueryValid()).to.deep.equal(true)
-        let queryResponse = filterANDNOTIS.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
-    });
-
-    }*/);
+    /*    it("Test FilterAND: 4 ANDs nested", function () {
+            let m = filter4ANDNESTED.checkQueryValid();
+            expect( m).to.deep.equal(true)
+            let queryResponse =  filter4ANDNESTED.applyFilter();
+            expect(queryResponse.length).to.deep.equal(1);
+        });
+        it("Test FilterAND with two double negations", function () {
+            expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
+            let queryResponse = filterANDNOTNOT.applyFilter();
+            expect(queryResponse.length).to.deep.equal(2);
+        });
+        it("Test FilterAND with 2 NOT IS", function () {
+            expect(filterANDNOTIS.checkQueryValid()).to.deep.equal(true)
+            let queryResponse = filterANDNOTIS.applyFilter();
+            expect(queryResponse.length).to.deep.equal(2);
+        });*/
+});

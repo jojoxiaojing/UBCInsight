@@ -31,7 +31,7 @@ export default class QueryBody {
         var objJSON = this.getBody()
         for (var key in objJSON) {
             let val = objJSON[key];
-           // check if each filter is of type listed in AST, then push to the array of filters
+            // check if each filter is of type listed in AST, then push to the array of filters
             if (key === "OR") {
                 var orFilter = new FilterOR(val, this.data);
                 this.filters.push(orFilter);
@@ -92,6 +92,7 @@ export default class QueryBody {
         s.result = this.getQueryOpt().applyOptions();
         return s
     }
+
     isValid(): boolean {
         return this.valid;
     }
