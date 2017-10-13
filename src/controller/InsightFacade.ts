@@ -162,6 +162,7 @@ export default class InsightFacade implements IInsightFacade {
                 }else{
                     s.code = 404;
                     reject(s);
+                    return;
                 }
             }else if(dataInMemory.id == id){
                 dataInMemory.id = null;
@@ -185,12 +186,14 @@ export default class InsightFacade implements IInsightFacade {
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
             if (dataInMemory.id === null) {
-                fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
-                    if (err) {
-                        s.code = 424;
-                        s.body = {"error":"missing dataset"}
-                        reject(s);
-                    }
+                if (!fs.existsSync(__dirname + '/data.txt')) {
+                    s.code = 424;
+                    s.body = {"error":"missing dataset"}
+                    reject(s);
+                    return;
+                }else{
+                    let data = fs.readFileSync(__dirname + '/data.txt', 'utf-8');
+
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
                     var queryController = new QueryController(query, tempData);
@@ -204,8 +207,7 @@ export default class InsightFacade implements IInsightFacade {
                         s.body = queryController.getQueryBody().applyFilter();
                         fullfill(s);
                     }
-
-                });
+                }
             } else {
                 let tempData = dataInMemory.data;
                 var queryController = new QueryController(query, tempData);
@@ -220,7 +222,6 @@ export default class InsightFacade implements IInsightFacade {
                 }
 
             }
-        }).catch(function(){
         });
     }
 

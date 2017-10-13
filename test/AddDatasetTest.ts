@@ -82,11 +82,11 @@ describe("testAddData", function() {
 
 
 
-    it("Import course.zip ，store the data and remove unsuccessfully", function (done) {
+    it("Import course.zip ，store the data and remove unsuccessfully", function () {
 
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64") ;
 
-            insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+           return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
                 let a = value;
                 expect(a.code).to.deep.equal(204);
                 let m = fs.existsSync('./src/controller/data.txt');
@@ -95,7 +95,7 @@ describe("testAddData", function() {
                 expect(dataID).to.deep.equal("Courses");
                 insightF.removeDataset("Empty").then(function (value: InsightResponse) {
                     expect.fail();
-                    done();
+
                 }).catch(function (value: InsightResponse) {
                     let m = value;
                     expect(m.code).to.deep.equal(404);
@@ -103,16 +103,16 @@ describe("testAddData", function() {
                     expect(ifFileExist).to.be.true;
                     insightF.removeDataset("Courses").then(function (value:InsightResponse) {
                        expect(value.code).to.deep.equal(204);
-                        done()
+
 
                     }).catch(function(err:any){
-                        console.log(err);
-                        done()
+                        expect.fail();
+
                     });
                 });
             }).catch(function (err: InsightResponse) {
                 expect.fail();
-                done()
+
 
             });
 
