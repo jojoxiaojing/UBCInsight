@@ -30,6 +30,23 @@ describe("testPerformQuery", function() {
 
 //Not in memory
 
+
+
+
+    it("Test performQuery, just IS with no *, it should return 200 and xx length of data ", function () {
+        var testQuery = {"WHERE": {AND: [{NOT: {"IS": {"courses_dept": "math"}}}, {NOT: {"IS": {"courses_instructor": "ma"}}},
+            {NOT: {"IS": {"courses_instructor": "po"}}}, {NOT: {"IS": {"courses_dept": "p*"}}}]}, "OPTIONS": {"COLUMNS": ["courses_dept",  "courses_instructor","courses_avg"], "ORDER": "courses_avg"}}
+        return insightF.performQuery(testQuery).then(function(value:any){
+            expect(value.code).to.equal(200);
+            let m = value.body.length;
+           // expect(m).to.equal(2772);
+            let n =Object.keys(value.body[0]).length;
+            expect(n).to.equal(3);
+        }).catch(function(err:any){
+            expect.fail();
+        });
+    });
+
     it("Import course.zip and store the data, it should return code 204", function () {
         let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
@@ -258,7 +275,7 @@ describe("testPerformQuery", function() {
 
     //Test if there is no such dataset
 
-   it("If file does not exit, it should return 424 ", function () {
+    it("If file does not exit, it should return 424 ", function () {
         insightF.getValue().id = null;
         insightF.getValue().data = [];
 

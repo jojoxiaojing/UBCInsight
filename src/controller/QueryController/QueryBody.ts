@@ -86,9 +86,11 @@ export default class QueryBody {
             results = element.applyFilter();
         }
 
+        var s: any = {result: []}
        // apply options to filtered results
         this.getQueryOpt().setData(results);
-        return this.getQueryOpt().applyOptions();
+        s.result = this.getQueryOpt().applyOptions();
+        return s
     }
 
     isValid(): boolean {

@@ -80,11 +80,6 @@ export default class FilterNOT implements IFilterLogic{
 
         let element: any;
         for (element of this.filters) {
-            // shortcut to handle double negation
-            if (element instanceof FilterNOT) {
-                results = element.filters[0].applyFilter();
-            }
-            //results = this.arrayDifference(results, element.applyFilter());
             let tempResults = element.applyFilter();
 
             var stringifyTempResults = tempResults.map(function(x: any) {
