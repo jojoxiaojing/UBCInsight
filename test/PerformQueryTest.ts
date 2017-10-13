@@ -84,6 +84,20 @@ describe("testPerformQuery", function() {
 
     });
 
+
+
+    it("Test performQuery, real query ", function () {
+        var testQuery = {WHERE: {IS: {"courses_dept": "*p"}}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_dept"}}
+        return insightF.performQuery(testQuery).then(function(value:any){
+            let a = value;
+            expect(value.code).to.equal(200);
+
+        }).catch(function(err:any){
+            expect.fail();
+        });
+
+    });
+
    /* it("If file does not exit, it should return 424 ", function () {
         insightF.getValue().id = null;
         insightF.getValue().data = [];

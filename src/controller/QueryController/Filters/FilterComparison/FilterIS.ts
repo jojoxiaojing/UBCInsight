@@ -25,8 +25,11 @@ export default class FilterIS implements IFilterComparison {
     // can have wildcard "*" in the beginning or the end of the string
     checkQueryValid(): boolean {
         let val = this.subNode2;
+        // it is OK to have no *, have * in the beginning and no * at the end, * at the end, and *s both at the beginning/end
         if (this.isValidComparisonString() && typeof val === "string" &&
-            (val.indexOf("*") == -1 || val.indexOf("*") == 0 || val.indexOf("*") == val.length-1)) {
+            (val.indexOf("*") == -1 || (val.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == -1)
+                || val.indexOf("*") == val.length-1 ||
+                (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (this.subNode2.length - 2)))) {
             return true;
         }
         else {
@@ -51,6 +54,7 @@ export default class FilterIS implements IFilterComparison {
         let subNode2 = this.subNode2;
         let dataFiltered = [];
         let element: any;
+        var nodeLength = this.subNode2.length
         for (element of this.data) {
             //console.log(element)
 
@@ -61,19 +65,22 @@ export default class FilterIS implements IFilterComparison {
                     }
 
                     //wildcard both at the beginning and in the end
-                } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (this.subNode2.length - 2)) {
-                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, this.subNode2.length - 2))) {
+                } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (nodeLength - 2)) {
+                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, nodeLength - 2))) {
                         dataFiltered.push(element);
+                        continue;
                     }
                 }
                 //wildcard in the beginning of the string
                 else if (this.subNode2.indexOf("*") == 0) {
-                    if (this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1))) {
+                    if (this.stringContainsSubstring(element[this.subNode1].slice(element[this.subNode1].length - nodeLength + 1,
+                            element[this.subNode1].length), this.subNode2.slice(1))) {
                         dataFiltered.push(element);
                     }
                     //wildcard in the end of the string
-                } else if (this.subNode2.indexOf("*") == this.subNode2.length - 1) {
-                    if (this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(0, this.subNode2.length-1))) {
+                } else if (this.subNode2.indexOf("*") == nodeLength - 1) {
+                    if (this.stringContainsSubstring(element[this.subNode1].slice(0, nodeLength-1),
+                            this.subNode2.slice(0, nodeLength - 1))) {
                         dataFiltered.push(element);
                     }
                 }
