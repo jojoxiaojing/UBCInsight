@@ -70,7 +70,7 @@ describe("testAddData", function() {
             expect(m).to.be.true;
             let dataID = insightF.getValue().id;
             expect(dataID).to.deep.equal("valid");
-            return insightF.removeDataset("valid").then(function (value: InsightResponse) {
+            insightF.removeDataset("valid").then(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(204);
                 let ifFileExist = fs.existsSync('./src/controller/data.txt');
