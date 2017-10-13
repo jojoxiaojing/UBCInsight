@@ -83,7 +83,7 @@ describe("Testing Logic Operators", function () {
     var filter18 = {NOT: {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}}
     var filter19 = [{NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}, {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}]
     var filter20 = [{AND: [{AND: [{EQ: {courses_avg: 60}}, {IS: {courses_instructor: "Bob"}}]}, {IS: {courses_dept: "math"}}]}, {EQ: {courses_audit: 5}}]
-
+    var filter21 = [{NOT: {IS: {courses_instructor: "Bob"}}},{NOT: {IS: {courses_instructor: "Alice"}}}]
 
     var filterEQ: FilterEQ;
     var filterGT: FilterGT;
@@ -107,6 +107,7 @@ describe("Testing Logic Operators", function () {
     var filterNOTNOTNOTNOT: FilterNOT;
     var filterANDNOTNOT: FilterAND;
     var filter4ANDNESTED: FilterAND;
+    var filterANDNOTIS: FilterAND;
 
 
 
@@ -134,6 +135,7 @@ describe("Testing Logic Operators", function () {
         filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData());
         filterANDNOTNOT = new FilterAND(filter19, data.getData());
         filter4ANDNESTED = new FilterAND(filter20, data.getData());
+        filterANDNOTIS = new FilterAND(filter21, data.getData())
     });
 
     afterEach(function () {
@@ -159,6 +161,7 @@ describe("Testing Logic Operators", function () {
         filterNOTNOTNOTNOT = null;
         filterANDNOTNOT = null;
         filter4ANDNESTED = null;
+        filterANDNOTIS = null;
     });
 
 
@@ -297,6 +300,12 @@ describe("Testing Logic Operators", function () {
     it("Test FilterAND with two double negations", function () {
         expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDNOTNOT.applyFilter();
+        expect(queryResponse.length).to.deep.equal(2);
+    });
+
+    it("Test FilterAND with 2 NOT IS", function () {
+        expect(filterANDNOTIS.checkQueryValid()).to.deep.equal(true)
+        let queryResponse = filterANDNOTIS.applyFilter();
         expect(queryResponse.length).to.deep.equal(2);
     });
 

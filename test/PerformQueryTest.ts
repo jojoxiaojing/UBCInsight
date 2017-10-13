@@ -90,4 +90,42 @@ describe("testPerformQuery", function() {
         });
     });
 
+    it("Test performQuery, real query ", function (done) {
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
+            //insightF.addDataset("Courses",data);
+            var testQuery = {WHERE: {AND: [{IS: {courses_instructor: "Ba*"}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+                done();
+            }).catch(function(err:any){
+            });
+        });
+    });
+
+    it.only("Import course.zip ，store the data and remove successfully", function (done) {
+
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function (err: any, data: string) {
+
+            insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+
+                var testQuery = {
+                    WHERE:
+                        {OR:
+                            [{GT: {courses_avg: 90}},
+                                {OR: [{GT: {courses_pass: 100}},
+                                    {LT: {courses_fail: 5}}]}]},
+                    OPTIONS: {COLUMNS: ["courses_pass", "courses_avg", "courses_fail"], ORDER: "courses_avg"}}
+                insightF.performQuery(testQuery).then(function(value:any){
+                    let a = value;
+                    expect(value.code).to.equal(200);
+                    done();
+                }).catch(function(err:any){
+                });
+            }).catch(function (err: InsightResponse) {
+
+            });
+        });
+    });
+
 })

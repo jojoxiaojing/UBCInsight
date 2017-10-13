@@ -95,6 +95,8 @@ export default class FilterOR implements IFilterLogic{
     }
 
 
+
+
     checkQueryValid(): boolean {
         // query is valid only if it contains query keywords specified in EBNF
         for (let element of this.filter) {
