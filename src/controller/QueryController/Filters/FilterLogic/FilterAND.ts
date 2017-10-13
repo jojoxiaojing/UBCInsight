@@ -77,19 +77,22 @@ export default class FilterAND implements IFilterLogic{
 
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         let element: any;
-        for (element of this.filters) {
+        for (element of filters) {
             let tempResults = element.applyFilter();
 
 
-            var stringifyTempResults = tempResults.map(function(x: any) {
+            let stringifyTempResults = tempResults.map(function(x: any) {
                 return JSON.stringify(x);
             });
 
             // array intersection
-            results = results.filter(function(x) {
-                return stringifyTempResults.indexOf(JSON.stringify(x)) !== -1;
+            results = results.filter(function(x, i) {
+                //console.log(i);
+                let temp = JSON.stringify(x);
+                let temp2 = stringifyTempResults.indexOf(temp);
+                return temp2 !== -1;
             });
-            
+
         }
         return results
     }
