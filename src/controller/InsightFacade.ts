@@ -83,6 +83,8 @@ export default class InsightFacade implements IInsightFacade {
                             }
                         }
 
+
+
                         if(dataInMemory.data.length === 0){
                             let s:InsightResponse = {
                                 code: 400,
