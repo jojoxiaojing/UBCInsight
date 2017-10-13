@@ -123,10 +123,27 @@ describe("testAddData", function() {
     });
 
     it("Import invalid.zip, it should return code 400", function () {
-        let data = fs.readFileSync(__dirname + '/data/emptyFolder.zip', "base64");
+        let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
 
 
         return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
+
+
+    it("Import biginvalid.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/bigInValid.zip', "base64");
+
+
+        return insightF.addDataset("biginvalid", data).then(function (value: InsightResponse) {
             expect.fail();
 
         }).catch(function (err: InsightResponse) {
