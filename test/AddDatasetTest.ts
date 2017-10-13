@@ -161,6 +161,39 @@ describe("testAddData", function() {
         });
     });
 
+    it("Import figure1.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/figure1.zip', "base64");
+
+
+        return insightF.addDataset("invalid", data).then(function (value: any) {
+            let a = value;
+            expect.fail();
+
+        }).catch(function (err: any) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+
+        });
+    });
+
+    it("Import figure1, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/figure1.png', "base64");
+
+
+        return insightF.addDataset("invalid", data).then(function (value: any) {
+            let a = value;
+            expect.fail();
+
+        }).catch(function (err: any) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+
+        });
+    });
 
     it("Given an invalid string and return 400", function () {
 
