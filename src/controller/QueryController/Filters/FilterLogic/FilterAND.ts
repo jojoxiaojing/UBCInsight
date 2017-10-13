@@ -75,7 +75,6 @@ export default class FilterAND implements IFilterLogic{
         return this.applyFilterHelper(this.filters, this.data);
     }
 
-    // helper for recursive implementation
     applyFilterHelper(filters: IFilter[], results: any[]): any[] {
         let element: any;
         for (element of this.filters) {
@@ -90,12 +89,11 @@ export default class FilterAND implements IFilterLogic{
             results = results.filter(function(x) {
                 return stringifyTempResults.indexOf(JSON.stringify(x)) !== -1;
             });
-
-
-
+            
         }
         return results
     }
+
 
 
 
