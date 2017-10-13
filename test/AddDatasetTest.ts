@@ -25,6 +25,7 @@ describe("testAddData", function() {
         //Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
+/*
 
     it("Import course.zip ，store the data and remove successfully", function () {
 
@@ -79,6 +80,7 @@ describe("testAddData", function() {
             expect.fail();
         });
     });
+*/
 
 
 
