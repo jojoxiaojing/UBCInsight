@@ -41,7 +41,10 @@ export default class InsightFacade implements IInsightFacade {
                 for(let key in zip.files){
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
-                        promiseArr.push(contentInFIle);
+
+                            promiseArr.push(contentInFIle);
+
+
                     }}
                 //Log.trace("101:Begin promise all");
 
@@ -175,7 +178,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (err) {
                         s.code = 424;
                         s.body = {"error":"missing dataset"}
-                        fullfill(s);
+                        reject(s);
                     }
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
@@ -183,7 +186,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (!queryController.isValid()) {
                         s.code = 400;
                         s.body = {"error":"query invalid"};
-                        fullfill(s);
+                        reject(s);
                     } else
                     {
                         s.code = 200;
@@ -198,11 +201,11 @@ export default class InsightFacade implements IInsightFacade {
                 if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {"error":"query invalid"};
-                    fullfill(s);
+                    reject(s);
                 } else {
                     s.code = 200;
                     s.body = queryController.getQueryBody().applyFilter();
-                    fullfill(s);
+                    reject(s);
                 }
 
             }
