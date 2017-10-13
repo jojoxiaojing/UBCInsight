@@ -61,8 +61,8 @@ export default class FilterIS implements IFilterComparison {
                     }
 
                     //wildcard both at the beginning and in the end
-                } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.indexOf("*") == (this.subNode2.length - 1)) {
-                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1, this.subNode2.length-1))) {
+                } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (this.subNode2.length - 2)) {
+                    if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, this.subNode2.length - 2))) {
                         dataFiltered.push(element);
                     }
                 }

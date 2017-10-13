@@ -77,7 +77,7 @@ describe("Testing Logic Operators", function () {
     var filter12 = {IS: {courses_instructor: "Bob"}};
     var filter13 = {IS: {courses_instructor: "*ob"}};
     var filter14 = {IS: {courses_instructor: "Alic*"}};
-    var filter15 = {IS: {courses_instructor: "*teve"}};
+    var filter15 = {IS: {courses_instructor: "*tev*"}};
     var filter16 =  {OR: [{IS: {courses_instructor: "Bob"}}, {AND: [{EQ: {courses_avg: 80}}, {EQ: {courses_audit: 10}}]}]};
     var filter17 = {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}
     var filter18 = {NOT: {NOT: {NOT: {AND: [{GT: {courses_avg: 0}}, {LT: {courses_avg: 80}}]}}}}
