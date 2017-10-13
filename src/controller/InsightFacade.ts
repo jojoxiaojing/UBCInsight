@@ -41,7 +41,10 @@ export default class InsightFacade implements IInsightFacade {
                 for(let key in zip.files){
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
+
                         promiseArr.push(contentInFIle);
+
+
                     }}
                 //Log.trace("101:Begin promise all");
 
@@ -51,6 +54,7 @@ export default class InsightFacade implements IInsightFacade {
                     Promise.all(promiseArr).then(function(value:any){
                         //Log.trace("120:Begin json parse the data");
 
+                        let i = value;
                         for (let i of value){
                             try{
                                 let m = JSON.parse(i);
@@ -78,6 +82,15 @@ export default class InsightFacade implements IInsightFacade {
                                 };
                                 dataInMemory.data.push(m);
                             }
+                        }
+
+                        if(dataInMemory.data.length === 0){
+                            let s:InsightResponse = {
+                                code: 400,
+                                body: {"Error": "Dataset is invalid"}
+                            };
+                            reject(s);
+                            return;
                         }
 
                         //Log.trace("140:Begin returning InsightResponse");
@@ -111,9 +124,10 @@ export default class InsightFacade implements IInsightFacade {
                         body: {"Error": "Dataset is invalid"}
                     };
                     this.removeDataset(id);
-                    fullfill(s);
+                    reject(s);
                 }
-            }).catch(function (err:any) {
+            }).
+            catch(function (err:any) {
                 let s:InsightResponse = {
                     code: 400,
                     body: {"error":err.message}
@@ -142,7 +156,7 @@ export default class InsightFacade implements IInsightFacade {
                             fullfill(s);
                         } else {
                             s.code = 404;
-                            fullfill(s);
+                            reject(s);
                         }
                     });
                 }else{
@@ -175,7 +189,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (err) {
                         s.code = 424;
                         s.body = {"error":"missing dataset"}
-                        fullfill(s);
+                        reject(s);
                     }
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
@@ -183,7 +197,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (!queryController.isValid()) {
                         s.code = 400;
                         s.body = {"error":"query invalid"};
-                        fullfill(s);
+                        reject(s);
                     } else
                     {
                         s.code = 200;
@@ -198,7 +212,7 @@ export default class InsightFacade implements IInsightFacade {
                 if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {"error":"query invalid"};
-                    fullfill(s);
+                    reject(s);
                 } else {
                     s.code = 200;
                     s.body = queryController.getQueryBody().applyFilter();
