@@ -42,7 +42,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
 
-                            promiseArr.push(contentInFIle);
+                        promiseArr.push(contentInFIle);
 
 
                     }}
