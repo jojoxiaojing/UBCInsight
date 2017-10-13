@@ -51,6 +51,37 @@ describe("testAddData", function() {
             });
 
         }).catch(function (err: InsightResponse) {
+            expect.fail();
+
+        });
+
+    });
+
+    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function () {
+
+        let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+            let a = value;
+            expect(a.code).to.deep.equal(204);
+
+            let m = fs.existsSync('./src/controller/Courses');
+            expect(m).to.be.true;
+            let dataID = insightF.getValue().has("Courses");
+            expect(dataID).to.be.true;
+            let data =fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
+
+            return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+                expect.fail();
+
+            }).catch(function (err: InsightResponse) {
+                let a = err;
+                expect(a.code).to.deep.equal(400);
+                let ifFileExist = fs.existsSync('./src/controller/invalid2');
+                expect(ifFileExist).to.be.false;
+            });
+
+        }).catch(function (err: InsightResponse) {
 
         });
 
@@ -130,6 +161,38 @@ describe("testAddData", function() {
             let a = err;
             expect(a.code).to.deep.equal(400);
             let ifFileExist = fs.existsSync('./src/controller/Empty');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
+
+    it("Import emptyFolder2.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/emptyFolder2.zip', "base64");
+
+
+        return insightF.addDataset("emptyFolder2", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/emptyFolder2');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
+
+    it("Import invalid2.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
+
+
+        return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/invalid2');
             expect(ifFileExist).to.be.false;
         });
 

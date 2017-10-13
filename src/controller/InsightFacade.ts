@@ -36,9 +36,9 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //Log.trace("100:Begin unzip and read the file");
             JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
-                let promiseArr:Array<Promise<any>> = new Array();
-                let parseResult:any[] = new Array();
-                let promiseAllResult:any[] = new Array();
+                let promiseArr:Array<Promise<any>> = [];
+                let parseResult:any[] =[];
+                let promiseAllResult:any[] = [];
                 for(let key in zip.files){
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
