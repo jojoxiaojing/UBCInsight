@@ -19,13 +19,15 @@ describe("testAddData", function() {
 
     after(function () {
         //Log.test('After: ' + (<any>this).test.parent.title);
+
+
     });
 
     afterEach(function () {
         //Log.test('AfterTest: ' + (<any>this).currentTest.title);
     });
 
-/*
+
 
     it("Import course.zip ，store the data and remove successfully", function () {
 
@@ -80,7 +82,7 @@ describe("testAddData", function() {
             expect.fail();
         });
     });
-*/
+
 
 
 
@@ -138,7 +140,7 @@ describe("testAddData", function() {
 
     it("run this and remove data.txt",function(){
         if(fs.existsSync('./src/controller/data.txt')){
-            fs.unlink('./src/controller/data.txt');
+            fs.unlinkSync('./src/controller/data.txt');
         }
     });
 
@@ -160,17 +162,59 @@ describe("testAddData", function() {
     });
 
 
-    it("Given an invalid string and return 400", function (done) {
+    it("Given an invalid string and return 400", function () {
 
-        insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
+        return insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
             expect.fail();
-            done();
+
         }).catch(function (err: InsightResponse) {
             let a = err;
             expect(a.code).to.deep.equal(400);
             let ifFileExist = fs.existsSync('./src/controller/data.txt');
             expect(ifFileExist).to.be.false;
-            done();
+
         });
     });
+
+    it("Test remove when not in memory but file exist", function () {
+
+        let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
+
+        return insightF.addDataset("valid", data).then(function (value: InsightResponse) {
+            insightF.getValue().id = null;
+            insightF.getValue().data = [];
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.true;
+            insightF.removeDataset("valid").then(function (value: InsightResponse) {
+                let m = value;
+                expect(m.code).to.deep.equal(204);
+                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                expect(ifFileExist).to.be.false;
+            }).catch(function (value: InsightResponse) {
+                expect.fail();
+            });
+        }).catch(function (err: InsightResponse) {
+            expect.fail();
+        });
+    });
+
+    it("Test remove when not in memory and file does not exist", function () {
+        insightF.getValue().id = null;
+        insightF.getValue().data = [];
+        if(fs.existsSync('./src/controller/data.txt')){
+            fs.unlinkSync('./src/controller/data.txt');
+        }
+
+            return insightF.removeDataset("valid").then(function (value: InsightResponse) {
+                expect.fail();
+            }).catch(function (value: InsightResponse) {
+                let m = value;
+                expect(m.code).to.deep.equal(404);
+                let ifFileExist = fs.existsSync('./src/controller/data.txt');
+                expect(ifFileExist).to.be.false;
+            });
+
+        });
+
+
 })
