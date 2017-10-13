@@ -34,7 +34,7 @@ describe("testAddData", function() {
                 let a = value;
                 expect(a.code).to.deep.equal(204);
 
-                let m = fs.existsSync('./src/controller/data.txt');
+               let m = fs.existsSync('./src/controller/data.txt');
                 expect(m).to.be.true;
                 let dataID = insightF.getValue().id;
                 expect(dataID).to.deep.equal("Courses");
