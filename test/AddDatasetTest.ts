@@ -108,6 +108,7 @@ describe("testAddData", function() {
 
 
 
+/*
     it("Given an invalid string and return 400", function (done) {
 
         insightF.addDataset("Empty", "A").then(function (value: InsightResponse) {
@@ -121,5 +122,5 @@ describe("testAddData", function() {
             expect(ifFileExist).to.deep.equal(false);
             done();
         });
-    });
+    });*/
 })
