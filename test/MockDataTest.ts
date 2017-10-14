@@ -260,6 +260,7 @@ describe("Testing Logic Operators", function () {
 
     it("Test FilterNOT IS, * at index 0", function () {
         expect(filterNOTWild1.checkQueryValid()).to.deep.equal(true)
+        filterNOTWild1.setData(data.getData()[1])
         let queryResponse = filterNOTWild1.applyFilter();
         expect(queryResponse).to.deep.equal(false);
     });

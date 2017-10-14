@@ -80,7 +80,6 @@ export default class FilterAND implements IFilterLogic{
         });
     }
 
-    // TODO check if this.filters is empty and its size
     checkQueryValid(): boolean {
         // query is valid only if it contains query keywords specified in EBNF
         for (let element of this.filter) {

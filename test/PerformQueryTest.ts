@@ -246,4 +246,40 @@ describe("testPerformQuery", function() {
 
     });
 
+
+
+    it("Already in memory:Test performQuery, real query with NOT... LT AND GT ", function () {
+        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("Courses", data).then(function (value: any) {
+            var testQuery = {WHERE: {NOT: {GT: {courses_pass: 100}}}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            return insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+
+            }).catch(function(err:any){
+                expect.fail();
+            });
+        }).catch(function (err) {
+            expect.fail();
+        });
+    });
+
+    it("Already in memory:Test performQuery, real query with IS dept, COLUMN courses ", function () {
+        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("Courses", data).then(function (value: any) {
+            var testQuery = {WHERE: {IS: {"courses_dept": "math"}}, OPTIONS: {COLUMNS: ["courses_title", "courses_instructor"], ORDER: "courses_title"}}
+            return insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+
+            }).catch(function(err:any){
+                expect.fail();
+            });
+        }).catch(function (err) {
+            expect.fail();
+        });
+    });
+
 })

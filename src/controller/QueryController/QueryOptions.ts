@@ -43,7 +43,7 @@ export default class QueryOptions {
             if (element !== "courses_avg" &&
                 element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
                 && element !== "courses_dept" && element !== "courses_instructor" && element !== "courses_id"
-                && element !== "courses_uuid") {
+                && element !== "courses_uuid" && element !== "courses_title") {
                 return false;
             }
         }
