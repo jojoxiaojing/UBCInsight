@@ -178,26 +178,19 @@ export default class InsightFacade implements IInsightFacade {
                     if (err) {
                         s.code = 424;
                         s.body = {"error":"missing dataset"}
-                        reject(s);
+                        fullfill(s);
                     }
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
                     if (!this.queryController.isValid()) {
                         s.code = 400;
                         s.body = {"error":"query invalid"};
-                        reject(s);
+                        fullfill(s);
                     } else
                     {
                         s.code = 200;
                         var output: any = {result: []}
-                        let res: any[] = [];
-                        let val: any;
-                        for (val of tempData) {
-                            this.queryController.setData(val);
-                            if (this.queryController.getQueryBody().applyFilter()) res.push(val);
-                        }
-                        this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
-                        output.result = this.queryController.getQueryBody().getQueryOpt().applyOptions();
+                        output.result = this.processData(tempData, this.queryController)
                         s.body = output;
                         fullfill(s);
                     }
@@ -208,18 +201,11 @@ export default class InsightFacade implements IInsightFacade {
                 if (!this.queryController.isValid()) {
                     s.code = 400;
                     s.body = {"error":"query invalid"};
-                    reject(s);
+                    fullfill(s);
                 } else {
-                    s.code = 200;
                     var output: any = {result: []}
-                    let res: any[] = [];
-                    let val: any;
-                    for (val of tempData) {
-                        this.queryController.setData(val);
-                        if (this.queryController.getQueryBody().applyFilter()) res.push(val);
-                    }
-                    this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
-                    output.result = this.queryController.getQueryBody().getQueryOpt().applyOptions();
+                    s.code = 200;
+                    output.result = this.processData(tempData, this.queryController)
                     s.body = output;
                     fullfill(s);
                 }
@@ -231,5 +217,16 @@ export default class InsightFacade implements IInsightFacade {
 
     getValue() {
         return dataInMemory;
+    }
+
+    processData(tempData: any[], qController: QueryController): any[] {
+        let res: any[] = [];
+        let val: any;
+        for (val of tempData) {
+            this.queryController.setData(val);
+            if (this.queryController.getQueryBody().applyFilter()) res.push(val);
+        }
+        this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
+        return this.queryController.getQueryBody().getQueryOpt().applyOptions();
     }
 }

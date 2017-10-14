@@ -38,7 +38,7 @@ describe("testPerformQuery", function() {
             expect.fail();
         });
     });
-    
+
 
 
     it("Test performQuery, just IS with no *, it should return 200 and xx length of data ", function () {
