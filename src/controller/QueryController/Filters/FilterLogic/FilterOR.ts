@@ -14,12 +14,11 @@ export default class FilterOR implements IFilterLogic{
     // input array of JSON containing subnodes
     filter: any;
     filters: IFilter[];
-    data: any[];
+    data: any;
     valid: boolean = false;
-    subtotal: any[] = [];
 
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         this.filters = [];
@@ -72,27 +71,15 @@ export default class FilterOR implements IFilterLogic{
     }
 
 
-    applyFilter(): any[] {
-        var dataFiltered: any[] = [];
-        return this.applyFilterHelper(this.filters, dataFiltered);
-    }
-
-    // helper for recursive implementation
-    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-
-        let element: any;
-        for (element of filters) {
-
+    applyFilter(): boolean {
+        let results: any[] = []
+        for (let element of this.filters) {
             results = results.concat(element.applyFilter());
-
         }
 
-        // remove duplicates
-        results = results.filter(function(elem, index, self) {
-            return index == self.indexOf(elem);
-        })
-
-        return results;
+        return results.some(function checkBoolean(val) {
+            if (val === true) return true;
+            });
     }
 
 
@@ -127,7 +114,10 @@ export default class FilterOR implements IFilterLogic{
         return this.valid;
     }
 
-    setData(data: any[]): void {
+    setData(data: any): void {
         this.data = data;
+        for (let i of this.filters) {
+            i.setData(data);
+        }
     }
 }

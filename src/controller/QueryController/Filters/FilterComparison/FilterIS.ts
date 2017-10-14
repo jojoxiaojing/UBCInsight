@@ -8,9 +8,9 @@ export default class FilterIS implements IFilterComparison {
     subNode2: string;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         let keys = Object.keys(this.filter);
@@ -49,43 +49,39 @@ export default class FilterIS implements IFilterComparison {
 
 
     // filter data
-    applyFilter(): any[] {
+    applyFilter(): any {
         let subNode1 = this.subNode1;
         let subNode2 = this.subNode2;
-        let dataFiltered = [];
-        let element: any;
         var nodeLength = this.subNode2.length
-        for (element of this.data) {
-            //console.log(element)
+
 
             // no wildcards case
             if (this.subNode2.indexOf("*") == -1) {
-                if (element[this.subNode1] === subNode2) {
-                    dataFiltered.push(element);
+                if (this.data[this.subNode1] === subNode2) {
+                    return true;
                 }
 
                 //wildcard both at the beginning and in the end
             } else if (this.subNode2.indexOf("*") == 0 && this.subNode2.slice(1).indexOf("*") == (nodeLength - 2)) {
-                if ( this.stringContainsSubstring(element[this.subNode1], this.subNode2.slice(1).slice(0, nodeLength - 2))) {
-                    dataFiltered.push(element);
-                    continue;
+                if ( this.stringContainsSubstring(this.data[this.subNode1], this.subNode2.slice(1).slice(0, nodeLength - 2))) {
+                   return true;
                 }
             }
             //wildcard in the beginning of the string
             else if (this.subNode2.indexOf("*") == 0) {
-                if (this.stringContainsSubstring(element[this.subNode1].slice(element[this.subNode1].length - nodeLength + 1,
-                        element[this.subNode1].length), this.subNode2.slice(1))) {
-                    dataFiltered.push(element);
+                if (this.stringContainsSubstring(this.data[this.subNode1].slice(this.data[this.subNode1].length - nodeLength + 1,
+                        this.data[this.subNode1].length), this.subNode2.slice(1))) {
+                    return true;
                 }
                 //wildcard in the end of the string
             } else if (this.subNode2.indexOf("*") == nodeLength - 1) {
-                if (this.stringContainsSubstring(element[this.subNode1].slice(0, nodeLength-1),
+                if (this.stringContainsSubstring(this.data[this.subNode1].slice(0, nodeLength-1),
                         this.subNode2.slice(0, nodeLength - 1))) {
-                    dataFiltered.push(element);
+                    return true;
                 }
             }
-        }
-        return dataFiltered;
+
+        return false;
     }
 
     stringContainsSubstring(str1: string, str2: string): boolean {

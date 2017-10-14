@@ -81,7 +81,7 @@ export default class QueryOptions {
         return this.options;
     }
 
-    setData(data: any[]): void{
+    setOptionsData(data: any[]): void{
         this.data = data;
     }
 

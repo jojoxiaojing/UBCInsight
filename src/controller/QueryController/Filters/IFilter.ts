@@ -5,7 +5,7 @@ export interface IFilter {
     valid: boolean
     checkQueryValid(): boolean;
 
-    applyFilter(): any[];
+    applyFilter(): boolean;
     isValid(): boolean;
     setData(data: any[]): void;
 }

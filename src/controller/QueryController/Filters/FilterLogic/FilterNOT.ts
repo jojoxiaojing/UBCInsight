@@ -15,10 +15,10 @@ export default class FilterNOT implements IFilterLogic{
     filter: any;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
     subtotal: any[];
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         // input array of JSON containing subnodes
         this.filter = filter;
@@ -71,27 +71,10 @@ export default class FilterNOT implements IFilterLogic{
     }
 
 
-    applyFilter(): any[] {
-        return this.applyFilterHelper(this.filters, this.data);
-    }
-
-    // helper for recursive implmentation
-    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-
-        let element: any;
-        for (element of this.filters) {
-            let tempResults = element.applyFilter();
-
-            var stringifyTempResults = tempResults.map(function(x: any) {
-                return JSON.stringify(x);
-            });
-
-            results = results.filter(function(x) {
-                return stringifyTempResults.indexOf(JSON.stringify(x)) === -1;
-            });
-
-        }
-        return results
+    // NOT can have only a single child node, the output of which we reverse
+    applyFilter(): boolean {
+        let result = this.filters[0].applyFilter();
+        return !result;
     }
 
     checkQueryValid(): boolean {
@@ -125,7 +108,7 @@ export default class FilterNOT implements IFilterLogic{
         return this.valid;
     }
 
-    setData(data: any[]): void {
+    setData(data: any): void {
         this.data = data;
         for (let i of this.filters) {
             i.setData(data);

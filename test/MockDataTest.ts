@@ -113,29 +113,29 @@ describe("Testing Logic Operators", function () {
 
     beforeEach(function () {
         var data = new MockData();
-        filterEQ = new FilterEQ(filter, data.getData());
-        filterGT = new FilterGT(filter2, data.getData());
-        filterLT = new FilterLT(filter3, data.getData());
-        filterOR = new FilterOR(filter4, data.getData());
-        filterORNested = new FilterOR(filter5, data.getData());
-        filterORMultiple = new FilterOR(filter6, data.getData());
-        filterAND = new FilterAND(filter7, data.getData());
-        filterANDOR1 = new FilterAND(filter8, data.getData());
-        filterANDOR2 = new FilterOR(filter9, data.getData());
-        filterIS = new FilterIS(filter10, data.getData());
-        filterANDORIS = new FilterOR(filter11, data.getData());
-        filterNOTIS = new FilterNOT(filter12, data.getData());
-        filterNOTNESTED = new FilterNOT(filter16, data.getData());
-        filterANDMultiple = new FilterAND(filter6, data.getData());
-        filterNOTMultiple = new FilterNOT(filter6, data.getData());
-        filterNOTWild1 = new FilterNOT(filter13, data.getData());
-        filterNOTWildL = new FilterNOT(filter14, data.getData());
-        filterNOTWild1L = new FilterNOT(filter15, data.getData());
-        filterNOTNOT = new FilterNOT(filter17, data.getData());
-        filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData());
-        filterANDNOTNOT = new FilterAND(filter19, data.getData());
-        filter4ANDNESTED = new FilterAND(filter20, data.getData());
-        filterANDNOTIS = new FilterAND(filter21, data.getData())
+        filterEQ = new FilterEQ(filter, data.getData()[1]);
+        filterGT = new FilterGT(filter2, data.getData()[2]);
+        filterLT = new FilterLT(filter3, data.getData()[3]);
+        filterOR = new FilterOR(filter4, data.getData()[4]);
+        filterORNested = new FilterOR(filter5, data.getData()[0]);
+        filterORMultiple = new FilterOR(filter6, data.getData()[1]);
+        filterAND = new FilterAND(filter7, data.getData()[1]);
+        filterANDOR1 = new FilterAND(filter8, data.getData()[2]);
+        filterANDOR2 = new FilterOR(filter9, data.getData()[3]);
+        filterIS = new FilterIS(filter10, data.getData()[4]);
+        filterANDORIS = new FilterOR(filter11, data.getData()[0]);
+        filterNOTIS = new FilterNOT(filter12, data.getData()[1]);
+        filterNOTNESTED = new FilterNOT(filter16, data.getData()[2]);
+        filterANDMultiple = new FilterAND(filter6, data.getData()[3]);
+        filterNOTMultiple = new FilterNOT(filter6, data.getData()[4]);
+        filterNOTWild1 = new FilterNOT(filter13, data.getData()[0]);
+        filterNOTWildL = new FilterNOT(filter14, data.getData()[1]);
+        filterNOTWild1L = new FilterNOT(filter15, data.getData()[2]);
+        filterNOTNOT = new FilterNOT(filter17, data.getData()[3]);
+        filterNOTNOTNOTNOT = new FilterNOT(filter18, data.getData()[4]);
+        filterANDNOTNOT = new FilterAND(filter19, data.getData()[0]);
+        filter4ANDNESTED = new FilterAND(filter20, data.getData()[1]);
+        filterANDNOTIS = new FilterAND(filter21, data.getData()[2])
     });
 
     afterEach(function () {
@@ -168,141 +168,140 @@ describe("Testing Logic Operators", function () {
     it("Test FilterEQ on course_avg", function () {
         expect(filterEQ.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterEQ.applyFilter();
-        // expect(queryResponse[0].courses_instructor).to.deep.equal("Steve");
-        expect(queryResponse.length).to.deep.equal(1);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterGT on course_avg", function () {
         expect(filterGT.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterGT.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Test FilterLT on course_avg", function () {
         expect(filterLT.checkQueryValid()).to.deep.equal(true);
         let queryResponse = filterLT.applyFilter();
-        expect(queryResponse.length).to.deep.equal(1);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterOR on course_avg", function () {
         expect(filterOR.checkQueryValid()).to.deep.equal(true)
-        let queryResponse:any[] = filterOR.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        let queryResponse:any = filterOR.applyFilter();
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Test FilterOR with 3 choices, other attributes", function () {
         expect(filterORMultiple.checkQueryValid()).to.deep.equal(true)
-        let queryResponse:any[] = filterORMultiple.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        let queryResponse:any = filterORMultiple.applyFilter();
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterOR nested", function () {
         expect(filterORNested.checkQueryValid()).to.deep.equal(true)
-        let queryResponse:any[] = filterORNested.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        let queryResponse:any = filterORNested.applyFilter();
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Filter AND", function () {
         expect(filterAND.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterAND.applyFilter();
-        expect(queryResponse.length).to.deep.equal(1);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Filter AND and OR: AND(..., OR(..., ....))", function () {
         expect(filterANDOR1.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDOR1.applyFilter();
         //console.log(queryResponse)
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Filter AND and OR:  OR(..., AND(..., ....))", function () {
         expect(filterANDOR2.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDOR2.applyFilter();
         //console.log(queryResponse)
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Filter AND and OR:  OR(..., AND(..., ....)), with IS", function () {
         expect(filterANDORIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDORIS.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(true);
     });
 
 
     it("Filter IS", function () {
         expect(filterIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterIS.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Filter NOT IS", function () {
         expect(filterNOTIS.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTIS.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Filter NOT nested", function () {
         expect(filterNOTNESTED.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTNESTED.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Filter NOT multiple", function () {
         expect(filterNOTMultiple.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTMultiple.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Filter AND multiple", function () {
         expect(filterANDMultiple.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterANDMultiple.applyFilter();
-        expect(queryResponse.length).to.deep.equal(0);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterNOT IS, * at index 0", function () {
         expect(filterNOTWild1.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTWild1.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterNOT IS, * at index length-1", function () {
         expect(filterNOTWildL.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTWildL.applyFilter();
-        expect(queryResponse.length).to.deep.equal(4);
+        expect(queryResponse).to.deep.equal(true);
     });
 
     it("Test FilterNOT IS, * at both index 0 and length-1", function () {
         expect(filterNOTWild1L.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTWild1L.applyFilter();
-        expect(queryResponse.length).to.deep.equal(3);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterNOT NOT, double negation", function () {
         expect(filterNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTNOT.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        expect(queryResponse).to.deep.equal(false);
     });
 
     it("Test FilterNOT NOT NOT NOT NOT, quadruple negation", function () {
         expect(filterNOTNOTNOTNOT.checkQueryValid()).to.deep.equal(true)
         let queryResponse = filterNOTNOTNOTNOT.applyFilter();
-        expect(queryResponse.length).to.deep.equal(2);
+        expect(queryResponse).to.deep.equal(false);
     });
 
-    /*    it("Test FilterAND: 4 ANDs nested", function () {
+        it("Test FilterAND: 4 ANDs nested", function () {
             let m = filter4ANDNESTED.checkQueryValid();
             expect( m).to.deep.equal(true)
             let queryResponse =  filter4ANDNESTED.applyFilter();
-            expect(queryResponse.length).to.deep.equal(1);
+            expect(queryResponse).to.deep.equal(false);
         });
         it("Test FilterAND with two double negations", function () {
             expect(filterANDNOTNOT.checkQueryValid()).to.deep.equal(true)
             let queryResponse = filterANDNOTNOT.applyFilter();
-            expect(queryResponse.length).to.deep.equal(2);
+            expect(queryResponse).to.deep.equal(true);
         });
         it("Test FilterAND with 2 NOT IS", function () {
             expect(filterANDNOTIS.checkQueryValid()).to.deep.equal(true)
             let queryResponse = filterANDNOTIS.applyFilter();
-            expect(queryResponse.length).to.deep.equal(2);
-        });*/
+            expect(queryResponse).to.deep.equal(true);
+        });
 });

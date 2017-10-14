@@ -10,7 +10,7 @@ export interface IFilterLogic extends IFilter {
 
     parseLogicFilters(objJSON: any): void;
     checkQueryValid(): boolean;
-    applyFilter(): any[];
+    applyFilter(): boolean;
     isValid(): boolean;
     setData(data: any[]): void;
 }

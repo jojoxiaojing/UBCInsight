@@ -3,7 +3,7 @@ import QueryBody from "./QueryBody";
 
 interface IQueryController {
     // data set
-    data: any[];
+    data: any;
     // JSON that we feed in
     query: JSON;
     queryBody: QueryBody;
@@ -17,7 +17,7 @@ interface IQueryController {
 // need to pass options from parsing into query body to options field
 export default class QueryController implements IQueryController{
 
-    data: any[];
+    data: any;
     //query: {[key: string]: JSON};
     query: JSON;
     queryBody: QueryBody ;
@@ -91,7 +91,7 @@ export default class QueryController implements IQueryController{
 
     setData(data: any): void {
         this.data = data;
-        //this.getQueryBody().setData(data);
+        this.getQueryBody().setData(data);
     }
 
 }

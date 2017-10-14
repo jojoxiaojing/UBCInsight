@@ -26,6 +26,7 @@ interface Course {
 }
 export default class InsightFacade implements IInsightFacade {
 
+    queryController: QueryController;
 
 
     constructor() {
@@ -124,8 +125,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     removeDataset(id: string): Promise<InsightResponse> {
-        return null;
-/*        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<InsightResponse>((fullfill, reject) =>{
             var exitOfFILE:Boolean = fs.existsSync(__dirname + '/data.txt');
             let s: InsightResponse = {
                 code: 204,
@@ -163,7 +163,7 @@ export default class InsightFacade implements IInsightFacade {
                 reject(s);
             }
 
-        });*/
+        });
     }
 
     performQuery(query: any): Promise <InsightResponse> {
@@ -171,38 +171,56 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
+            this.queryController = new QueryController(query, []);
+
             if (dataInMemory.id === null) {
                 fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
                     if (err) {
                         s.code = 424;
                         s.body = {"error":"missing dataset"}
-                        fullfill(s);
+                        reject(s);
                     }
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
-                    var queryController = new QueryController(query, tempData);
-                    if (!queryController.isValid()) {
+                    if (!this.queryController.isValid()) {
                         s.code = 400;
                         s.body = {"error":"query invalid"};
-                        fullfill(s);
+                        reject(s);
                     } else
                     {
                         s.code = 200;
-                        s.body = queryController.getQueryBody().applyFilter();
+                        var output: any = {result: []}
+                        let res: any[] = [];
+                        let val: any;
+                        for (val of tempData) {
+                            this.queryController.setData(val);
+                            if (this.queryController.getQueryBody().applyFilter()) res.push(val);
+                        }
+                        this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
+                        output.result = this.queryController.getQueryBody().getQueryOpt().applyOptions();
+                        s.body = output;
                         fullfill(s);
                     }
 
                 });
             } else {
                 let tempData = dataInMemory.data;
-                var queryController = new QueryController(query, tempData);
-                if (!queryController.isValid()) {
+                if (!this.queryController.isValid()) {
                     s.code = 400;
                     s.body = {"error":"query invalid"};
-                    fullfill(s);
+                    reject(s);
                 } else {
                     s.code = 200;
-                    s.body = queryController.getQueryBody().applyFilter();
+                    var output: any = {result: []}
+                    let res: any[] = [];
+                    let val: any;
+                    for (val of tempData) {
+                        this.queryController.setData(val);
+                        if (this.queryController.getQueryBody().applyFilter()) res.push(val);
+                    }
+                    this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
+                    output.result = this.queryController.getQueryBody().getQueryOpt().applyOptions();
+                    s.body = output;
                     fullfill(s);
                 }
 

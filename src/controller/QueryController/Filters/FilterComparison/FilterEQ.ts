@@ -8,9 +8,9 @@ export default class FilterEQ implements IFilterComparison {
     subNode2: number;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         let keys = Object.keys(this.filter);
@@ -43,17 +43,15 @@ export default class FilterEQ implements IFilterComparison {
     }
 
     // filter data
-    applyFilter(): any[] {
+    applyFilter(): boolean {
         let subNode1 = this.subNode1;
         let subNode2 = this.subNode2;
-        let dataFiltered = [];
-        let element: any;
-        for (element of this.data) {
-            if (element[subNode1] === subNode2) {
-                dataFiltered.push(element);
-            }
-        }
-        return dataFiltered;
+
+        if (this.data[subNode1] === subNode2) {
+            return true;
+        } else return false;
+
+
     }
 
     isValid(): boolean {

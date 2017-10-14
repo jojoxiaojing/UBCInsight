@@ -14,11 +14,10 @@ export default class FilterAND implements IFilterLogic{
     // input array of JSON containing subnodes
     filter: any;
     filters: IFilter[];
-    data: any[];
+    data: any;
     valid: boolean = false;
-    subtotal: any [] = [];
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         this.filters = [];
@@ -70,31 +69,15 @@ export default class FilterAND implements IFilterLogic{
     }
 
 
-    applyFilter(): any[] {
-        return this.applyFilterHelper(this.filters, this.data);
-    }
-
-
-    applyFilterHelper(filters: IFilter[], results: any[]): any[] {
-        let element: any;
-        for (element of filters) {
-            let tempResults = element.applyFilter();
-
-
-            let stringifyTempResults = tempResults.map(function(x: any) {
-                return JSON.stringify(x);
-            });
-
-            // array intersection
-            results = results.filter(function(x, i) {
-                //console.log(i);
-                let temp = JSON.stringify(x);
-                let temp2 = stringifyTempResults.indexOf(temp);
-                return temp2 !== -1;
-            });
-
+    applyFilter(): boolean {
+        let results: any[] = []
+        for (let element of this.filters) {
+            results = results.concat(element.applyFilter());
         }
-        return results
+
+        return results.every(function checkBoolean(val) {
+            if (val === true) return true;
+        });
     }
 
     // TODO check if this.filters is empty and its size
@@ -129,7 +112,10 @@ export default class FilterAND implements IFilterLogic{
         return this.valid;
     }
 
-    setData(data: any[]): void {
+    setData(data: any): void {
         this.data = data;
+        for (let i of this.filters) {
+            i.setData(data);
+        }
     }
 }

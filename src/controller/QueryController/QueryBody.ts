@@ -15,7 +15,7 @@ export default class QueryBody {
     options: any;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
 
     constructor(body: any, data: any[]) {
         this.setBody(body);
@@ -79,18 +79,9 @@ export default class QueryBody {
         return true;
     }
 
-    applyFilter(): any[] {
-        var results: any[] = []
-        let element: any;
-        for (element of this.filters) {
-            results = element.applyFilter();
-        }
-
-        //var s: any = {result: []}
-        // apply options to filtered results
-        this.getQueryOpt().setData(results);
-        //s.result = this.getQueryOpt().applyOptions();
-        return results
+    // query body only has one top most filter, which may or may not have children filters
+    applyFilter(): boolean {
+        return this.filters[0].applyFilter();
     }
 
     isValid(): boolean {
@@ -108,11 +99,11 @@ export default class QueryBody {
         this.body = body;
     }
 
-    setData(data: any[]): void {
+    setData(data: any): void {
         this.data = data;
-/*        for (let i of this.filters) {
+        for (let i of this.filters) {
             i.setData(data);
-        }*/
+        }
     }
 
     setQueryOpt(options: any) {

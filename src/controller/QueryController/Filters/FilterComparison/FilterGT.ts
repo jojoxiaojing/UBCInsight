@@ -8,9 +8,9 @@ export default class FilterGT implements IFilterComparison {
     subNode2: number;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         let keys = Object.keys(this.filter);
@@ -41,15 +41,10 @@ export default class FilterGT implements IFilterComparison {
     }
 
     // filter data
-    applyFilter(): any[] {
-        var dataFiltered = [];
-        let element: any;
-        for (element of this.data) {
-            if (+element[this.subNode1] > this.subNode2) {
-                dataFiltered.push(element);
-            }
-        }
-        return dataFiltered;
+    applyFilter(): boolean {
+        if (+this.data[this.subNode1] > this.subNode2) {
+                return true;
+        } else return false;
     }
 
     isValid(): boolean {

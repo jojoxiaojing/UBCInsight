@@ -8,9 +8,9 @@ export default class FilterLT implements IFilterComparison {
     subNode2: number;
     valid: boolean = false;
 
-    data: any[];
+    data: any;
 
-    constructor(filter: any, data: any[]) {
+    constructor(filter: any, data: any) {
         this.data = data;
         this.filter = filter;
         let keys = Object.keys(this.filter);
@@ -42,22 +42,18 @@ export default class FilterLT implements IFilterComparison {
     }
 
     // filter data
-    applyFilter(): any[] {
+    applyFilter(): boolean {
         var dataFiltered = [];
-        let element: any;
-        for (element of this.data) {
-                if (+element[this.subNode1 ] < this.subNode2) {
-                    dataFiltered.push(element);
-                }
-        }
-        return dataFiltered;
+        if (+this.data[this.subNode1 ] < this.subNode2) {
+            return true;
+        } else return false;
     }
 
     isValid(): boolean {
         return this.valid;
     }
 
-    setData(data: any[]): void {
+    setData(data: any): void {
         this.data = data;
     }
 }
