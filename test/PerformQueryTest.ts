@@ -47,7 +47,7 @@ describe("testPerformQuery", function() {
     });
 */
 
-    it("Import course.zip and store the data, it should return code 204", function () {
+/*    it("Import course.zip and store the data, it should return code 204", function () {
         let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
         return insightF.addDataset("Courses", data).then(function (value: any) {
@@ -66,11 +66,12 @@ describe("testPerformQuery", function() {
         var testQuery = {THERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
         return insightF.performQuery(testQuery).then(function(value:any){
             let m = value;
-            expect.fail();
+            expect(m.code).to.equal(400);
+            //expect.fail();
 
         }).catch(function(err:any){
-            let a = err;
-            expect(a.code).to.equal(400);
+            //let a = err;
+            expect.fail();
         });
 
     });
@@ -82,9 +83,9 @@ describe("testPerformQuery", function() {
         return insightF.performQuery(testQuery).then(function(value:any){
             let a =value;
             expect(a.code).to.equal(400);
-            expect.fail();
 
         }).catch(function(err:any){
+            expect.fail();
         });
     });
 
@@ -355,6 +356,6 @@ describe("testPerformQuery", function() {
         });
 
 
-    });
+    });*/
 
 })

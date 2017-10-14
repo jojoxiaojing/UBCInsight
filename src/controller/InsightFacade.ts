@@ -88,7 +88,7 @@ export default class InsightFacade implements IInsightFacade {
                             code: 400,
                             body: {error : "Dataset is invalid"}
                         };
-                        reject(s);
+                        fullfill(s);
                         return;
                     }
 
@@ -125,7 +125,7 @@ export default class InsightFacade implements IInsightFacade {
                     code: 400,
                     body: {error:"123"}
                 };
-                reject(s);
+                fullfill(s);
             });
         });
     }
@@ -144,7 +144,7 @@ export default class InsightFacade implements IInsightFacade {
 
                 if(!exitOfFILE && !(that.dataInMemory.has(id))){
                     s.code = 404;
-                    reject(s);
+                    fullfill(s);
                     return;
                 }
 

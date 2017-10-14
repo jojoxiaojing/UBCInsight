@@ -28,6 +28,7 @@ describe("testAddData", function() {
     });
 
 
+/*
 
     it("Import course.zip ，store the data and remove successfully", function () {
 
@@ -150,7 +151,7 @@ describe("testAddData", function() {
 
     });
 
-    it.only("Import invalid.zip, it should return code 400", function () {
+    it("Import invalid.zip, it should return code 400", function () {
         let data : string = new Buffer(fs.readFileSync(__dirname + '/data/invalid.zip')).toString("base64");
 
 
@@ -350,6 +351,7 @@ describe("testAddData", function() {
         });
 
     });
+*/
 
 
 })
