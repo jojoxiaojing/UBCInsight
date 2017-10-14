@@ -38,7 +38,6 @@ export default class InsightFacade implements IInsightFacade {
             JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
                 let promiseArr:Array<Promise<any>> = [];
                 let parseResult:any[] =[];
-                let promiseAllResult:any[] = [];
                 for(let key in zip.files){
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
@@ -50,6 +49,7 @@ export default class InsightFacade implements IInsightFacade {
 
                     Promise.all(promiseArr).then(function(value:any){
                         //Log.trace("120:Begin json parse the data");
+                        let promiseAllResult:any[] = [];
 
 
                         let i = value;
@@ -86,7 +86,7 @@ export default class InsightFacade implements IInsightFacade {
                         if(m.length === 0){
                             let s:InsightResponse = {
                                 code: 400,
-                                body: {"Error": "Dataset is invalid"}
+                                body: {error : "Dataset is invalid"}
                             };
                             reject(s);
                             return;
@@ -123,7 +123,7 @@ export default class InsightFacade implements IInsightFacade {
             catch(function (err:any) {
                 let s:InsightResponse = {
                     code: 400,
-                    body: {"error":err.message}
+                    body: {error:"123"}
                 };
                 reject(s);
             });

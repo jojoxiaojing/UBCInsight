@@ -150,8 +150,8 @@ describe("testAddData", function() {
 
     });
 
-    it("Import invalid.zip, it should return code 400", function () {
-        let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
+    it.only("Import invalid.zip, it should return code 400", function () {
+        let data : string = new Buffer(fs.readFileSync(__dirname + '/data/invalid.zip')).toString("base64");
 
 
         return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
@@ -198,6 +198,17 @@ describe("testAddData", function() {
 
     });
 
+    it("Import Archive.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/Archive.zip', "base64");
+
+
+        return insightF.addDataset("Archive", data).then(function (value: InsightResponse) {
+            expect.fail();
+        }).catch(function (err: InsightResponse) {
+            expect(err.code).to.deep.equal(400);
+        });
+
+    });
 
     it("Import biginvalid.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/bigInValid.zip', "base64");
