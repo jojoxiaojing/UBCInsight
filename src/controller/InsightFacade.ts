@@ -109,7 +109,7 @@ export default class InsightFacade implements IInsightFacade {
                 }else{
                     let s:InsightResponse = {
                         code: 400,
-                        body: {"Error": "Dataset is invalid"}
+                        body: {error: "Dataset is invalid"}
                     };
                     this.removeDataset(id);
                     fullfill(s);
@@ -117,7 +117,7 @@ export default class InsightFacade implements IInsightFacade {
             }).catch(function (err:any) {
                 let s:InsightResponse = {
                     code: 400,
-                    body: {"error":err.message}
+                    body: {error:err.message}
                 };
                 reject(s);
             });
@@ -177,14 +177,14 @@ export default class InsightFacade implements IInsightFacade {
                 fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
                     if (err) {
                         s.code = 424;
-                        s.body = {"error":"missing dataset"}
+                        s.body = {error:"missing dataset"}
                         fullfill(s);
                     }
                     dataInMemory = JSON.parse(data);
                     let tempData = dataInMemory.data;
                     if (!this.queryController.isValid()) {
                         s.code = 400;
-                        s.body = {"error":"query invalid"};
+                        s.body = {error: "query invalid"};
                         fullfill(s);
                     } else
                     {
@@ -200,7 +200,7 @@ export default class InsightFacade implements IInsightFacade {
                 let tempData = dataInMemory.data;
                 if (!this.queryController.isValid()) {
                     s.code = 400;
-                    s.body = {"error":"query invalid"};
+                    s.body = {error:"query invalid"};
                     fullfill(s);
                 } else {
                     var output: any = {result: []}

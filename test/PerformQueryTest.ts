@@ -246,5 +246,4 @@ describe("testPerformQuery", function() {
 
     });
 
-
 })
