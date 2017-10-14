@@ -28,26 +28,7 @@ describe("testPerformQuery", function() {
 
 //Not in memory
 
-
-
-
-/*
-    it("Test performQuery, just IS with no *, it should return 200 and xx length of data ", function () {
-        var testQuery = {"WHERE": {AND: [{NOT: {"IS": {"courses_dept": "math"}}}, {NOT: {"IS": {"courses_instructor": "ma"}}},
-            {NOT: {"IS": {"courses_instructor": "po"}}}, {NOT: {"IS": {"courses_dept": "p*"}}}]}, "OPTIONS": {"COLUMNS": ["courses_dept",  "courses_instructor","courses_avg"], "ORDER": "courses_avg"}}
-        return insightF.performQuery(testQuery).then(function(value:any){
-            expect(value.code).to.equal(200);
-            let m = value.body.result.length;
-           // expect(m).to.equal(2772);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
-        }).catch(function(err:any){
-            expect.fail();
-        });
-    });
-*/
-
-/*    it("Import course.zip and store the data, it should return code 204", function () {
+    it("Import course.zip and store the data, it should return code 204", function () {
         let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
         return insightF.addDataset("Courses", data).then(function (value: any) {
@@ -60,43 +41,14 @@ describe("testPerformQuery", function() {
 
 
 
-    it("Test performQuery, invalid query returning 400 code: WHERE is misspelled", function () {
-
-        //insightF.addDataset("Courses",data);
-        var testQuery = {THERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-        return insightF.performQuery(testQuery).then(function(value:any){
-            let m = value;
-            expect(m.code).to.equal(400);
-            //expect.fail();
-
-        }).catch(function(err:any){
-            //let a = err;
-            expect.fail();
-        });
-
-    });
-
-    it("Test performQuery, invalid query returning 400 code: GT has string input", function () {
-
-        //insightF.addDataset("Courses",data);
-        var testQuery = {WHERE: {AND: [{NOT: {GT: {courses_audit: 2}}}, {AND: [{GT: {courses_fail: "a"}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-        return insightF.performQuery(testQuery).then(function(value:any){
-            let a =value;
-            expect(a.code).to.equal(400);
-
-        }).catch(function(err:any){
-            expect.fail();
-        });
-    });
-
     it("Test performQuery, just IS with no *, it should return 200 and xx length of data ", function () {
         var testQuery ={"WHERE": {"IS": {"courses_dept": "math"}}, "OPTIONS": {"COLUMNS": ["courses_dept",  "courses_instructor","courses_avg"], "ORDER": "courses_avg"}}
         return insightF.performQuery(testQuery).then(function(value:any){
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(2772);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(3);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -122,8 +74,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(1155);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(3);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -135,8 +87,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(5073);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(3);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -148,8 +100,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(107);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(3);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -161,8 +113,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(9091);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(2);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(2);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -174,8 +126,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(439);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(2);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(2);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -187,8 +139,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(1034);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(2);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(2);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -200,8 +152,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(442);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(2);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(2);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -216,8 +168,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(162);
-            //let n =Object.keys(value.body[1]).length;
-            //expect(n).to.equal(2);
+            let n =Object.keys(value.body.result[1]).length;
+            expect(n).to.equal(2);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -262,8 +214,8 @@ describe("testPerformQuery", function() {
             expect(value.code).to.equal(200);
             let m = value.body.result.length;
             expect(m).to.equal(1);
-            //let n =Object.keys(value.body[0]).length;
-            //expect(n).to.equal(3);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(3);
         }).catch(function(err:any){
             expect.fail();
         });
@@ -273,70 +225,6 @@ describe("testPerformQuery", function() {
 
 
     //Test if there is no such dataset
-
-    it("If file does not exit, it should return 424 ", function () {
-
-
-        if(fs.existsSync('./src/controller/data.txt')){
-            fs.unlinkSync('./src/controller/data.txt');
-        }
-        var testQuery = {WHERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-        return insightF.performQuery(testQuery).then(function(value:any){
-            expect.fail();
-
-        }).catch(function(err:any){
-            let a = err;
-            expect(a.code).to.equal(424);
-        });
-
-    });
-
-
-
-    //Already in memory
-
-
-    it("Already in memory:Test performQuery, invalid query returning 400 code: WHERE is misspelled", function () {
-        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
-
-        return insightF.addDataset("Courses", data).then(function (value: any) {
-            var testQuery = {THERE: {AND: [{GT: {courses_audit: 2}}, {OR: [{GT: {courses_fail: 10}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-            return insightF.performQuery(testQuery).then(function(value:any){
-                let m = value;
-                expect.fail();
-
-            }).catch(function(err:any){
-                let a = err;
-                expect(a.code).to.equal(400);
-            });
-        }).catch(function (err) {
-            expect.fail();
-        });
-
-        //insightF.addDataset("Courses",data);
-
-
-    });
-
-    it("Already in memory:Test performQuery, invalid query returning 400 code: GT has string input", function () {
-        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
-
-        return insightF.addDataset("Courses", data).then(function (value: any) {
-            var testQuery = {WHERE: {AND: [{NOT: {GT: {courses_audit: 2}}}, {AND: [{GT: {courses_fail: "a"}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
-            return insightF.performQuery(testQuery).then(function(value:any){
-                let a =value;
-                expect.fail();
-
-            }).catch(function(err:any){
-                let a = err;
-                expect(a.code).to.equal(400);
-            });
-        }).catch(function (err) {
-            expect.fail();
-        });
-        //insightF.addDataset("Courses",data);
-
-    });
 
 
     it("Already in memory:Test performQuery, real query ", function () {
@@ -356,6 +244,7 @@ describe("testPerformQuery", function() {
         });
 
 
-    });*/
+    });
+
 
 })
