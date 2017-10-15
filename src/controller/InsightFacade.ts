@@ -1,14 +1,17 @@
+
 /**
  * This is the main programmatic entry point for the project.
  */
 import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
 import QueryController from "./QueryController/QueryController";
-import {isUndefined} from "util";
 var JSZip = require("jszip");
 var fs = require("fs");
 
-
+interface dataStore {
+    id: string;
+    data:Course[];
+}
 
 interface Course {
     courses_dept: string;
@@ -22,22 +25,22 @@ interface Course {
     courses_uuid: string;
 }
 export default class InsightFacade implements IInsightFacade {
-    dataInMemory:Map<string,any[]>;
+
     queryController: QueryController;
+    dataInMemory:dataStore;
 
 
     constructor() {
-        //Log.trace('InsightFacadeImpl::init()');
-        this.dataInMemory= new Map<string,any[]>();
+        this.dataInMemory = {id:null,data:[]};
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
         let that = this;
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<InsightResponse>(function(fullfill, reject){
             //Log.trace("100:Begin unzip and read the file");
-            JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
-                let promiseArr:Array<Promise<any>> = [];
-                let parseResult:any[] =[];
+            JSZip.load(content, {base64: true}).then(function (zip:any) {
+                let promiseArr:Array<Promise<any>> = new Array();
+                let parseResult:any[] = new Array();
                 for(let key in zip.files){
                     if (zip.file(key)) {
                         let contentInFIle = zip.file(key).async("string");
@@ -47,148 +50,147 @@ export default class InsightFacade implements IInsightFacade {
 
 
 
-                Promise.all(promiseArr).then(function(value:any){
-                    //Log.trace("120:Begin json parse the data");
-                    let promiseAllResult:any[] = [];
+                if(promiseArr.length !== 0){
+                    Promise.all(promiseArr).then(function(value:any){
+                        //Log.trace("120:Begin json parse the data");
 
-
-                    let i = value;
-                    for (let i of value){
-                        try{
-                            let m = JSON.parse(i);
-                            parseResult.push(m);
+                        for (let i of value){
+                            try{
+                                let m = JSON.parse(i);
+                                parseResult.push(m);
+                            }
+                            catch(err){
+                                //do nothing here
+                            }
                         }
-                        catch(err){
-                            //do nothing here
-                        }
-                    }
-                    //Log.trace("130:Begin to transform the data into Course Object");
+                        //Log.trace("130:Begin to transform the data into Course Object");
 
-                    for (let i of parseResult){
-                        let courseData:Array<any> = i.result;
-                        for(let c of courseData){
-                            let m:Course = {
-                                courses_dept: c.Subject,
-                                courses_id: c.Course,
-                                courses_avg: c.Avg,
-                                courses_instructor: c.Professor,
-                                courses_title: c.Title,
-                                courses_pass: c.Pass,
-                                courses_fail: c.Fail,
-                                courses_audit: c.Audit,
-                                courses_uuid: c.id
-                            };
-                            promiseAllResult.push(m);
+                        for (let i of parseResult){
+                            let courseData:Array<any> = i.result;
+                            for(let c of courseData){
+                                let m:Course = {
+                                    courses_dept: c.Subject,
+                                    courses_id: c.Course,
+                                    courses_avg: c.Avg,
+                                    courses_instructor: c.Professor,
+                                    courses_title: c.Title,
+                                    courses_pass: c.Pass,
+                                    courses_fail: c.Fail,
+                                    courses_audit: c.Audit,
+                                    courses_uuid: c.id
+                                };
+                                this.dataInMemory.data.push(m);
+                            }
                         }
-                    }
-                    let m = promiseAllResult;
 
-                    if(m.length === 0){
+                        //Log.trace("140:Begin returning InsightResponse");
+                        //decide return 201 or 204
+                        let c;
+
+
+                        if(id == this.dataInMemory.id){
+                            c = 201;
+                        }else{
+                            c = 204;
+                        }
+                        that.dataInMemory.id =id;
                         let s:InsightResponse = {
-                            code: 400,
-                            body: {error : "Dataset is invalid"}
+                            code: c,
+                            body: {dataStore: this.dataInMemory}
                         };
+                        //store the data into data/data.json
+                        // Log.trace(__dirname);
+                        fs.writeFileSync(__dirname + '/data.txt', JSON.stringify(this.dataInMemory), 'utf-8');
                         fullfill(s);
-                        return;
-                    }
-
-                    //Log.trace("140:Begin returning InsightResponse");
-                    //decide return 201 or 204
-                    let c;
 
 
-                    if(that.dataInMemory.has(id)){
-                        c = 201;
-
-                    }else{
-                        c = 204;
-                    }
-                    that.dataInMemory.set(id,promiseArr);
+                    }).catch(function(err:any){
+                        let a = err;
+                        throw new Error(a.message);
+                    });
+                }else{
                     let s:InsightResponse = {
-                        code: c,
-                        body: {dataStore: that.dataInMemory}
+                        code: 400,
+                        body: {error: "Dataset is invalid"}
                     };
-                    //store the data into data/data.json
-                    // Log.trace(__dirname);
-                    fs.writeFileSync(__dirname + "/"+id, JSON.stringify(promiseAllResult), 'utf-8');
-                    fullfill(s);
-
-
-                }).catch(function(err:any){
-                    let a = err;
-                    throw new Error(a.message);
-                });
-
-            }).
-            catch(function (err:any) {
+                    this.removeDataset(id);
+                    reject(s);
+                }
+            }).catch(function (err:any) {
                 let s:InsightResponse = {
                     code: 400,
-                    body: {error:"123"}
+                    body: {error:err.message}
                 };
-                fullfill(s);
+                reject(s);
             });
+        }).catch(function (err:any) {
+
         });
     }
-
-
 
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
         return new Promise<InsightResponse>((fullfill, reject) =>{
-            try{
-                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/"+ id);
-                let s: InsightResponse = {
-                    code: 204,
-                    body: {}
-                };
-
-                if(!exitOfFILE && !(that.dataInMemory.has(id))){
+            var exitOfFILE:Boolean = fs.existsSync(__dirname + '/data.txt');
+            let s: InsightResponse = {
+                code: 204,
+                body: {}
+            };
+            if(that.dataInMemory.id === null){
+                if(exitOfFILE) {
+                    fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
+                        that.dataInMemory = JSON.parse(data);
+                        if (that.dataInMemory.id == id) {
+                            that.dataInMemory.id = null;
+                            that.dataInMemory.data = [];
+                            fs.unlink(__dirname + '/data.txt');
+                            s.code = 204;
+                            fullfill(s);
+                        } else {
+                            s.code = 404;
+                            fullfill(s);
+                        }
+                    });
+                }else{
                     s.code = 404;
                     fullfill(s);
-                    return;
                 }
-
+            }else if(that.dataInMemory.id == id){
+                that.dataInMemory.id = null;
+                that.dataInMemory.data = [];
                 if(exitOfFILE){
-                    fs.unlink(__dirname +"/"+id);
+                    fs.unlink(__dirname + '/data.txt');
                 }
-
-                if(that.dataInMemory.has(id)){
-                    that.dataInMemory.delete(id);
-                }
-
                 s.code = 204;
                 fullfill(s);
-            }catch(err){
-                let s: InsightResponse = {
-                    code: 404,
-                    body: err
-                };
-                reject(s);
-                return;
+            }else{
+                s.code = 404;
+                fullfill(s);
             }
+
+        }).catch(function(){
         });
     }
 
-
     performQuery(query: any): Promise <InsightResponse> {
-        let that = this;
+
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
             this.queryController = new QueryController(query, []);
 
-            if (!(that.dataInMemory.has("Courses"))) {
+            if (this.dataInMemory.id === null) {
                 fs.readFile(__dirname + '/data.txt', 'utf-8', function (err: any, data: any) {
                     if (err) {
                         s.code = 424;
-                        s.body = {"error":"missing dataset"}
+                        s.body = {error:"missing dataset"}
                         fullfill(s);
                     }
-                    that.dataInMemory = JSON.parse(data);
-                    let tempData = that.dataInMemory.get("Courses");
-                    if (!that.queryController.isValid()) {
+                    this.dataInMemory = JSON.parse(data);
+                    let tempData = this.dataInMemory.data;
+                    if (!this.queryController.isValid()) {
                         s.code = 400;
-                        s.body = {"error":"query invalid"};
+                        s.body = {error: "query invalid"};
                         fullfill(s);
                     } else
                     {
@@ -201,10 +203,10 @@ export default class InsightFacade implements IInsightFacade {
 
                 });
             } else {
-                let tempData = that.dataInMemory.get("Courses");
-                if (!that.queryController.isValid()) {
+                let tempData = this.dataInMemory.data;
+                if (!this.queryController.isValid()) {
                     s.code = 400;
-                    s.body = {"error":"query invalid"};
+                    s.body = {error:"query invalid"};
                     fullfill(s);
                 } else {
                     var output: any = {result: []}
