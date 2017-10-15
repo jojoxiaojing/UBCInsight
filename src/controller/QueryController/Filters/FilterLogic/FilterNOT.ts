@@ -89,13 +89,6 @@ export default class FilterNOT implements IFilterLogic{
                     return false;
                 }
             }
-            // every filter key of type AND, OR, NOT must contain array as its value
-/*            for (var key in keys) {
-                let val = element[key];
-                if (key === "AND" || key === "OR") {
-                    if (!Array.isArray(val) || val.length == 0 || val.length == 1) return false;
-                }
-            }*/
         }
         if (this.filters.length == 0) return false;
         for (var element of this.filters) {
