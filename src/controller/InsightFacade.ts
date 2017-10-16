@@ -30,7 +30,7 @@ export default class InsightFacade implements IInsightFacade {
 
 
     constructor() {
-   
+
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
