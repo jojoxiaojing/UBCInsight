@@ -111,9 +111,9 @@ export default class InsightFacade implements IInsightFacade {
                     };
                     //store the data into data/data.json
                     // Log.trace(__dirname);
-                    fs.writeFileSync(__dirname + "/"+id, JSON.stringify(promiseAllResult), 'utf-8');
+                    fs.writeFileSync(__dirname + "/data.txt", JSON.stringify(promiseAllResult), 'utf-8');
                     fullfill(s);
-
+                    return;
 
                 }).catch(function(err:any){
                     let a = err;
@@ -127,6 +127,7 @@ export default class InsightFacade implements IInsightFacade {
                     body: {"error":err.message}
                 };
                 reject(s);
+                return;
             });
         });
     }
@@ -135,37 +136,39 @@ export default class InsightFacade implements IInsightFacade {
 
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
+
         return new Promise<InsightResponse>((fullfill, reject) =>{
             try{
-                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/"+ id);
-                let s: InsightResponse = {
+                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/data.txt");
+                var s: InsightResponse = {
                     code: 204,
                     body: {}
                 };
 
                 if(!exitOfFILE && !(that.dataInMemory.has(id))){
                     s.code = 404;
+                    s.body = {error: "dataset not in memory"}
                     reject(s);
                     return;
                 }
 
                 if(exitOfFILE){
-                    fs.unlink(__dirname +"/"+id);
+                    fs.unlink(__dirname + "/data.txt");
                 }
 
                 if(that.dataInMemory.has(id)){
                     that.dataInMemory.delete(id);
                 }
 
-                s.code = 204;
+                //s.code = 204;
                 fullfill(s);
+                //return;
+
             }catch(err){
-                let s: InsightResponse = {
-                    code: 404,
-                    body: err
-                };
+                s.code = 404;
+                s.body = {error: "something went wrong"}
                 reject(s);
-                return;
+                //return;
             }
         });
     }
@@ -179,25 +182,25 @@ export default class InsightFacade implements IInsightFacade {
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
             if (!(this.dataInMemory.has("Courses"))) {
-                if (!fs.existsSync(__dirname + "/"+"Courses")) {
+                if (!fs.existsSync(__dirname + "/data.txt")) {
                     s.code = 424;
-                    s.body = {"error":"missing dataset"}
+                    s.body = {error:"missing dataset"}
                     reject(s);
-                    return;
+                    //return;
                 }else{
-                    let data = fs.readFileSync(__dirname  + "/"+"Courses", 'utf-8');
+                    let data = fs.readFileSync(__dirname  + "/data.txt", 'utf-8');
 
                    let tempData = JSON.parse(data);
 
                     if (!this.queryController.isValid()){
                         s.code = 400;
-                        s.body = {"error":"query invalid"};
+                        s.body = {error:"query invalid"};
                         reject(s);
                     } else
                     {
                         s.code = 200;
                         var output: any = {result: []}
-                        output.result = this.processData(tempData, this.queryController)
+                        output.result = this.processData(tempData)
                         s.body = output;
                         fullfill(s);
                     }
@@ -206,12 +209,12 @@ export default class InsightFacade implements IInsightFacade {
                 let tempData = this.dataInMemory.get("Courses");
                 if (!this.queryController.isValid()) {
                     s.code = 400;
-                    s.body = {"error":"query invalid"};
+                    s.body = {error:"query invalid"};
                     reject(s);
                 } else {
                     s.code = 200;
                     var output: any = {result: []}
-                    output.result = this.processData(tempData, this.queryController)
+                    output.result = this.processData(tempData)
                     s.body = output;
                     fullfill(s);
                 }
@@ -225,7 +228,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
 
-    processData(tempData: any[], qController: QueryController): any[] {
+    processData(tempData: any[]): any[] {
         let res: any[] = [];
         let val: any;
         for (val of tempData) {
