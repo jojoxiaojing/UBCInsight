@@ -30,7 +30,7 @@ describe("testAddData", function() {
 
 
 
-/*    it("Import course.zip ，store the data and remove successfully", function (done) {
+    it("Import course.zip ，store the data and remove successfully", function (done) {
 
         let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
@@ -59,10 +59,9 @@ describe("testAddData", function() {
 
         });
 
-    });*/
+    });
 
 
-/*
     it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function () {
 
         let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
@@ -92,9 +91,8 @@ describe("testAddData", function() {
         });
 
     });
-*/
 
-    /*it("Import valid.zip ，store the data and remove successfully", function () {
+    it("Import valid.zip ，store the data and remove successfully", function () {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
@@ -155,9 +153,9 @@ describe("testAddData", function() {
 
         });
 
-    });*/
+    });
 
-/*    it("Import invalid.zip, it should return code 400", function () {
+    it("Import invalid.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
 
 
@@ -171,7 +169,7 @@ describe("testAddData", function() {
             expect(ifFileExist).to.be.false;
         });
 
-    });*/
+    });
 
     it("Import emptyFolder2.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/emptyFolder2.zip', "base64");
@@ -189,7 +187,7 @@ describe("testAddData", function() {
 
     });
 
-/*    it("Import invalid2.zip, it should return code 400", function () {
+    it("Import invalid2.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
 
 
@@ -203,7 +201,7 @@ describe("testAddData", function() {
             expect(ifFileExist).to.be.false;
         });
 
-    });*/
+    });
 
 
     it("Import biginvalid.zip, it should return code 400", function () {
@@ -222,7 +220,7 @@ describe("testAddData", function() {
 
     });
 
-/*    it("Import empty.zip, it should return code 400", function () {
+    it("Import empty.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/emptyFolder.zip', "base64");
 
 
@@ -242,8 +240,8 @@ describe("testAddData", function() {
         if(fs.existsSync('./src/controller/data.txt')){
             fs.unlinkSync('./src/controller/data.txt');
         }
-    });*/
-/*
+    });
+
     it("Import invalid.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
 
@@ -259,9 +257,9 @@ describe("testAddData", function() {
             expect(ifFileExist).to.be.false;
 
         });
-    });*/
+    });
 
- /*   it("Import figure1.zip, it should return code 400", function () {
+    it("Import figure1.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/figure1.zip', "base64");
 
 
@@ -308,8 +306,8 @@ describe("testAddData", function() {
 
         });
     });
-*/
-/*    it("Test remove when not in memory but file exist", function () {
+
+   it("Test remove when not in memory but file exist", function () {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
@@ -328,7 +326,7 @@ describe("testAddData", function() {
         }).catch(function (err: InsightResponse) {
             expect.fail();
         });
-    });*/
+    });
 
     it("Test remove when not in memory and file does not exist", function () {
 
