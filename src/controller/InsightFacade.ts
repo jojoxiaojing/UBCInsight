@@ -22,7 +22,6 @@ interface Course {
     courses_uuid: string;
 }
 export default class InsightFacade implements IInsightFacade {
-    queryController: QueryController;
     dataInMemory:Map<string,any[]>;
 
 
@@ -104,7 +103,7 @@ export default class InsightFacade implements IInsightFacade {
                     }else{
                         c = 204;
                     }
-                    that.dataInMemory.set(id,promiseArr);
+                    that.dataInMemory.set(id,promiseAllResult);
                     let s:InsightResponse = {
                         code: c,
                         body: {dataStore: that.dataInMemory}
@@ -176,7 +175,7 @@ export default class InsightFacade implements IInsightFacade {
     performQuery(query: any): Promise <InsightResponse> {
 
         var s: InsightResponse = {code: null, body: {}};
-        this.queryController = new QueryController(query, []);
+        var queryController = new QueryController(query, []);
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
@@ -192,7 +191,7 @@ export default class InsightFacade implements IInsightFacade {
 
                    let tempData = JSON.parse(data);
 
-                    if (!this.queryController.isValid()){
+                    if (!queryController.isValid()){
                         s.code = 400;
                         s.body = {error:"query invalid"};
                         reject(s);
@@ -201,13 +200,14 @@ export default class InsightFacade implements IInsightFacade {
                         s.code = 200;
                         var output: any = {result: []}
                         output.result = this.processData(tempData)
+
                         s.body = output;
                         fullfill(s);
                     }
                 }
             } else {
                 let tempData = this.dataInMemory.get("Courses");
-                if (!this.queryController.isValid()) {
+                if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {error:"query invalid"};
                     reject(s);
@@ -215,6 +215,7 @@ export default class InsightFacade implements IInsightFacade {
                     s.code = 200;
                     var output: any = {result: []}
                     output.result = this.processData(tempData)
+
                     s.body = output;
                     fullfill(s);
                 }
@@ -232,10 +233,10 @@ export default class InsightFacade implements IInsightFacade {
         let res: any[] = [];
         let val: any;
         for (val of tempData) {
-            this.queryController.setData(val);
-            if (this.queryController.getQueryBody().applyFilter()) res.push(val);
+            qController.setData(val);
+            if (qController.getQueryBody().applyFilter()) res.push(val);
         }
-        this.queryController.getQueryBody().getQueryOpt().setOptionsData(res)
-        return this.queryController.getQueryBody().getQueryOpt().applyOptions();
+        qController.getQueryBody().getQueryOpt().setOptionsData(res)
+        return qController.getQueryBody().getQueryOpt().applyOptions();
     }
 }
