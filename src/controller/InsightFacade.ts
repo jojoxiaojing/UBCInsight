@@ -64,22 +64,40 @@ export default class InsightFacade implements IInsightFacade {
                     }
                     //Log.trace("130:Begin to transform the data into Course Object");
 
-                    for (let i of parseResult){
-                        let courseData:Array<any> = i.result;
-                        for(let c of courseData){
-                            let m:Course = {
-                                courses_dept: c.Subject,
-                                courses_id: c.Course,
-                                courses_avg: c.Avg,
-                                courses_instructor: c.Professor,
-                                courses_title: c.Title,
-                                courses_pass: c.Pass,
-                                courses_fail: c.Fail,
-                                courses_audit: c.Audit,
-                                courses_uuid: c.id
-                            };
-                            promiseAllResult.push(m);
+
+
+                    for (let f of parseResult){
+
+                        if(typeof f.result !== 'undefined'){
+                            let courseData:Array<any> = f.result;
+                            for(var c of courseData){
+                                if(typeof c.Subject === 'string' &&
+                                    typeof c.Course === 'string' &&
+                                    typeof c.Avg === 'number' &&
+                                    typeof c.Professor === 'string' &&
+                                    typeof c.Title === 'string' &&
+                                    typeof c.Pass === 'number' &&
+                                    typeof c.Fail === 'number' &&
+                                    typeof c.Audit === 'number' &&
+                                    typeof (c.id).toString() === 'string'
+                                ){
+                                    let m:Course = {
+                                        courses_dept: c.Subject,
+                                        courses_id: c.Course,
+                                        courses_avg: c.Avg,
+                                        courses_instructor: c.Professor,
+                                        courses_title: c.Title,
+                                        courses_pass: c.Pass,
+                                        courses_fail: c.Fail,
+                                        courses_audit: c.Audit,
+                                        courses_uuid: (c.id).toString()
+                                    };
+                                    promiseAllResult.push(m);
+                                }
+
+                            }
                         }
+
                     }
                     let m = promiseAllResult;
 
@@ -94,18 +112,18 @@ export default class InsightFacade implements IInsightFacade {
 
                     //Log.trace("140:Begin returning InsightResponse");
                     //decide return 201 or 204
-                    let c;
+                    let code;
 
 
                     if(that.dataInMemory.has(id)){
-                        c = 201;
+                        code = 201;
 
                     }else{
-                        c = 204;
+                        code = 204;
                     }
                     that.dataInMemory.set(id,promiseAllResult);
                     let s:InsightResponse = {
-                        code: c,
+                        code: code,
                         body: {dataStore: that.dataInMemory}
                     };
                     //store the data into data/data.json
