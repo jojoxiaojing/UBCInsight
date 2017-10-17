@@ -199,7 +199,7 @@ export default class InsightFacade implements IInsightFacade {
                     {
                         s.code = 200;
                         var output: any = {result: []}
-                        output.result = this.processData(tempData)
+                        output.result = this.processData(tempData, queryController)
 
                         s.body = output;
                         fullfill(s);
@@ -214,7 +214,7 @@ export default class InsightFacade implements IInsightFacade {
                 } else {
                     s.code = 200;
                     var output: any = {result: []}
-                    output.result = this.processData(tempData)
+                    output.result = this.processData(tempData, queryController)
 
                     s.body = output;
                     fullfill(s);
@@ -229,7 +229,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
 
-    processData(tempData: any[]): any[] {
+    processData(tempData: any[], qController: QueryController): any[] {
         let res: any[] = [];
         let val: any;
         for (val of tempData) {
