@@ -104,7 +104,7 @@ export default class InsightFacade implements IInsightFacade {
                     }else{
                         c = 204;
                     }
-                    that.dataInMemory.set(id,promiseArr);
+                    that.dataInMemory.set(id,promiseAllResult);
                     let s:InsightResponse = {
                         code: c,
                         body: {dataStore: that.dataInMemory}
