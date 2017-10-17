@@ -34,7 +34,7 @@ describe("testAddData", function() {
 
         let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
-        return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+        insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
 
@@ -42,31 +42,32 @@ describe("testAddData", function() {
             expect(m).to.be.true;
             let dataID = insightF.getValue().has("Courses");
             expect(dataID).to.be.true;
-            return insightF.removeDataset("Courses").then(function (value: InsightResponse) {
-                let m = value;
-                expect(m.code).to.deep.equal(204);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.be.false;
 
-            }).catch(function (value: InsightResponse) {
-                expect.fail();
+        }).then(()=>{ insightF.removeDataset("Courses").then(function (value: InsightResponse) {
+            let m = value;
+            expect(m.code).to.deep.equal(204);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
 
-            });
-
-        }).catch(function (err: InsightResponse) {
+        }).catch(function () {
             expect.fail();
 
-
         });
+        }).catch(function () {
+            expect.fail();
+        });
+
+
+        done();
 
     });
 
 
-    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function () {
+    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function (done) {
 
-        let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
-        return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+        insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
 
@@ -74,9 +75,9 @@ describe("testAddData", function() {
             expect(m).to.be.true;
             let dataID = insightF.getValue().has("Courses");
             expect(dataID).to.be.true;
-            let data =fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
-
-            return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+            let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64")
+        }).then(() => {
+            insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
                 expect.fail();
 
             }).catch(function (err: InsightResponse) {
@@ -85,91 +86,68 @@ describe("testAddData", function() {
                 let ifFileExist = fs.existsSync('./src/controller/invalid2');
                 expect(ifFileExist).to.be.false;
             });
-
         }).catch(function (err: InsightResponse) {
             expect.fail();
         });
-
+        done();
     });
 
-    it("Import valid.zip ，store the data and remove successfully", function () {
+    it("Import valid.zip ，store the data and remove successfully", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
-        return insightF.addDataset("smallValid", data).then(function (value: InsightResponse) {
+        insightF.addDataset("smallValid", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
             let m = fs.existsSync('./src/controller/data.txt');
             expect(m).to.be.true;
             let dataID = insightF.getValue().has("smallValid");
             expect(dataID).to.be.true;
-            return insightF.removeDataset("smallValid").then(function (value: InsightResponse) {
-                let m = value;
-                expect(m.code).to.deep.equal(204);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.be.false;
-            }).catch(function (value: InsightResponse) {
-                expect.fail();
-            });
+        }).then(()=>{insightF.removeDataset("smallValid").then(function (value: InsightResponse) {
+            let m = value;
+            expect(m.code).to.deep.equal(204);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+        }).catch(function (value: InsightResponse) {
+            expect.fail();
+        });
         }).catch(function (err: InsightResponse) {
             expect.fail();
         });
-    });
+
+        done();
+    })
 
 
 
 
-    it("Import course.zip ，store the data and remove unsuccessfully", function () {
+    it("Import course.zip ，store the data and remove unsuccessfully", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64") ;
 
-        return insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
+        insightF.addDataset("Courses", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
             let m = fs.existsSync('./src/controller/data.txt');
             expect(m).to.be.true;
             let dataID = insightF.getValue().has("Courses");
-            expect(dataID).to.be.true;
-            return insightF.removeDataset("Empty").then(function (value: InsightResponse) {
-                expect.fail();
-
-            }).catch(function (value: InsightResponse) {
-                let m = value;
-                expect(m.code).to.deep.equal(404);
-                let ifFileExist = fs.existsSync('./src/controller/data.txt');
-                expect(ifFileExist).to.be.true;
-                return insightF.removeDataset("Courses").then(function (value:InsightResponse) {
-                    expect(value.code).to.deep.equal(204);
-
-
-                }).catch(function(err:any){
-                    expect.fail();
-
-                });
-            });
-        }).catch(function (err: InsightResponse) {
+            expect(dataID).to.be.true;}).then(()=>{insightF.removeDataset("Empty").then(function (value: InsightResponse) {
             expect.fail();
 
-
-        });
-
-    });
-
-    it("Import invalid.zip, it should return code 400", function () {
-        let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
-
-
-        return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
-            expect.fail();
-
-        }).catch(function (err: InsightResponse) {
-            let a = err;
-            expect(a.code).to.deep.equal(400);
+        }).catch(function (value: InsightResponse) {
+            let m = value;
+            expect(m.code).to.deep.equal(404);
             let ifFileExist = fs.existsSync('./src/controller/data.txt');
-            expect(ifFileExist).to.be.false;
+            expect(ifFileExist).to.be.true;
+        });
+        }).catch(function (err: InsightResponse) {
+            expect.fail();
         });
 
-    });
+        done();
+    })
+
+
 
     it("Import emptyFolder2.zip, it should return code 400", function () {
         let data = fs.readFileSync(__dirname + '/data/emptyFolder2.zip', "base64");
@@ -187,21 +165,6 @@ describe("testAddData", function() {
 
     });
 
-    it("Import invalid2.zip, it should return code 400", function () {
-        let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
-
-
-        return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
-            expect.fail();
-
-        }).catch(function (err: InsightResponse) {
-            let a = err;
-            expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
-            expect(ifFileExist).to.be.false;
-        });
-
-    });
 
 
     it("Import biginvalid.zip, it should return code 400", function () {
@@ -220,21 +183,6 @@ describe("testAddData", function() {
 
     });
 
-    it("Import empty.zip, it should return code 400", function () {
-        let data = fs.readFileSync(__dirname + '/data/emptyFolder.zip', "base64");
-
-
-        return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
-            expect.fail();
-
-        }).catch(function (err: InsightResponse) {
-            let a = err;
-            expect(a.code).to.deep.equal(400);
-            let ifFileExist = fs.existsSync('./src/controller/data.txt');
-            expect(ifFileExist).to.be.false;
-        });
-
-    });
 
     it("run this and remove data.txt",function(){
         if(fs.existsSync('./src/controller/data.txt')){
@@ -307,15 +255,15 @@ describe("testAddData", function() {
         });
     });
 
-   it("Test remove when not in memory but file exist", function () {
+   it("Test remove when not in memory but file exist", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
-        return insightF.addDataset("valid", data).then(function (value: InsightResponse) {
+        insightF.addDataset("valid", data).then(function (value: InsightResponse) {
 
             let ifFileExist = fs.existsSync('./src/controller/data.txt');
-            expect(ifFileExist).to.be.true;
-            return insightF.removeDataset("valid").then(function (value: InsightResponse) {
+            expect(ifFileExist).to.be.true;}).then(()=>{
+            insightF.removeDataset("valid").then(function (value: InsightResponse) {
                 let m = value;
                 expect(m.code).to.deep.equal(204);
                 let ifFileExist = fs.existsSync('./src/controller/data.txt');
@@ -326,7 +274,10 @@ describe("testAddData", function() {
         }).catch(function (err: InsightResponse) {
             expect.fail();
         });
-    });
+        done();
+   })
+
+
 
     it("Test remove when not in memory and file does not exist", function () {
 
@@ -345,5 +296,53 @@ describe("testAddData", function() {
 
     });
 
+    it("Import invalid.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/invalid.zip', "base64");
+
+
+        return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
+
+
+    it("Import invalid2.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
+
+
+        return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
+
+    it("Import empty.zip, it should return code 400", function () {
+        let data = fs.readFileSync(__dirname + '/data/emptyFolder.zip', "base64");
+
+
+        return insightF.addDataset("Empty", data).then(function (value: InsightResponse) {
+            expect.fail();
+
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/data.txt');
+            expect(ifFileExist).to.be.false;
+        });
+
+    });
 
 })

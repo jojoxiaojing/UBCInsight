@@ -161,13 +161,13 @@ export default class InsightFacade implements IInsightFacade {
 
                 //s.code = 204;
                 fullfill(s);
-                //return;
+                return;
 
             }catch(err){
                 s.code = 404;
                 s.body = {error: "something went wrong"}
                 reject(s);
-                //return;
+                return;
             }
         });
     }
