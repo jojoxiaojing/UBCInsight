@@ -96,6 +96,13 @@ export default class InsightFacade implements IInsightFacade {
                                 }
 
                             }
+                        } else {
+                            let s:InsightResponse = {
+                                code: 400,
+                                body: {"Error": "Dataset is invalid"}
+                            };
+                            reject(s);
+
                         }
 
                     }

@@ -6,7 +6,7 @@ var fs = require("fs");
 
 
 describe("testAddData", function() {
-    this.timeout(40000);
+    this.timeout(10000);
     var insightF: InsightFacade;
     before(function () {
         //Log.test('Before: ' + (<any>this).test.parent.title);
