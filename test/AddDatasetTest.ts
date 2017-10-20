@@ -255,7 +255,7 @@ describe("testAddData", function() {
         });
     });
 
-   it("Test remove when not in memory but file exist", function (done) {
+    it("Test remove when not in memory but file exist", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
@@ -275,7 +275,7 @@ describe("testAddData", function() {
             expect.fail();
         });
         done();
-   })
+    })
 
 
 

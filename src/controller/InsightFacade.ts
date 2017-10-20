@@ -1,7 +1,7 @@
 /**
-     * This is the main programmatic entry point for the project.
-     */
-    import {IInsightFacade, InsightResponse} from "./IInsightFacade";
+ * This is the main programmatic entry point for the project.
+ */
+import {IInsightFacade, InsightResponse} from "./IInsightFacade";
 import Log from "../Util";
 import QueryController from "./QueryController/QueryController";
 import {isUndefined} from "util";
@@ -214,7 +214,7 @@ export default class InsightFacade implements IInsightFacade {
                 }else{
                     let data = fs.readFileSync(__dirname  + "/data.txt", 'utf-8');
 
-                   let tempData = JSON.parse(data);
+                    let tempData = JSON.parse(data);
 
                     if (!queryController.isValid()){
                         s.code = 400;
