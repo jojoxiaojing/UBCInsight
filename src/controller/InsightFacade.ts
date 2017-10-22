@@ -93,7 +93,7 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (!(data.has("data.txt"))) {
+            if (!(data.has("courses"))) {
                 if (!fs.existsSync(__dirname + "/courses.txt")) {
                     s.code = 424;
                     s.body = {error:"missing dataset"}
@@ -119,7 +119,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
             } else {
-                let tempData = data.get("data.txt");
+                let tempData = data.get("courses");
                 if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {error:"query invalid"};
