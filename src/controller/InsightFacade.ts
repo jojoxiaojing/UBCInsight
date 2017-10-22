@@ -45,7 +45,7 @@ export default class InsightFacade implements IInsightFacade {
                     reject({code: 400, error: 'error'});
                 }
             } catch (err) {
-                reject({code:400, error: 'error'});
+                reject({code:400, error: err});
             }
         });
     }
@@ -56,19 +56,19 @@ export default class InsightFacade implements IInsightFacade {
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             try{
-                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/" + id + ".txt");
+                let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
                 var s: InsightResponse = {
                     code: 204,
                     body: {}
                 };
 
-                if((!exitOfFILE && !(this.dataController.dataInMemory.has(id))) || (id !== 'courses' && id !== 'rooms')){
+                if((!ifFileExist && !(this.dataController.dataInMemory.has(id))) || (id !== 'courses' && id !== 'rooms')){
                     s.code = 404;
                     s.body = {error: "dataset not in memory"}
                     reject(s);
                 }
 
-                if(exitOfFILE){
+                if(ifFileExist){
                     fs.unlink(__dirname + "/" + id + ".txt");
                 }
 

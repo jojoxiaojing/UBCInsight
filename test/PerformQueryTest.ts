@@ -25,6 +25,10 @@ describe("testPerformQuery", function() {
         return insightF.addDataset("courses", data).then(function (value: any) {
             let a = value;
             expect(a.code).to.deep.equal(204);
+            let dataID = insightF.getDataController().getDataInMemory().has("courses");
+            expect(dataID).to.be.true;
+            let dataSize = insightF.getDataController().getDataInMemory().get("courses").length;
+            expect(dataSize).to.equal(64612)
         }).catch(function (err) {
             expect.fail();
         });
