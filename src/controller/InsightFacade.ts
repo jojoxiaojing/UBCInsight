@@ -90,62 +90,56 @@ export default class InsightFacade implements IInsightFacade {
 
         var s: InsightResponse = {code: null, body: {}};
         var queryController = new QueryController(query, []);
-
+        var isValid = queryController.isValid();
         var id = queryController.whichID();
 
         let that = this;
         var dataCntrl = that.getDataController();
         var dataMap = dataCntrl.getDataInMemory();
 
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (!(dataMap.has(id))) {
-                if (id !== "courses" && id !== "rooms") {
-                    s.code = 400;
-                    s.body = {error:"wrong id"}
-                    reject(s);
-                    return;
-                }
-                if (!fs.existsSync('./src/controller/' + id + '.txt')) {
-                    s.code = 424;
-                    s.body = {error:"missing dataset"}
-                    reject(s);
-                    //return;
-                }else{
-                    let data = fs.readFileSync('./src/controller/' + id + '.txt', 'utf-8');
-
-                    let tempData = JSON.parse(data);
-
-                    if (!queryController.isValid()){
+            if (isValid) {
+                if (!(dataMap.has(id))) {
+                    if (id !== "courses" && id !== "rooms") {
                         s.code = 400;
-                        s.body = {error:"query invalid"};
+                        s.body = {error:"wrong id"}
                         reject(s);
-                    } else
-                    {
+                        return;
+                    }
+                    if (!fs.existsSync('./src/controller/' + id + '.txt')) {
+                        s.code = 424;
+                        s.body = {error:"missing dataset"}
+                        reject(s);
+                        //return;
+                    }else{
+                        let data = fs.readFileSync('./src/controller/' + id + '.txt', 'utf-8');
+
+                        let tempData = JSON.parse(data);
+
                         s.code = 200;
                         var output: any = {result: []}
                         output.result = this.processData(tempData, queryController)
 
                         s.body = output;
-                        fullfill(s);
+                        fulfill(s);
+
                     }
-                }
-            } else {
-                let tempData = dataMap.get(id);
-                if (!queryController.isValid()) {
-                    s.code = 400;
-                    s.body = {error:"query invalid"};
-                    reject(s);
                 } else {
+                    let tempData = dataMap.get(id);
                     s.code = 200;
                     var output: any = {result: []}
                     output.result = this.processData(tempData, queryController)
                     s.body = output;
-                    fullfill(s);
+                    fulfill(s);
                 }
-
+            } else {
+                s.code = 400;
+                s.body = {error:"query invalid"};
+                reject(s);
             }
+
         });
     }
 
