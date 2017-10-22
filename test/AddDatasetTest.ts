@@ -60,11 +60,11 @@ describe("testAddData", function() {
     });
 
 
-    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function () {
+    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
-        return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
+            insightF.addDataset("courses", data).then(function (value: InsightResponse) {
             let a = value;
             expect(a.code).to.deep.equal(204);
 
@@ -74,7 +74,7 @@ describe("testAddData", function() {
             expect(dataID).to.be.true;
             let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64")
         }).then(() => {
-            return insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+                insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
                 expect.fail();
 
             }).catch(function (err: InsightResponse) {
@@ -82,11 +82,12 @@ describe("testAddData", function() {
                 expect(a.code).to.deep.equal(400);
                 let ifFileExist = fs.existsSync('./src/controller/invalid2');
                 expect(ifFileExist).to.be.false;
+                done()
             });
         }).catch(function (err: InsightResponse) {
             expect.fail();
         });
-
+        done()
     });
 
     it("Import valid.zip ，store the data and remove successfully", function (done) {
@@ -134,7 +135,7 @@ describe("testAddData", function() {
             let dataID = insightF.getDataController().getDataInMemory().has("courses");
             expect(dataID).to.be.true;}).then(()=>{insightF.removeDataset("Empty").then(function (value: InsightResponse) {
             expect.fail();
-            done();
+
         }).catch(function (value: InsightResponse) {
             let m = value;
             expect(m.code).to.deep.equal(404);
@@ -144,8 +145,9 @@ describe("testAddData", function() {
         });
         }).catch(function (err: InsightResponse) {
             expect.fail();
-            done()
+
         });
+        done()
 
 
     })
@@ -258,7 +260,7 @@ describe("testAddData", function() {
         });
     });
 
-    it("Test remove when not in memory but file exist", function (done) {
+/*    it("Test remove when not in memory but file exist", function (done) {
 
         let data = fs.readFileSync(__dirname + '/data/valid.zip', "base64");
 
@@ -280,7 +282,7 @@ describe("testAddData", function() {
         });
         done();
 
-    })
+    })*/
 
 
 
@@ -349,5 +351,27 @@ describe("testAddData", function() {
         });
 
     });
+
+
+    it("simple test for addDataset with courses.zip", function () {
+        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        insightF.removeDataset('courses');
+
+        return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
+
+            let a = value;
+            expect(a.code).to.deep.equal(204);
+            let m = fs.existsSync('./src/controller/courses.txt');
+            expect(m).to.be.true;
+            let dataID = insightF.getDataController().getDataInMemory().has("courses");
+            expect(dataID).to.be.true;
+            let dataSize = insightF.getDataController().getDataInMemory().get("courses").length;
+            expect(dataSize).to.equal(64612)
+        }).catch(function (err: InsightResponse) {
+            expect.fail();
+        });
+
+    });
+
 
 })

@@ -23,15 +23,19 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise((fulfill, reject)=> {
             try {
                 let dataController = this.dataController;
-                let c: number;
+                var c: number;
                 if (dataController.getDataset(id) == null || dataController.getDataset(id) == {}){
                     c = 204;
                 } else {
                     c = 201;
                 }
                 if (id === "courses") {
-                    dataController.processCourses(id, content).then(()=>{
-                        fulfill({code: c, body: {}});
+                    dataController.processCourses(id, content).then((value: boolean)=>{
+                        if (value === true) {
+                            fulfill({code: c, body: {}});
+                        } else {
+                            throw new Error("Dataset is invalid")
+                        }
                     }).catch(function (err: Error) {
                         reject({code: 400, error: 'error'});
                     });
@@ -87,7 +91,7 @@ export default class InsightFacade implements IInsightFacade {
         var queryController = new QueryController(query, []);
         let that = this;
         var dataCntrl = that.getDataController();
-        var data = dataCntrl.dataInMemory;
+        var data = dataCntrl.getDataInMemory();
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable

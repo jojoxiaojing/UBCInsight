@@ -39,9 +39,9 @@ export default class DataController {
         return this.dataInMemory.get(id);
     }
 
-    public processCourses(id: string, content: any): Promise<InsightResponse> {
+    public processCourses(id: string, content: any): Promise<boolean> {
         let that = this;
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<boolean>((fullfill, reject) =>{
             JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
                 let promiseArr:Array<Promise<any>> = new Array();
                 let parseResult:any[] = new Array();
@@ -88,48 +88,24 @@ export default class DataController {
                     let m = promiseAllResult;
 
                     if(m.length === 0){
-                        let s:InsightResponse = {
-                            code: 400,
-                            body: {error: "Dataset is invalid"}
-                        };
-                        reject(s);
+                        throw new Error("Dataset is empty")
+                    } else {
+                        //update the in memory file
+                        let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
+                        if (!ifFileExist) {
+                            fs.writeFileSync( './src/controller/' + id + '.txt', JSON.stringify(m), 'utf-8');
+                        }
+                        that.dataInMemory.set(id, m)
+                        fullfill(true);
                     }
-
-                    let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
-                    if (!ifFileExist) {
-                        fs.writeFileSync( './src/controller/' + id + '.txt', JSON.stringify(m), 'utf-8');
-                    }
-
-                    let c;
-                    if(that.dataInMemory.has(id)){
-                        c = 201;
-
-                    }else{
-                        c = 204;
-                    }
-                    that.dataInMemory.set(id,m);
-                    let s:InsightResponse = {
-                        code: c,
-                        body: {dataStore: that.dataInMemory.get(id)}
-                    };
-                    fullfill(s);
-
 
                 }).catch(function(err:any){
-                    let s:InsightResponse = {
-                        code: 400,
-                        body: {"error":err.message}
-                    };
-                    reject(s);
+                    reject(false);
                 });
 
             }).
             catch(function (err:any) {
-                let s:InsightResponse = {
-                    code: 400,
-                    body: {"error":err.message}
-                };
-                reject(s);
+                reject(false);
             });
         });
     }
