@@ -52,7 +52,7 @@ export default class DataController {
                         promiseArr.push(contentInFIle);
                     }}
 
-                Promise.all(promiseArr).then(function(value:any){
+                Promise.all(promiseArr).then((value:any)=>{
                     let i = value;
                     for (let i of value){
                         try{

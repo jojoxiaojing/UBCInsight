@@ -45,7 +45,6 @@ describe("testPerformQuery", function() {
             let n =Object.keys(value.body.result[0]).length;
             expect(n).to.equal(3);
         }).catch(function(err:any){
-            let a =1;
             expect.fail();
         });
     });

@@ -27,20 +27,11 @@ describe("testAddData", function() {
 
 
 
-    it("Import course.zip and then invalid2.zip ，store the data of course but not invalid2", function (done) {
+    it("Import invalid2.zip ，do not store the data of invalid2", function (done) {
 
-        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
-            insightF.addDataset("courses", data).then(function (value: InsightResponse) {
-            let a = value;
-            expect(a.code).to.deep.equal(204);
-
-            let m = fs.existsSync('./src/controller/courses.txt');
-            expect(m).to.be.true;
-            let dataID = insightF.getDataController().getDataInMemory().has("courses");
-            expect(dataID).to.be.true;
             let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
-        }).then(() => {
+
                 insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
                 expect.fail();
                 done();
@@ -51,10 +42,6 @@ describe("testAddData", function() {
                 expect(ifFileExist).to.be.false;
                 done();
             });
-        }).catch(function (err: InsightResponse) {
-            expect.fail();
-            done();
-        });
 
     });
 
@@ -216,7 +203,7 @@ describe("testAddData", function() {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
         insightF.removeDataset('courses');
 
-        return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
+        return insightF.addDataset('courses', data).then( (value: InsightResponse)=> {
 
             let a = value;
             expect(a.code).to.deep.equal(204);
@@ -232,7 +219,29 @@ describe("testAddData", function() {
 
     });
 
-    //TODO need more addDataset tests for other codes
+    it("simple test for addDataset with courses.zip, with code 201", function () {
+        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        insightF.removeDataset('courses');
+
+        return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
+            return insightF.addDataset("courses", data).then((value)=> {
+                let a = value;
+                expect(a.code).to.deep.equal(201);
+                let m = fs.existsSync('./src/controller/courses.txt');
+                expect(m).to.be.true;
+                let dataID = insightF.getDataController().getDataInMemory().has("courses");
+                expect(dataID).to.be.true;
+                let dataSize = insightF.getDataController().getDataInMemory().get("courses").length;
+                expect(dataSize).to.equal(64612)
+            }).catch(function(err: InsightResponse){
+                expect.fail();
+            })
+
+        }).catch(function (err: InsightResponse) {
+            expect.fail();
+        });
+
+    });
 
 
 })

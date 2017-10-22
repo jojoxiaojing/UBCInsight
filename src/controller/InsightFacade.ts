@@ -20,9 +20,10 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
+        let that = this;
         return new Promise((fulfill, reject)=> {
             try {
-                let dataController = this.dataController;
+                var dataController = that.dataController;
                 var c: number;
                 if (dataController.getDataset(id) == null || dataController.getDataset(id) == {}){
                     c = 204;
@@ -37,7 +38,7 @@ export default class InsightFacade implements IInsightFacade {
                             throw new Error("Dataset is invalid")
                         }
                     }).catch(function (err: Error) {
-                        reject({code: 400, error: 'error'});
+                        reject({code: 400, error: err});
                     });
                 } else if (id === "rooms") {
                     //TODO: insert the call to processRooms(...)
@@ -69,7 +70,7 @@ export default class InsightFacade implements IInsightFacade {
                 }
 
                 if(ifFileExist){
-                    fs.unlink(__dirname + "/" + id + ".txt");
+                    fs.unlink('./src/controller/' + id + '.txt');
                 }
 
                 if(this.dataController.dataInMemory.has(id)){
@@ -94,25 +95,25 @@ export default class InsightFacade implements IInsightFacade {
 
         let that = this;
         var dataCntrl = that.getDataController();
-        var data = dataCntrl.getDataInMemory();
+        var dataMap = dataCntrl.getDataInMemory();
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (!(data.has(id))) {
+            if (!(dataMap.has(id))) {
                 if (id !== "courses" && id !== "rooms") {
                     s.code = 400;
                     s.body = {error:"wrong id"}
                     reject(s);
                     return;
                 }
-                if (!fs.existsSync(__dirname + "/" + id + ".txt")) {
+                if (!fs.existsSync('./src/controller/' + id + '.txt')) {
                     s.code = 424;
                     s.body = {error:"missing dataset"}
                     reject(s);
                     //return;
                 }else{
-                    let data = fs.readFileSync(__dirname  + "/" + id + ".txt", 'utf-8');
+                    let data = fs.readFileSync('./src/controller/' + id + '.txt', 'utf-8');
 
                     let tempData = JSON.parse(data);
 
@@ -131,7 +132,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
             } else {
-                let tempData = data.get(id);
+                let tempData = dataMap.get(id);
                 if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {error:"query invalid"};
