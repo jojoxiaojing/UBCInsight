@@ -36,6 +36,8 @@ export default class InsightFacade implements IInsightFacade {
                         reject({code: 400, error: 'error'});
                     });
                 } else if (id === "rooms") {
+                } else {
+                    reject({code: 400, error: 'error'});
                 }
             } catch (err) {
                 reject({code:400, error: 'error'});

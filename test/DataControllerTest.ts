@@ -11,10 +11,12 @@ describe("testAddData", function() {
     var dataController: DataController;
     beforeEach(function () {
         // load the dataset for testing
-        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        let data  = fs.readFileSync(__dirname + '/data/courses.txt', 'utf-8');
+        fs.writeFileSync('./src/controller/courses.txt', data, 'utf-8')
         var insightF = new InsightFacade();
         insightF.addDataset('courses', data);
         dataController = insightF.dataController;
+
     });
 
 
