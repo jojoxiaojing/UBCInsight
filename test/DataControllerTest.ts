@@ -4,7 +4,7 @@ import InsightFacade from "../src/controller/InsightFacade";
 import {InsightResponse} from "../src/controller/IInsightFacade";
 import DataController from "../src/controller/DataController";
 var fs = require("fs");
-
+var insightF: InsightFacade;
 
 describe("testAddData", function() {
     this.timeout(10000);
@@ -13,13 +13,15 @@ describe("testAddData", function() {
         // load the dataset for testing
         let data  = fs.readFileSync(__dirname + '/data/courses.txt', 'utf-8');
         fs.writeFileSync('./src/controller/courses.txt', data, 'utf-8')
-        var insightF = new InsightFacade();
+        insightF = new InsightFacade();
         insightF.addDataset('courses', data);
         dataController = insightF.dataController;
 
     });
 
-
+    after(function() {
+        insightF.removeDataset('courses');
+    })
 
 
     it("Test getDataset, file not inDisk", function () {

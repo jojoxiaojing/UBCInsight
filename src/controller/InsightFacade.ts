@@ -47,19 +47,19 @@ export default class InsightFacade implements IInsightFacade {
     }
 
 
-
+   //TODO check if ID is either "rooms" or "courses"
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
 
         return new Promise<InsightResponse>((fullfill, reject) =>{
             try{
-                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/courses.txt");
+                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/" + id + ".txt");
                 var s: InsightResponse = {
                     code: 204,
                     body: {}
                 };
 
-                if(!exitOfFILE && !(this.dataController.dataInMemory.has(id))){
+                if((!exitOfFILE && !(this.dataController.dataInMemory.has(id))) || (id !== 'courses' && id !== 'rooms')){
                     s.code = 404;
                     s.body = {error: "dataset not in memory"}
                     reject(s);
@@ -135,10 +135,6 @@ export default class InsightFacade implements IInsightFacade {
 
             }
         });
-    }
-
-    getValue() {
-        return this.dataController.dataInMemory;
     }
 
     getDataController(): DataController {

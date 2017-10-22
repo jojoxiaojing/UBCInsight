@@ -129,4 +129,8 @@ export default class DataController {
         });
     }
 
+    getDataInMemory(): any {
+        return this.dataInMemory;
+    }
+
 }

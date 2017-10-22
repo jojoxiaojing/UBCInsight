@@ -10,9 +10,13 @@ describe("testPerformQuery", function() {
     var insightF: InsightFacade;
     before(function () {
         insightF = new InsightFacade();
+        insightF.removeDataset('courses');
         //Log.test('Before: ' + (<any>this).test.parent.title);
     });
 
+    after(function() {
+        insightF.removeDataset('courses');
+    })
 //Not in memory
 
     it("Import course.zip and store the data, it should return code 204", function () {
@@ -20,7 +24,7 @@ describe("testPerformQuery", function() {
 
         return insightF.addDataset("courses", data).then(function (value: any) {
             let a = value;
-            expect(a.code).to.deep.equal(201);
+            expect(a.code).to.deep.equal(204);
         }).catch(function (err) {
             expect.fail();
         });
