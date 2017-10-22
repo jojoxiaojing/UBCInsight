@@ -30,7 +30,7 @@ describe("testAddData", function() {
 
 
 
-    it.only("Import course.zip ，store the data and remove successfully", function (done) {
+    it("Import course.zip ，store the data and remove successfully", function (done) {
 
         let data =fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
@@ -48,7 +48,7 @@ describe("testAddData", function() {
             expect(m.code).to.deep.equal(204);
             let ifFileExist = fs.existsSync('./src/controller/courses.txt');
             expect(ifFileExist).to.be.false;
-            done();
+
         }).catch(function () {
             expect.fail();
 
@@ -57,7 +57,7 @@ describe("testAddData", function() {
             expect.fail();
         });
 
-
+        done();
     });
 
 

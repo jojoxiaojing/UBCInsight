@@ -92,7 +92,7 @@ export default class DataController {
 
                     let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
                     if (!ifFileExist) {
-                        fs.writeFileSync(__dirname + './' + id + '.txt', JSON.stringify(m), 'utf-8');
+                        fs.writeFileSync( './src/controller/' + id + '.txt', JSON.stringify(m), 'utf-8');
                     }
 
                     let c;
