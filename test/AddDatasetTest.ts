@@ -274,11 +274,9 @@ describe("testAddData", function() {
                 done();
             }).catch(function (value: InsightResponse) {
                 expect.fail();
-                done()
             });
         }).catch(function (err: InsightResponse) {
             expect.fail();
-            done()
         });
         done();
 

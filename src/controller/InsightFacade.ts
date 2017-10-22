@@ -47,7 +47,6 @@ export default class InsightFacade implements IInsightFacade {
     }
 
 
-   //TODO check if ID is either "rooms" or "courses"
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
 

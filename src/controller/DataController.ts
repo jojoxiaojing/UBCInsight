@@ -13,6 +13,7 @@ interface Course {
     courses_fail: number;
     courses_audit: number;
     courses_uuid: string;
+    courses_year: number;
 }
 
 export default class DataController {
@@ -75,8 +76,12 @@ export default class DataController {
                                 courses_pass: c.Pass,
                                 courses_fail: c.Fail,
                                 courses_audit: c.Audit,
-                                courses_uuid: c.id
+                                courses_uuid: c.id,
+                                courses_year: c.Year
                             };
+                            if (c.Section === "overall") {
+                                m.courses_year = 1900
+                            }
                             promiseAllResult.push(m);
                         }
                     }
