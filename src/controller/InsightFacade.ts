@@ -89,6 +89,9 @@ export default class InsightFacade implements IInsightFacade {
 
         var s: InsightResponse = {code: null, body: {}};
         var queryController = new QueryController(query, []);
+
+        var id = queryController.whichID();
+
         let that = this;
         var dataCntrl = that.getDataController();
         var data = dataCntrl.getDataInMemory();
@@ -96,14 +99,20 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fullfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (!(data.has("courses"))) {
-                if (!fs.existsSync(__dirname + "/courses.txt")) {
+            if (!(data.has(id))) {
+                if (id !== "courses" && id !== "rooms") {
+                    s.code = 400;
+                    s.body = {error:"wrong id"}
+                    reject(s);
+                    return;
+                }
+                if (!fs.existsSync(__dirname + "/" + id + ".txt")) {
                     s.code = 424;
                     s.body = {error:"missing dataset"}
                     reject(s);
                     //return;
                 }else{
-                    let data = fs.readFileSync(__dirname  + "/courses.txt", 'utf-8');
+                    let data = fs.readFileSync(__dirname  + "/" + id + ".txt", 'utf-8');
 
                     let tempData = JSON.parse(data);
 
@@ -122,7 +131,7 @@ export default class InsightFacade implements IInsightFacade {
                     }
                 }
             } else {
-                let tempData = data.get("courses");
+                let tempData = data.get(id);
                 if (!queryController.isValid()) {
                     s.code = 400;
                     s.body = {error:"query invalid"};
@@ -131,7 +140,6 @@ export default class InsightFacade implements IInsightFacade {
                     s.code = 200;
                     var output: any = {result: []}
                     output.result = this.processData(tempData, queryController)
-
                     s.body = output;
                     fullfill(s);
                 }
