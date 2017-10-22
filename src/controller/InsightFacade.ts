@@ -21,9 +21,9 @@ export default class InsightFacade implements IInsightFacade {
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
         let that = this;
+        var dataController = that.dataController;
         return new Promise((fulfill, reject)=> {
             try {
-                var dataController = that.dataController;
                 var c: number;
                 if (dataController.getDataset(id) == null || dataController.getDataset(id) == {}){
                     c = 204;
@@ -36,12 +36,14 @@ export default class InsightFacade implements IInsightFacade {
                             fulfill({code: c, body: {}});
                         } else {
                             throw new Error("Dataset is invalid")
+                            //reject({code: 400, error: "dataset invalid"})
                         }
                     }).catch(function (err: Error) {
                         reject({code: 400, error: err});
                     });
                 } else if (id === "rooms") {
                     //TODO: insert the call to processRooms(...)
+
                 } else {
                     reject({code: 400, error: 'error'});
                 }
@@ -55,7 +57,7 @@ export default class InsightFacade implements IInsightFacade {
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
 
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<InsightResponse>((fulfill, reject) =>{
             try{
                 let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
                 var s: InsightResponse = {
@@ -76,7 +78,7 @@ export default class InsightFacade implements IInsightFacade {
                 if(this.dataController.dataInMemory.has(id)){
                     this.dataController.dataInMemory.delete(id);
                 }
-                fullfill(s);
+                fulfill(s);
 
             }catch(err){
                 s.code = 404;
@@ -94,40 +96,20 @@ export default class InsightFacade implements IInsightFacade {
         var id = queryController.whichID();
 
         let that = this;
-        var dataCntrl = that.getDataController();
-        var dataMap = dataCntrl.getDataInMemory();
+        var dataController = that.getDataController();
+        var dataMap = dataController.getDataInMemory();
 
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
             if (isValid) {
-                if (!(dataMap.has(id))) {
-                    if (id !== "courses" && id !== "rooms") {
-                        s.code = 400;
-                        s.body = {error:"wrong id"}
-                        reject(s);
-                        return;
-                    }
-                    if (!fs.existsSync('./src/controller/' + id + '.txt')) {
+                if (dataController.getDataset(id) === null) {
                         s.code = 424;
                         s.body = {error:"missing dataset"}
                         reject(s);
-                        //return;
-                    }else{
-                        let data = fs.readFileSync('./src/controller/' + id + '.txt', 'utf-8');
 
-                        let tempData = JSON.parse(data);
-
-                        s.code = 200;
-                        var output: any = {result: []}
-                        output.result = this.processData(tempData, queryController)
-
-                        s.body = output;
-                        fulfill(s);
-
-                    }
                 } else {
-                    let tempData = dataMap.get(id);
+                    let tempData = dataController.getDataset(id);
                     s.code = 200;
                     var output: any = {result: []}
                     output.result = this.processData(tempData, queryController)
