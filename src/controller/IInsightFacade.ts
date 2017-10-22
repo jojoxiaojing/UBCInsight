@@ -4,9 +4,11 @@
  * You should not change this interface at all or the test suite will not work.
  */
 
+import DataController from "./DataController";
+
 export interface InsightResponse {
     code: number;
-    body: {}; // the actual response
+    body:{ [key:string] : any }; // the actual response
 }
 
 export interface IInsightFacade {
@@ -82,4 +84,6 @@ export interface IInsightFacade {
      *
      */
     performQuery(query: any): Promise<InsightResponse>;
+
+
 }
