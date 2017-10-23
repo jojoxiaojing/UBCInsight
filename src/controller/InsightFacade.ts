@@ -44,12 +44,12 @@ export default class InsightFacade implements IInsightFacade {
                         let contentInFIle = zip.file(key).async("string");
                         promiseArr.push(contentInFIle);
                     }}
-                //Log.trace("101:Begin promise all");
+
 
 
 
                 Promise.all(promiseArr).then(function(value:any){
-                    //Log.trace("120:Begin json parse the data");
+                    
 
 
                     let i = value;
