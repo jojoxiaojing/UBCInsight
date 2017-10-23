@@ -47,21 +47,18 @@ describe("testRemoveData", function() {
     });
 
 
-/*    it("Import course.zip ，store the data and remove successfully", function () {
-        let ifFileExist = fs.existsSync('./src/controller/courses.txt');
-        expect(ifFileExist).to.deep.equal(true);
-       return insightF.removeDataset("courses").then(function (value: InsightResponse) {
-            let m = value;
-            expect(m.code).to.deep.equal(204);
+    /*    it("Import course.zip ，store the data and remove successfully", function () {
             let ifFileExist = fs.existsSync('./src/controller/courses.txt');
-            expect(ifFileExist).to.be.false;
-
-        }).catch(function () {
-            expect.fail();
-
-        });
-
-    });*/
+            expect(ifFileExist).to.deep.equal(true);
+           return insightF.removeDataset("courses").then(function (value: InsightResponse) {
+                let m = value;
+                expect(m.code).to.deep.equal(204);
+                let ifFileExist = fs.existsSync('./src/controller/courses.txt');
+                expect(ifFileExist).to.be.false;
+            }).catch(function () {
+                expect.fail();
+            });
+        });*/
 
 
     it("Test remove when not in memory and file does not exist", function () {

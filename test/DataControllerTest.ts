@@ -6,7 +6,7 @@ import DataController from "../src/controller/DataController";
 var fs = require("fs");
 var insightF: InsightFacade;
 
-describe("testAddData", function() {
+describe("data controller tests", function() {
     this.timeout(10000);
     var dataController: DataController;
     beforeEach(function () {
@@ -48,8 +48,8 @@ describe("testAddData", function() {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
         return dataController.processCourses('courses', data).then((value: boolean)=> {
-                expect(value).to.deep.equal(true)
-            }).catch(()=>{
+            expect(value).to.deep.equal(true)
+        }).catch(()=>{
             expect.fail()})
     });
 

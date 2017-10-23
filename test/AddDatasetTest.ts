@@ -30,18 +30,18 @@ describe("testAddData", function() {
     it("Import invalid2.zip ，do not store the data of invalid2", function (done) {
 
 
-            let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
+        let data = fs.readFileSync(__dirname + '/data/invalid2.zip', "base64");
 
-                insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
-                expect.fail();
-                done();
-            }).catch(function (err: InsightResponse) {
-                let a = err;
-                expect(a.code).to.deep.equal(400);
-                let ifFileExist = fs.existsSync('./src/controller/invalid2');
-                expect(ifFileExist).to.be.false;
-                done();
-            });
+        insightF.addDataset("invalid2", data).then(function (value: InsightResponse) {
+            expect.fail();
+            done();
+        }).catch(function (err: InsightResponse) {
+            let a = err;
+            expect(a.code).to.deep.equal(400);
+            let ifFileExist = fs.existsSync('./src/controller/invalid2');
+            expect(ifFileExist).to.be.false;
+            done();
+        });
 
     });
 
@@ -219,9 +219,9 @@ describe("testAddData", function() {
 
     });
 
-    it("simple test for addDataset with courses.zip, with code 201", function () {
+/*    it("simple test for addDataset with courses.zip, with code 201", function () {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
-        insightF.removeDataset('courses');
+        //insightF.removeDataset('courses');
 
         return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
             return insightF.addDataset("courses", data).then((value)=> {
@@ -241,7 +241,7 @@ describe("testAddData", function() {
             expect.fail();
         });
 
-    });
+    });*/
 
 
 })
