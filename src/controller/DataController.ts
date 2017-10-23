@@ -23,7 +23,7 @@ export default class DataController {
         this.dataInMemory= new Map<string,any[]>();
     }
 
-    public getDataset(id: string): any {
+    public loadDataset(id: string): any {
 
         var fs = require("fs");
         let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
@@ -42,71 +42,75 @@ export default class DataController {
     public processCourses(id: string, content: any): Promise<boolean> {
         let that = this;
         return new Promise<boolean>((fullfill, reject) =>{
-            JSZip.loadAsync(content, {base64: true}).then(function (zip:any) {
-                let promiseArr:Array<Promise<any>> = new Array();
-                let parseResult:any[] = new Array();
-                let promiseAllResult:any[] = new Array();
-                for(let key in zip.files){
-                    if (zip.file(key)) {
-                        let contentInFIle = zip.file(key).async("string");
-                        promiseArr.push(contentInFIle);
-                    }}
-
-                Promise.all(promiseArr).then((value:any)=>{
-                    let i = value;
-                    for (let i of value){
-                        try{
-                            let m = JSON.parse(i);
-                            parseResult.push(m);
-                        }
-                        catch(err){
-                            //do nothing here
+            try {
+                JSZip.loadAsync(content, {base64: true}).then(function (zip: any) {
+                    let promiseArr: Array<Promise<any>> = new Array();
+                    let parseResult: any[] = new Array();
+                    let promiseAllResult: any[] = new Array();
+                    for (let key in zip.files) {
+                        if (zip.file(key)) {
+                            let contentInFIle = zip.file(key).async("string");
+                            promiseArr.push(contentInFIle);
                         }
                     }
 
-                    for (let i of parseResult){
-                        let courseData:Array<any> = i.result;
-                        for(let c of courseData){
-                            let m: Course = {
-                                courses_dept: c.Subject,
-                                courses_id: c.Course,
-                                courses_avg: c.Avg,
-                                courses_instructor: c.Professor,
-                                courses_title: c.Title,
-                                courses_pass: c.Pass,
-                                courses_fail: c.Fail,
-                                courses_audit: c.Audit,
-                                courses_uuid: c.id,
-                                courses_year: c.Year
-                            };
-                            if (c.Section === "overall") {
-                                m.courses_year = 1900
+                    Promise.all(promiseArr).then((value: any) => {
+                        let i = value;
+                        for (let i of value) {
+                            try {
+                                let m = JSON.parse(i);
+                                parseResult.push(m);
                             }
-                            promiseAllResult.push(m);
+                            catch (err) {
+                                //do nothing here
+                            }
                         }
-                    }
-                    let m = promiseAllResult;
 
-                    if(m.length === 0){
-                        throw new Error("Dataset is empty")
-                    } else {
-                        //update the in memory file
-                        let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
-                        if (!ifFileExist) {
-                            fs.writeFileSync( __dirname + "/" + id + '.txt', JSON.stringify(m), 'utf-8');
+                        for (let i of parseResult) {
+                            let courseData: Array<any> = i.result;
+                            for (let c of courseData) {
+                                let m: Course = {
+                                    courses_dept: c.Subject,
+                                    courses_id: c.Course,
+                                    courses_avg: c.Avg,
+                                    courses_instructor: c.Professor,
+                                    courses_title: c.Title,
+                                    courses_pass: c.Pass,
+                                    courses_fail: c.Fail,
+                                    courses_audit: c.Audit,
+                                    courses_uuid: c.id,
+                                    courses_year: c.Year
+                                };
+                                if (c.Section === "overall") {
+                                    m.courses_year = 1900
+                                }
+                                promiseAllResult.push(m);
+                            }
                         }
-                        that.dataInMemory.set(id, m)
-                        fullfill(true);
-                    }
+                        let m = promiseAllResult;
 
-                }).catch(function(err:any){
+                        if (m.length === 0) {
+                            throw new Error("Dataset is empty")
+                        } else {
+                            //update the in memory file
+                            let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
+                            if (!ifFileExist) {
+                                fs.writeFileSync(__dirname + "/" + id + '.txt', JSON.stringify(m), 'utf-8');
+                            }
+                            that.dataInMemory.set(id, m)
+                            fullfill(true);
+                        }
+
+                    }).catch(function (err: any) {
+                        reject(false);
+                    });
+
+                }).catch(function (err: any) {
                     reject(false);
                 });
-
-            }).
-            catch(function (err:any) {
-                reject(false);
-            });
+            } catch (err) {
+                reject(false)
+            }
         });
     }
 

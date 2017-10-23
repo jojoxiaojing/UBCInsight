@@ -25,7 +25,7 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise((fulfill, reject)=> {
             try {
                 var c: number;
-                if (dataController.getDataset(id) == null || dataController.getDataset(id) == {}){
+                if (dataController.loadDataset(id) == null || dataController.loadDataset(id) == {}){
                     c = 204;
                 } else {
                     c = 201;
@@ -104,13 +104,13 @@ export default class InsightFacade implements IInsightFacade {
             var s: InsightResponse = {code: null, body: {}};
             try {
                 if (isValid) {
-                    if (dataController.getDataset(id) === null) {
+                    if (dataController.loadDataset(id) === null) {
                         s.code = 424;
                         s.body = {error: "missing dataset"}
                         reject(s);
 
                     } else {
-                        let tempData = dataController.getDataset(id);
+                        let tempData = dataController.loadDataset(id);
                         s.code = 200;
                         var output: any = {result: []}
                         output.result = this.processData(tempData, queryController)
