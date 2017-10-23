@@ -97,7 +97,7 @@ export default class InsightFacade implements IInsightFacade {
 
         let that = this;
         var dataController = that.getDataController();
-       // var dataMap = dataController.getDataInMemory();
+        // var dataMap = dataController.getDataInMemory();
 
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
