@@ -25,12 +25,12 @@ describe("data controller tests", function() {
 
 
     it("Test getDataset, file not inDisk", function () {
-        let a = dataController.getDataset('tears');
+        let a = dataController.loadDataset('tears');
         expect(a).to.equal(null);
     });
 
     it("Test getDataset, file inDisk", function () {
-        let a = dataController.getDataset('courses');
+        let a = dataController.loadDataset('courses');
         expect(a.length).to.equal(64612);
     });
 
