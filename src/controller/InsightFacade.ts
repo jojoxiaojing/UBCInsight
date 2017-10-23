@@ -102,23 +102,29 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (isValid) {
-                if (dataController.getDataset(id) === null) {
+            try {
+                if (isValid) {
+                    if (dataController.getDataset(id) === null) {
                         s.code = 424;
-                        s.body = {error:"missing dataset"}
+                        s.body = {error: "missing dataset"}
                         reject(s);
 
+                    } else {
+                        let tempData = dataController.getDataset(id);
+                        s.code = 200;
+                        var output: any = {result: []}
+                        output.result = this.processData(tempData, queryController)
+                        s.body = output;
+                        fulfill(s);
+                    }
                 } else {
-                    let tempData = dataController.getDataset(id);
-                    s.code = 200;
-                    var output: any = {result: []}
-                    output.result = this.processData(tempData, queryController)
-                    s.body = output;
-                    fulfill(s);
+                    s.code = 400;
+                    s.body = {error: "query invalid"};
+                    reject(s);
                 }
-            } else {
+            } catch(err){
                 s.code = 400;
-                s.body = {error:"query invalid"};
+                s.body = {error: err};
                 reject(s);
             }
 
