@@ -23,7 +23,7 @@ describe("testRemoveData", function() {
     })
 
     afterEach(function () {
-        //insightF.removeDataset('courses');
+        insightF.removeDataset('courses');
     });
 
     it("simple test for addDataset with courses.zip", function () {

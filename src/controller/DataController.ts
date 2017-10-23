@@ -26,13 +26,13 @@ export default class DataController {
     public getDataset(id: string): any {
 
         var fs = require("fs");
-        let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
+        let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
         if (!ifFileExist) {
             return null;
         }
 
         if (!this.dataInMemory.has(id) || this.dataInMemory.get(id) === {}) {
-            var data = fs.readFileSync('./src/controller/' + id + '.txt', "utf8");
+            var data = fs.readFileSync(__dirname + "/" + id + '.txt', "utf8");
             this.dataInMemory.set(id, JSON.parse(data));
         }
 
@@ -91,9 +91,9 @@ export default class DataController {
                         throw new Error("Dataset is empty")
                     } else {
                         //update the in memory file
-                        let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
+                        let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
                         if (!ifFileExist) {
-                            fs.writeFileSync( './src/controller/' + id + '.txt', JSON.stringify(m), 'utf-8');
+                            fs.writeFileSync( __dirname + "/" + id + '.txt', JSON.stringify(m), 'utf-8');
                         }
                         that.dataInMemory.set(id, m)
                         fullfill(true);

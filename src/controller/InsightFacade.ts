@@ -59,7 +59,7 @@ export default class InsightFacade implements IInsightFacade {
 
         return new Promise<InsightResponse>((fulfill, reject) =>{
             try{
-                let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
+                let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
                 var s: InsightResponse = {
                     code: 204,
                     body: {}
@@ -72,7 +72,7 @@ export default class InsightFacade implements IInsightFacade {
                 }
 
                 if(ifFileExist){
-                    fs.unlink('./src/controller/' + id + '.txt');
+                    fs.unlink(__dirname + "/" + id + '.txt');
                 }
 
                 if(this.dataController.dataInMemory.has(id)){
@@ -97,7 +97,7 @@ export default class InsightFacade implements IInsightFacade {
 
         let that = this;
         var dataController = that.getDataController();
-        var dataMap = dataController.getDataInMemory();
+       // var dataMap = dataController.getDataInMemory();
 
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
