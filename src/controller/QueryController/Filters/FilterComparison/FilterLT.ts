@@ -35,7 +35,8 @@ export default class FilterLT implements IFilterComparison {
     isValidComparisonString(): boolean {
         let val = this.subNode1;
         if (!(typeof val === "string" && (val === "courses_avg" ||
-                val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit"))) {
+                val === "courses_pass" || val  === "courses_fail" || val  === "courses_audit" ||
+                val === "rooms_seats" || val === "rooms_lat" || val === "rooms_lon"))) {
             return false;
         }
         return true;

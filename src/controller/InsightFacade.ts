@@ -45,7 +45,7 @@ export default class InsightFacade implements IInsightFacade {
                     //TODO: insert the call to processRooms(...)
 
                 } else {
-                    reject({code: 400, error: 'error'});
+                    reject({code: 400, error: 'ID is invalid'});
                 }
             } catch (err) {
                 reject({code:400, error: err});

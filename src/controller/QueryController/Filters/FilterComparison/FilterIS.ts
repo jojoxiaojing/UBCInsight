@@ -40,11 +40,20 @@ export default class FilterIS implements IFilterComparison {
     // helper to check if the first subNode in the comparison is a valid key of type string
     isValidComparisonString(): boolean {
         let val = this.subNode1;
-        if (!(typeof val === "string" && (val  === "courses_dept" || val === "courses_title"
-                || val  === "courses_instructor" || val  === "courses_id" || val === "courses_uuid"))) {
+        if (!(typeof val === "string" && (this.isValidCourseKey(val) || this.isValidRoomKey(val)))) {
             return false;
         }
         return true;
+    }
+
+    isValidRoomKey(val: string): boolean {
+        return (val === "rooms_fullname" || val === "rooms_shortname" || val === "rooms_number" || val === "rooms_name"
+                || val === "rooms_address" || val === "rooms_type" || val === "rooms_furniture" || val === "rooms_href");
+    }
+
+    isValidCourseKey(val: string): boolean {
+        return (val  === "courses_dept" || val === "courses_title" || val  === "courses_instructor"
+            || val  === "courses_id" || val === "courses_uuid");
     }
 
 
