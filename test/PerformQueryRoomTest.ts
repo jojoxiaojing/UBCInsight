@@ -34,10 +34,9 @@ describe("testPerformQuery", function() {
             expect.fail();
         });
     });
+    
 
-
-
-    it("Test performQuery, just IS with no *, it should return 200 and xx length of data ", function () {
+    it("Test performQuery, IS with *, it should return 200 and xx length of data ", function () {
         var testQuery = {"WHERE": {"IS": {"rooms_name": "DMP_*"}},"OPTIONS": {"COLUMNS": ["rooms_name"], "ORDER": "rooms_name"}}
         return insightF.performQuery(testQuery).then(function(value:any){
             expect(value.code).to.equal(200);
@@ -51,8 +50,18 @@ describe("testPerformQuery", function() {
     });
 
 
-
-
+    it("Test performQuery, IS with *, multiple columns, no order. It should return 200 and xx length of data ", function () {
+        var testQuery = {"WHERE": {"IS": {"rooms_address": "*Agrono*"}},"OPTIONS": {"COLUMNS": ["rooms_address", "rooms_name"]}}
+        return insightF.performQuery(testQuery).then(function(value:any){
+            expect(value.code).to.equal(200);
+            let m = value.body.result.length;
+            expect(m).to.equal(26);
+            let n =Object.keys(value.body.result[0]).length;
+            expect(n).to.equal(2);
+        }).catch(function(err:any){
+            expect.fail();
+        });
+    });
 
 
 
