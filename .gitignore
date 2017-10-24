@@ -2,7 +2,6 @@ src/*.js
 src/*.map
 src/**/*.js
 src/**/*.map
-src/controller/*.txt
 test/*.js
 test/*.map
 npm-debug.log

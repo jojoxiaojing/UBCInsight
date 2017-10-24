@@ -45,114 +45,94 @@ export default class DataController {
         this.dataInMemory = new Map<string, any[]>();
     }
 
-    public getDataset(id: string): any {
+    public loadDataset(id: string): any {
 
         var fs = require("fs");
-        let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
+        let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
         if (!ifFileExist) {
             return null;
         }
 
         if (!this.dataInMemory.has(id) || this.dataInMemory.get(id) === {}) {
-            var data = fs.readFileSync('./src/controller/' + id + '.txt', "utf8");
+            var data = fs.readFileSync(__dirname + "/" + id + '.txt', "utf8");
             this.dataInMemory.set(id, JSON.parse(data));
         }
 
         return this.dataInMemory.get(id);
     }
 
-    public processCourses(id: string, content: any): Promise<InsightResponse> {
+    public processCourses(id: string, content: any): Promise<boolean> {
         let that = this;
-        return new Promise<InsightResponse>((fullfill, reject) => {
-            return JSZip.loadAsync(content, {base64: true}).then(function (zip: any) {
-                let promiseArr: Array<Promise<any>> = new Array();
-                let parseResult: any[] = new Array();
-                let promiseAllResult: any[] = new Array();
-                for (let key in zip.files) {
-                    if (zip.file(key)) {
-                        let contentInFIle = zip.file(key).async("string");
-                        promiseArr.push(contentInFIle);
-                    }
-                }
-
-                Promise.all(promiseArr).then(function (value: any) {
-                    let i = value;
-                    for (let i of value) {
-                        try {
-                            let m = JSON.parse(i);
-                            parseResult.push(m);
-                        }
-                        catch (err) {
-                            //do nothing here
+        return new Promise<boolean>((fullfill, reject) =>{
+            try {
+                JSZip.loadAsync(content, {base64: true}).then(function (zip: any) {
+                    let promiseArr: Array<Promise<any>> = new Array();
+                    let parseResult: any[] = new Array();
+                    let promiseAllResult: any[] = new Array();
+                    for (let key in zip.files) {
+                        if (zip.file(key)) {
+                            let contentInFIle = zip.file(key).async("string");
+                            promiseArr.push(contentInFIle);
                         }
                     }
 
-                    for (let i of parseResult) {
-                        let courseData: Array<any> = i.result;
-                        for (let c of courseData) {
-                            let m: Course = {
-                                courses_dept: c.Subject,
-                                courses_id: c.Course,
-                                courses_avg: c.Avg,
-                                courses_instructor: c.Professor,
-                                courses_title: c.Title,
-                                courses_pass: c.Pass,
-                                courses_fail: c.Fail,
-                                courses_audit: c.Audit,
-                                courses_uuid: c.id,
-                                courses_year: c.Year
-                            };
-                            if (c.Section === "overall") {
-                                m.courses_year = 1900
+                    Promise.all(promiseArr).then((value: any) => {
+                        let i = value;
+                        for (let i of value) {
+                            try {
+                                let m = JSON.parse(i);
+                                parseResult.push(m);
                             }
-                            promiseAllResult.push(m);
+                            catch (err) {
+                                //do nothing here
+                            }
                         }
-                    }
-                    let m = promiseAllResult;
 
-                    if (m.length === 0) {
-                        let s: InsightResponse = {
-                            code: 400,
-                            body: {error: "Dataset is invalid"}
-                        };
-                        reject(s);
-                    }
+                        for (let i of parseResult) {
+                            let courseData: Array<any> = i.result;
+                            for (let c of courseData) {
+                                let m: Course = {
+                                    courses_dept: c.Subject,
+                                    courses_id: c.Course,
+                                    courses_avg: c.Avg,
+                                    courses_instructor: c.Professor,
+                                    courses_title: c.Title,
+                                    courses_pass: c.Pass,
+                                    courses_fail: c.Fail,
+                                    courses_audit: c.Audit,
+                                    courses_uuid: c.id,
+                                    courses_year: c.Year
+                                };
+                                if (c.Section === "overall") {
+                                    m.courses_year = 1900
+                                }
+                                promiseAllResult.push(m);
+                            }
+                        }
+                        let m = promiseAllResult;
 
-                    let ifFileExist = fs.existsSync('./src/controller/' + id + '.txt');
-                    if (!ifFileExist) {
-                        fs.writeFileSync('./src/controller/' + id + '.txt', JSON.stringify(m), 'utf-8');
-                    }
+                        if (m.length === 0) {
+                            throw new Error("Dataset is empty")
+                        } else {
+                            //update the in memory file
+                            let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
+                            if (!ifFileExist) {
+                                fs.writeFileSync(__dirname + "/" + id + '.txt', JSON.stringify(m), 'utf-8');
+                            }
+                            that.dataInMemory.set(id, m)
+                            fullfill(true);
+                        }
 
-                    let c;
-                    if (that.dataInMemory.has(id)) {
-                        c = 201;
-
-                    } else {
-                        c = 204;
-                    }
-                    that.dataInMemory.set(id, m);
-                    let s: InsightResponse = {
-                        code: c,
-                        body: {dataStore: that.dataInMemory.get(id)}
-                    };
-                    fullfill(s);
-
+                    }).catch(function (err: any) {
+                        reject(false);
+                    });
 
                 }).catch(function (err: any) {
-                    let s: InsightResponse = {
-                        code: 400,
-                        body: {"error": err.message}
-                    };
-                    reject(s);
+                    reject(false);
                 });
-
-            }).catch(function (err: any) {
-                let s: InsightResponse = {
-                    code: 400,
-                    body: {"error": err.message}
-                };
-                reject(s);
-            });
+            } catch (err) {
+                reject(false)
+            }
         });
     }
 

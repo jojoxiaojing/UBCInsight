@@ -6,7 +6,7 @@ import DataController from "../src/controller/DataController";
 var fs = require("fs");
 var insightF: InsightFacade;
 
-describe("testAddData", function() {
+describe("data controller tests", function() {
     this.timeout(10000);
     var dataController: DataController;
     beforeEach(function () {
@@ -25,12 +25,12 @@ describe("testAddData", function() {
 
 
     it("Test getDataset, file not inDisk", function () {
-        let a = dataController.getDataset('tears');
+        let a = dataController.loadDataset('tears');
         expect(a).to.equal(null);
     });
 
     it("Test getDataset, file inDisk", function () {
-        let a = dataController.getDataset('courses');
+        let a = dataController.loadDataset('courses');
         expect(a.length).to.equal(64612);
     });
 
@@ -38,12 +38,8 @@ describe("testAddData", function() {
     it("Test process, file inDisk", function () {
         dataController = new DataController();
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
-        return dataController.processCourses('courses', data).then((value: InsightResponse)=> {
-            expect(value.code).to.deep.equal(204)
-            let firstKey = Object.keys(value.body)[0];
-            expect(firstKey).to.deep.equal("dataStore")
-            let firstElement = value.body[firstKey]
-            expect(value.body[firstKey].length).to.deep.equal(64612);
+        return dataController.processCourses('courses', data).then((value: boolean)=> {
+            expect(value).to.deep.equal(true)
         }).catch(()=>{
             expect.fail()})
     });
@@ -51,27 +47,19 @@ describe("testAddData", function() {
     it("Test process, file inDisk and file inMemory", function () {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 
-        return dataController.processCourses('courses', data).then((value: InsightResponse)=> {
-                expect(value.code).to.deep.equal(201)
-                let firstKey = Object.keys(value.body)[0];
-                expect(firstKey).to.deep.equal("dataStore")
-                let firstElement = value.body[firstKey]
-                expect(value.body[firstKey].length).to.deep.equal(64612);
-            }).catch(()=>{
+        return dataController.processCourses('courses', data).then((value: boolean)=> {
+            expect(value).to.deep.equal(true)
+        }).catch(()=>{
             expect.fail()})
     });
 
 
     it("Test process, invalid content", function () {
         let data = "invalid content";
-        return dataController.processCourses('courses', data).then((value: InsightResponse)=> {
+        return dataController.processCourses('courses', data).then((value: boolean)=> {
             expect.fail();
         }).catch((value: any)=>{
-            expect(value.code).to.deep.equal(400)
-            let firstKey = Object.keys(value.body)[0];
-            expect(firstKey).to.deep.equal("error")
-            let firstElement = value.body[firstKey]
-            expect(value.body[firstKey]).to.deep.equal("Invalid base64 input, bad content length.");
+            expect(value).to.deep.equal(false)
         })
     });
 

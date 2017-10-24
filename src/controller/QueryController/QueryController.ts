@@ -94,4 +94,39 @@ export default class QueryController implements IQueryController{
         this.getQueryBody().setData(data);
     }
 
+    whichID(): string {
+        if (this.isValid()) {
+            var containsCourseFields: boolean = this.checkContainsCourseFields();
+            var containsRoomFields: boolean = this.checkContainsRoomFields();
+
+            if (containsCourseFields && containsRoomFields) return "wrongID";
+            else if (containsCourseFields) return "courses";
+            else if (containsRoomFields) return "rooms";
+            else return "wrongID"
+        } else return "brokenQuery"
+    }
+
+    checkContainsCourseFields(): boolean {
+
+        var queryBody = this.getQueryBody().getBody();
+        var courseFields = ["courses_dept", "courses_id", "courses_avg", "courses_instructor",
+            "courses_title", "courses_pass", "courses_fail", "courses_audit", "courses_uuid", "courses_year"];
+        var response = false;
+        for (let element of courseFields) {
+            if (JSON.stringify(queryBody).indexOf(element) !== -1) response = true;
+        }
+        return response;
+    }
+
+    checkContainsRoomFields(): boolean {
+        var queryBody = this.getQueryBody().getBody();
+        var roomFields = ["rooms_fullname", "rooms_shortname", "rooms_number", "rooms_name", "rooms_address", "rooms_lat",
+            "rooms_lon", "rooms_seats", "rooms_type", "rooms_furniture", "rooms_href"];
+        var response = false;
+        for (let element of roomFields) {
+            if (JSON.stringify(queryBody).indexOf(element) !== -1) response = true;
+        }
+        return response;
+    }
+
 }

@@ -4,52 +4,6 @@ import MockData from "./MockDataTest";
 import FilterOR from "../src/controller/QueryController/Filters/FilterLogic/FilterOR";
 
 describe("QueryBody", function () {
-/*    var testQuery: string =
-    "{\n" +
-        "\n" +
-        "     \"OR\":[\n" +
-        "\n" +
-        "        {\n" +
-        "\n" +
-        "           \"AND\":[\n" +
-        "\n" +
-        "              {\n" +
-        "\n" +
-        "                 \"GT\":{\n" +
-        "\n" +
-        "                    \"courses_avg\":90\n" +
-        "\n" +
-        "                 }\n" +
-        "\n" +
-        "              },\n" +
-        "\n" +
-        "              {\n" +
-        "\n" +
-        "                 \"LT\":{\n" +
-        "\n" +
-        "                    \"courses_avg\":99\n" +
-        "\n" +
-        "                 }\n" +
-        "\n" +
-        "              }\n" +
-        "\n" +
-        "           ]\n" +
-        "\n" +
-        "        },\n" +
-        "\n" +
-        "        {\n" +
-        "\n" +
-        "           \"EQ\":{\n" +
-        "\n" +
-        "              \"courses_avg\":50\n" +
-        "\n" +
-        "           }\n" +
-        "\n" +
-        "        }\n" +
-        "\n" +
-        "     ]\n" +
-        "\n" +
-        "}"*/
 
     var testQuery = {OR: [{LT: {courses_audit: 20}}, {AND: [{EQ: {courses_avg: 90}}, {EQ: {courses_audit: 50}}]}]}
 

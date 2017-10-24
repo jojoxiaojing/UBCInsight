@@ -20,20 +20,26 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     addDataset(id: string, content: string): Promise<InsightResponse> {
+        let that = this;
+        var dataController = that.dataController;
         return new Promise((fulfill, reject)=> {
             try {
-                let dataController = this.dataController;
-                let c: number;
-                if (dataController.getDataset(id) == null || dataController.getDataset(id) == {}){
+                var c: number;
+                if (dataController.loadDataset(id) == null || dataController.loadDataset(id) == {}){
                     c = 204;
                 } else {
                     c = 201;
                 }
                 if (id === "courses") {
-                    dataController.processCourses(id, content).then(()=>{
-                        fulfill({code: c, body: {}});
+                    dataController.processCourses(id, content).then((value: boolean)=>{
+                        if (value === true) {
+                            fulfill({code: c, body: {}});
+                        } else {
+                            throw new Error("Dataset is invalid")
+                            //reject({code: 400, error: "dataset invalid"})
+                        }
                     }).catch(function (err: Error) {
-                        reject({code: 400, error: 'error'});
+                        reject({code: 400, error: err});
                     });
                 } else if (id === "rooms") {
                     dataController.processRooms(id, content).then(()=>{
@@ -42,10 +48,10 @@ export default class InsightFacade implements IInsightFacade {
                         reject({code: 400, error: 'error'});
                     });
                 } else {
-                    reject({code: 400, error: 'error'});
+                    reject({code: 400, error: 'ID is invalid'});
                 }
             } catch (err) {
-                reject({code:400, error: 'error'});
+                reject({code:400, error: err});
             }
         });
     }
@@ -54,28 +60,28 @@ export default class InsightFacade implements IInsightFacade {
     removeDataset(id: string): Promise<InsightResponse> {
         let that = this;
 
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        return new Promise<InsightResponse>((fulfill, reject) =>{
             try{
-                var exitOfFILE:Boolean = fs.existsSync(__dirname +"/" + id + ".txt");
+                let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
                 var s: InsightResponse = {
                     code: 204,
                     body: {}
                 };
 
-                if((!exitOfFILE && !(this.dataController.dataInMemory.has(id))) || (id !== 'courses' && id !== 'rooms')){
+                if((!ifFileExist && !(this.dataController.dataInMemory.has(id))) || (id !== 'courses' && id !== 'rooms')){
                     s.code = 404;
                     s.body = {error: "dataset not in memory"}
                     reject(s);
                 }
 
-                if(exitOfFILE){
-                    fs.unlink(__dirname + "/" + id + ".txt");
+                if(ifFileExist){
+                    fs.unlink(__dirname + "/" + id + '.txt');
                 }
 
                 if(this.dataController.dataInMemory.has(id)){
                     this.dataController.dataInMemory.delete(id);
                 }
-                fullfill(s);
+                fulfill(s);
 
             }catch(err){
                 s.code = 404;
@@ -89,54 +95,42 @@ export default class InsightFacade implements IInsightFacade {
 
         var s: InsightResponse = {code: null, body: {}};
         var queryController = new QueryController(query, []);
-        let that = this;
-        var dataCntrl = that.getDataController();
-        var data = dataCntrl.dataInMemory;
+        var isValid = queryController.isValid();
+        var id = queryController.whichID();
 
-        return new Promise<InsightResponse>((fullfill, reject) =>{
+        let that = this;
+        var dataController = that.getDataController();
+        // var dataMap = dataController.getDataInMemory();
+
+        return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
-            if (!(data.has("courses"))) {
-                if (!fs.existsSync(__dirname + "/courses.txt")) {
-                    s.code = 424;
-                    s.body = {error:"missing dataset"}
-                    reject(s);
-                    //return;
-                }else{
-                    let data = fs.readFileSync(__dirname  + "/courses.txt", 'utf-8');
-
-                    let tempData = JSON.parse(data);
-
-                    if (!queryController.isValid()){
-                        s.code = 400;
-                        s.body = {error:"query invalid"};
+            try {
+                if (isValid) {
+                    if (dataController.loadDataset(id) === null) {
+                        s.code = 424;
+                        s.body = {error: "missing dataset"}
                         reject(s);
-                    } else
-                    {
+
+                    } else {
+                        let tempData = dataController.loadDataset(id);
                         s.code = 200;
                         var output: any = {result: []}
                         output.result = this.processData(tempData, queryController)
-
                         s.body = output;
-                        fullfill(s);
+                        fulfill(s);
                     }
-                }
-            } else {
-                let tempData = data.get("courses");
-                if (!queryController.isValid()) {
-                    s.code = 400;
-                    s.body = {error:"query invalid"};
-                    reject(s);
                 } else {
-                    s.code = 200;
-                    var output: any = {result: []}
-                    output.result = this.processData(tempData, queryController)
-
-                    s.body = output;
-                    fullfill(s);
+                    s.code = 400;
+                    s.body = {error: "query invalid"};
+                    reject(s);
                 }
-
+            } catch(err){
+                s.code = 400;
+                s.body = {error: err};
+                reject(s);
             }
+
         });
     }
 
