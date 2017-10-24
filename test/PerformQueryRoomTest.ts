@@ -10,7 +10,7 @@ describe("testPerformQuery", function() {
     var insightF: InsightFacade;
     before(function () {
         insightF = new InsightFacade();
-        //insightF.removeDataset('rooms');
+        insightF.removeDataset('rooms');
         //Log.test('Before: ' + (<any>this).test.parent.title);
     });
 
@@ -34,7 +34,7 @@ describe("testPerformQuery", function() {
             expect.fail();
         });
     });
-    
+
 
     it("Test performQuery, IS with *, it should return 200 and xx length of data ", function () {
         var testQuery = {"WHERE": {"IS": {"rooms_name": "DMP_*"}},"OPTIONS": {"COLUMNS": ["rooms_name"], "ORDER": "rooms_name"}}
