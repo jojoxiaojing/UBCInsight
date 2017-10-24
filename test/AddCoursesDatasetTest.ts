@@ -5,7 +5,7 @@ import {InsightResponse} from "../src/controller/IInsightFacade";
 var fs = require("fs");
 
 
-describe("testAddData", function() {
+describe("testAddCoursesData", function() {
     this.timeout(10000);
     var insightF: InsightFacade;
     before(function () {

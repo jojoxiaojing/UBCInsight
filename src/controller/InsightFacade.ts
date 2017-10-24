@@ -36,7 +36,11 @@ export default class InsightFacade implements IInsightFacade {
                         reject({code: 400, error: 'error'});
                     });
                 } else if (id === "rooms") {
-                    //TODO: insert the call to processRooms(...)
+                    dataController.processRooms(id, content).then(()=>{
+                        fulfill({code: c, body: {}});
+                    }).catch(function (err: Error) {
+                        reject({code: 400, error: 'error'});
+                    });
                 } else {
                     reject({code: 400, error: 'error'});
                 }
