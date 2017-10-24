@@ -137,6 +137,8 @@ export default class DataController {
     }
 
     public processRooms(id: string, content: any): Promise<InsightResponse> {
+        let that = this;
+
         const buildFindTableAttr: string = "views-table cols-5 table";
         const roomFullNameAttr: string = "views-field views-field-title";
         const roomFullName2Attr: string = "Building Details and Map";
@@ -155,19 +157,19 @@ export default class DataController {
 
                 zip.file("index.htm").async("string").then((value: any) => {
                     const document: ASTNode = parse5.parse(value);
-                    let targetTable: ASTNode = this.findElementByAttri(document, buildFindTableAttr);
-                    let targetBuildList: ASTNode[] = this.findElementBynodeName(targetTable, "tbody").childNodes;
+                    let targetTable: ASTNode = that.findElementByAttri(document, buildFindTableAttr);
+                    let targetBuildList: ASTNode[] = that.findElementBynodeName(targetTable, "tbody").childNodes;
                     let listForRooms: Promise<any>[] = [];
                     for (let m of targetBuildList) {
                         if (m.nodeName === "tr") {
                             //assign value to rooms_fullname
-                            let fullNameNode: ASTNode = this.findElementByAttri(m, roomFullNameAttr);
-                            let fullNameAndUlrNode: ASTNode = this.findElementByAttri(fullNameNode, roomFullName2Attr);
+                            let fullNameNode: ASTNode = that.findElementByAttri(m, roomFullNameAttr);
+                            let fullNameAndUlrNode: ASTNode = that.findElementByAttri(fullNameNode, roomFullName2Attr);
                             let build_fullname: string = fullNameAndUlrNode.childNodes[0].value.trim();
                             //assign value to rooms_shortname
-                            let build_shortname: string = this.findElementByAttri(m, roomShortnameAttr).childNodes[0].value.trim();
+                            let build_shortname: string = that.findElementByAttri(m, roomShortnameAttr).childNodes[0].value.trim();
                             //assign value to rooms_address
-                            let build_address: string = this.findElementByAttri(m, roomAddressAttr).childNodes[0].value.trim();
+                            let build_address: string = that.findElementByAttri(m, roomAddressAttr).childNodes[0].value.trim();
                             let build_lat: number = null;
                             let build_lan: number = null;
 
@@ -185,22 +187,22 @@ export default class DataController {
                                     //Read files for each building
                                     zip.files["campus/discover/buildings-and-classrooms/" + build_shortname].async("string").then((value: any) => {
                                         let roomsDoc = parse5.parse(value);
-                                        let tableOfRooms: ASTNode = this.findElementByAttri(roomsDoc, roomsFindTable);
+                                        let tableOfRooms: ASTNode = that.findElementByAttri(roomsDoc, roomsFindTable);
                                         if (tableOfRooms) {
                                             let listOfRooms111: Array<any> = [];
-                                            let targetRoomTr: ASTNode[] = this.findElementBynodeName(tableOfRooms, "tbody").childNodes;
+                                            let targetRoomTr: ASTNode[] = that.findElementBynodeName(tableOfRooms, "tbody").childNodes;
                                             //for each room in a building, get the data from each row in the table and fullfill the whole list of all rooms
                                             for (let each of targetRoomTr) {
 
                                                 if (each.nodeName === "tr") {
-                                                    let roomNum = this.findElementByAttri(each, roomNumAttr).childNodes[1].childNodes[0].value.trim();
+                                                    let roomNum = that.findElementByAttri(each, roomNumAttr).childNodes[1].childNodes[0].value.trim();
                                                     let roomName = build_shortname + "_" + roomNum;
-                                                    let roomSeats = JSON.parse(this.findElementByAttri(each, roomCapacityAttr).childNodes[0].value.trim());
-                                                    let roomType = this.findElementByAttri(each, roomTypeAttr).childNodes[0].value.trim();
-                                                    let roomFurType = this.findElementByAttri(each, roomFurTypeAttr).childNodes[0].value.trim();
-                                                    let roomMoreDetail = this.findElementByAttri(each, roomMoreDetailAttr).childNodes[1].attrs[0].value;
+                                                    let roomSeats = JSON.parse(that.findElementByAttri(each, roomCapacityAttr).childNodes[0].value.trim());
+                                                    let roomType = that.findElementByAttri(each, roomTypeAttr).childNodes[0].value.trim();
+                                                    let roomFurType = that.findElementByAttri(each, roomFurTypeAttr).childNodes[0].value.trim();
+                                                    let roomMoreDetail = that.findElementByAttri(each, roomMoreDetailAttr).childNodes[1].attrs[0].value;
 
-                                                    let r = this.setRoom(build_fullname, build_shortname, roomNum, roomName, build_address, build_lat, build_lan, roomSeats, roomType, roomFurType,roomMoreDetail);
+                                                    let r = that.setRoom(build_fullname, build_shortname, roomNum, roomName, build_address, build_lat, build_lan, roomSeats, roomType, roomFurType,roomMoreDetail);
                                                     if(r){
                                                         listOfRooms111.push(r);
                                                     }
@@ -220,8 +222,8 @@ export default class DataController {
                     }
 
                     Promise.all(listForRooms).then((value: any) => {
-                        let roomDataSet = this.contactWholeArray(value);
-                        this.dataInMemory.set(id,roomDataSet);
+                        let roomDataSet = that.contactWholeArray(value);
+                        that.dataInMemory.set(id,roomDataSet);
                         fs.writeFileSync('./src/controller/' + id + '.txt', JSON.stringify(roomDataSet), 'utf-8');
                         let s: InsightResponse = {
                             code: 201,
