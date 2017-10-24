@@ -136,6 +136,7 @@ export default class DataController {
         });
     }
 
+    // TODO change relative path to match performQuery
     public processRooms(id: string, content: any): Promise<InsightResponse> {
         let that = this;
 
@@ -224,7 +225,7 @@ export default class DataController {
                     Promise.all(listForRooms).then((value: any) => {
                         let roomDataSet = that.contactWholeArray(value);
                         that.dataInMemory.set(id,roomDataSet);
-                        fs.writeFileSync('./src/controller/' + id + '.txt', JSON.stringify(roomDataSet), 'utf-8');
+                        fs.writeFileSync(__dirname + "/" + id + '.txt', JSON.stringify(roomDataSet), 'utf-8');
                         let s: InsightResponse = {
                             code: 201,
                             body: {}

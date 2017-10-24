@@ -40,10 +40,7 @@ export default class QueryOptions {
 
         // options are correct only if they include valid column names
         for (let element of this.columns) {
-            if (element !== "courses_avg" &&
-                element !== "courses_pass" && element !== "courses_fail" && element !== "courses_audit"
-                && element !== "courses_dept" && element !== "courses_instructor" && element !== "courses_id"
-                && element !== "courses_uuid" && element !== "courses_title") {
+            if (!this.isValidRoomKey(element) && !this.isValidCourseKey(element)) {
                 return false;
             }
         }
@@ -53,6 +50,19 @@ export default class QueryOptions {
 
         return true;
     }
+
+    isValidRoomKey(val: string): boolean {
+        return (val === "rooms_fullname" || val === "rooms_shortname" || val === "rooms_number" || val === "rooms_name"
+            || val === "rooms_address" || val === "rooms_type" || val === "rooms_furniture" || val === "rooms_href" ||
+            val === "rooms_seats" || val === "rooms_lat" || val === "rooms_lon");
+    }
+
+    isValidCourseKey(val: string): boolean {
+        return (val  ===  "courses_avg" || val  ===  "courses_pass" || val  ===  "courses_fail" || val  ===  "courses_audit" ||
+            val  === "courses_dept" || val === "courses_title" || val  === "courses_instructor" || val  === "courses_id" ||
+            val === "courses_uuid");
+    }
+
 
     // apply options to the currently stored data set
     applyOptions(): any[] {
