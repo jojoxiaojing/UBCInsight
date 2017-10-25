@@ -16,6 +16,7 @@ describe("testAddRoomsData", function () {
         //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        insightF.removeDataset('rooms')
         insightF.addDataset('courses', data)
     });
 

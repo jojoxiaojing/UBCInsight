@@ -60,7 +60,7 @@ export default class QueryOptions {
     isValidCourseKey(val: string): boolean {
         return (val  ===  "courses_avg" || val  ===  "courses_pass" || val  ===  "courses_fail" || val  ===  "courses_audit" ||
             val  === "courses_dept" || val === "courses_title" || val  === "courses_instructor" || val  === "courses_id" ||
-            val === "courses_uuid");
+            val === "courses_uuid" ||  val === "courses_year");
     }
 
 
