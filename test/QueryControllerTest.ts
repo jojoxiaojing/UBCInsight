@@ -81,9 +81,9 @@ describe("QueryController", function () {
         expect(countFilters).to.deep.equal(1);
     });
 
-    it("Test whichID, courses", function () {
+    it("Test guessID, courses", function () {
         //qC.parseQueryBody()
-        let id = qC.whichID()
+        let id = qC.guessID()
         expect(id).to.deep.equal("courses");
     });
 

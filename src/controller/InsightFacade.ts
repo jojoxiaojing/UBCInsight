@@ -96,7 +96,7 @@ export default class InsightFacade implements IInsightFacade {
         var s: InsightResponse = {code: null, body: {}};
         var queryController = new QueryController(query, []);
         var isValid = queryController.isValid();
-        var id = queryController.whichID();
+        var id = queryController.guessID();
 
         let that = this;
         var dataController = that.getDataController();
@@ -105,6 +105,14 @@ export default class InsightFacade implements IInsightFacade {
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
             var s: InsightResponse = {code: null, body: {}};
+
+            if (id === "wrongID") {
+                s.code = 400;
+                s.body = {error: "query invalid"};
+                reject(s);
+                return;
+            }
+
             try {
                 if (isValid) {
                     if (dataController.loadDataset(id) === null) {

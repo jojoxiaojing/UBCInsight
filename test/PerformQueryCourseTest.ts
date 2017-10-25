@@ -341,5 +341,39 @@ describe("testPerformQuery", function() {
     });
 
 
+        it("Already in memory:Test performQuery with courses_year ", function () {
+        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("courses", data).then(function (value: any) {
+            var testQuery ={"WHERE":{"LT": {"courses_year": 2000}}, "OPTIONS":{"COLUMNS":[ "courses_dept", "courses_id","courses_avg"],"ORDER":"courses_avg"}}
+            return insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+
+            }).catch(function(err:any){
+                expect.fail();
+            });
+        }).catch(function (err) {
+            expect.fail();
+        });
+    });
+
+
+    it("Test performQuery with invalid query: keys are from both rooms and courses ", function () {
+        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("courses", data).then(function (value: any) {
+            var testQuery ={"WHERE":{"LT": {"courses_year": 2000}}, "OPTIONS":{"COLUMNS":[ "rooms_fullname", "courses_id","courses_avg"],"ORDER":"courses_avg"}}
+            return insightF.performQuery(testQuery).then(function(value:any){
+               expect.fail()
+
+            }).catch(function(err:any){
+                expect(err.code).to.equal(400);
+            });
+        }).catch(function (err) {
+            expect.fail();
+        });
+    });
+
 
 })
