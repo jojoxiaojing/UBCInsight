@@ -18,7 +18,7 @@ describe("testAddCoursesData", function() {
     });
 
     after(function() {
-        insightF.removeDataset('courses');
+        //insightF.removeDataset('courses');
     })
 
     afterEach(function () {
@@ -218,7 +218,7 @@ describe("testAddCoursesData", function() {
 
     });
 
-/*    it("simple test for addDataset with courses.zip, with code 201", function () {
+    it("simple test for addDataset with courses.zip, with code 201", function () {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
         //insightF.removeDataset('courses');
 
@@ -240,7 +240,7 @@ describe("testAddCoursesData", function() {
             expect.fail();
         });
 
-    });*/
+    });
 
 
 })

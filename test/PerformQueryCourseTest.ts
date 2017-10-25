@@ -321,4 +321,16 @@ describe("testPerformQuery", function() {
         });
     });
 
+    it("Test performQuery, invalid query returning 400 code: GT has string input", function (done) {
+        fs.readFile(__dirname + '/data/courses.zip', "base64", function(err:any, data:string) {
+            var testQuery = {WHERE: {AND: [{NOT: {GT: {courses_audit: 2}}}, {AND: [{GT: {courses_fail: "a"}}, {GT: {courses_pass: 100}}]}]}, OPTIONS: {COLUMNS: ["courses_dept", "courses_avg"], ORDER: "courses_avg"}}
+            insightF.performQuery(testQuery).then(function(value:any){
+                expect.fail();
+            }).catch(function(value:any){
+                expect(value.code).to.equal(400);
+                done();
+            });
+        });
+    });
+
 })

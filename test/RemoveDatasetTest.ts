@@ -23,7 +23,7 @@ describe("testRemoveData", function() {
     })
 
     afterEach(function () {
-        insightF.removeDataset('courses');
+        //insightF.removeDataset('courses');
     });
 
     it("simple test for addDataset with courses.zip", function () {
@@ -46,8 +46,8 @@ describe("testRemoveData", function() {
 
     });
 
-
-    /*    it("Import course.zip ，store the data and remove successfully", function () {
+/*
+        it("Import course.zip ，store the data and remove successfully", function () {
             let ifFileExist = fs.existsSync('./src/controller/courses.txt');
             expect(ifFileExist).to.deep.equal(true);
            return insightF.removeDataset("courses").then(function (value: InsightResponse) {
