@@ -359,6 +359,24 @@ describe("testPerformQuery", function() {
     });
 
 
+    it("Already in memory:Test performQuery with courses_year in the options ", function () {
+        let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+
+        return insightF.addDataset("courses", data).then(function (value: any) {
+            var testQuery ={"WHERE":{"GT": {"courses_year": 1900}}, "OPTIONS":{"COLUMNS":[ "courses_dept", "courses_year","courses_avg"],"ORDER":"courses_avg"}}
+            return insightF.performQuery(testQuery).then(function(value:any){
+                let a = value;
+                expect(value.code).to.equal(200);
+
+            }).catch(function(err:any){
+                expect.fail();
+            });
+        }).catch(function (err) {
+            expect.fail();
+        });
+    });
+
+
     it("Test performQuery with invalid query: keys are from both rooms and courses ", function () {
         let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 

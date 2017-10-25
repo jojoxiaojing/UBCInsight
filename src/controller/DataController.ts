@@ -107,6 +107,8 @@ export default class DataController {
                                 };
                                 if (c.Section === "overall") {
                                     m.courses_year = 1900
+                                } else {
+                                    m.courses_year = +m.courses_year
                                 }
                                 promiseAllResult.push(m);
                             }
