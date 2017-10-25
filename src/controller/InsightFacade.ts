@@ -10,12 +10,10 @@ var fs = require("fs");
 
 
 export default class InsightFacade implements IInsightFacade {
-    //dataInMemory:Map<string,any[]>;
     dataController: DataController = new DataController();
 
 
     constructor() {
-        //Log.trace('InsightFacadeImpl::init()');
         //this.dataInMemory= new Map<string,any[]>();
     }
 
@@ -100,7 +98,6 @@ export default class InsightFacade implements IInsightFacade {
 
         let that = this;
         var dataController = that.getDataController();
-        // var dataMap = dataController.getDataInMemory();
 
         return new Promise<InsightResponse>((fulfill, reject) =>{
             //initialize response variable
