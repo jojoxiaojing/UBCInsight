@@ -55,7 +55,7 @@ export default class DataController {
         }
 
         // check if file is in memory
-        if (!this.dataInMemory.has(id) || this.dataInMemory.get(id) === {}) {
+        if (!this.dataInMemory.has(id)) {
             var data = fs.readFileSync(__dirname + "/" + id + '.txt', "utf8");
             this.dataInMemory.set(id, JSON.parse(data));
         }
@@ -114,7 +114,8 @@ export default class DataController {
                         let m = promiseAllResult;
 
                         if (m.length === 0) {
-                            throw new Error("Dataset is empty")
+                            //throw new Error("Dataset is empty")
+                            reject(false)
                         } else {
                             //update the in memory file
                             let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
