@@ -19,6 +19,16 @@ describe("testPerformQuery", function() {
     })
 //Not in memory
 
+
+    it("Test performQuery, when no dataset has been added ", function () {
+        var testQuery ={"WHERE": {"IS": {"courses_dept": "math"}}, "OPTIONS": {"COLUMNS": ["courses_dept",  "courses_instructor","courses_avg"], "ORDER": "courses_avg"}}
+        return insightF.performQuery(testQuery).then(function(value:any){
+            expect.fail();
+        }).catch(function(value:any){
+            expect(value.code).to.equal(424);
+        });
+    });
+
     it("Import course.zip and store the data, it should return code 204", function () {
         let data  = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
 

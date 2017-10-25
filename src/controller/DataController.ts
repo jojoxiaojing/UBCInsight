@@ -49,10 +49,12 @@ export default class DataController {
 
         var fs = require("fs");
         let ifFileExist = fs.existsSync(__dirname + "/" + id + '.txt');
+        // check if file is in disk
         if (!ifFileExist) {
             return null;
         }
 
+        // check if file is in memory
         if (!this.dataInMemory.has(id) || this.dataInMemory.get(id) === {}) {
             var data = fs.readFileSync(__dirname + "/" + id + '.txt', "utf8");
             this.dataInMemory.set(id, JSON.parse(data));
