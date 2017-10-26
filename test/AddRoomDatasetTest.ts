@@ -21,9 +21,9 @@ describe("testAddRoomsData", function () {
     });
 
     after(function () {
-        if(fs.existsSync('./src/controller/rooms.txt')){
-            fs.unlinkSync('./src/controller/rooms.txt');
-        }
+        insightF.removeDataset('rooms')
+        insightF.removeDataset('courses')
+
     })
 
     afterEach(function () {

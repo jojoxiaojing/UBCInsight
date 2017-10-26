@@ -9,13 +9,12 @@ var insightF: InsightFacade;
 describe("data controller tests", function() {
     this.timeout(10000);
     var dataController: DataController;
-    beforeEach(function () {
+    before(function () {
         // load the dataset for testing
         //let data  = fs.readFileSync(__dirname + '/data/courses.txt', 'utf-8');
         //fs.writeFileSync('./src/controller/courses.txt', data, 'utf-8')
-        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
         insightF = new InsightFacade();
-        insightF.addDataset('courses', data);
+
         dataController = insightF.dataController;
 
     });
@@ -30,7 +29,9 @@ describe("data controller tests", function() {
         expect(a).to.equal(null);
     });
 
-    it("Test getDataset, file inDisk", function () {
+    it("Test getDataset, file inDisk", async function () {
+        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
+        var coursePromise = await insightF.addDataset('courses', data);
         let a = dataController.loadDataset('courses');
         expect(a.length).to.equal(64612);
     });

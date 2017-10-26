@@ -73,7 +73,7 @@ export default class InsightFacade implements IInsightFacade {
                 }
 
                 if(ifFileExist){
-                    fs.unlinkSync(__dirname + "/" + id + '.txt');
+                    fs.unlinkSync("./src/controller/" + id + '.txt');
                 }
 
                 if(this.dataController.dataInMemory.has(id)){
