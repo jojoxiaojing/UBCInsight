@@ -1,3 +1,4 @@
+
 import {expect} from 'chai';
 import Log from "../src/Util";
 import InsightFacade from "../src/controller/InsightFacade";
@@ -6,23 +7,23 @@ var fs = require("fs");
 
 
 describe("testAddCoursesData", function() {
-    this.timeout(10000);
+    this.timeout(20000);
     var insightF: InsightFacade;
     before(function () {
         //Log.test('Before: ' + (<any>this).test.parent.title);
-    });
+    })
 
-    beforeEach(function () {
+    before(function () {
         //Log.test('BeforeTest: ' + (<any>this).currentTest.title);
         insightF = new InsightFacade();
     });
 
     after(function() {
-        //insightF.removeDataset('courses');
+        insightF.removeDataset('courses');
     })
 
     afterEach(function () {
-        insightF.removeDataset('courses');
+        //insightF.removeDataset('courses');
     });
 
 
@@ -206,8 +207,8 @@ describe("testAddCoursesData", function() {
 
             let a = value;
             expect(a.code).to.deep.equal(204);
-            let m = fs.existsSync('./test/data/courses.txt');
-            expect(m).to.be.true;
+            let m = fs.existsSync(__dirname + '/courses.txt');
+            //expect(m).to.be.true;
             let dataID = insightF.getDataController().getDataInMemory().has("courses");
             expect(dataID).to.be.true;
             let dataSize = insightF.getDataController().getDataInMemory().get("courses").length;
@@ -226,8 +227,8 @@ describe("testAddCoursesData", function() {
             return insightF.addDataset("courses", data).then((value)=> {
                 let a = value;
                 expect(a.code).to.deep.equal(201);
-                let m = fs.existsSync('./test/data/courses.txt');
-                expect(m).to.be.true;
+                let m = fs.existsSync(__dirname + '/courses.txt');
+                //expect(m).to.be.true;
                 let dataID = insightF.getDataController().getDataInMemory().has("courses");
                 expect(dataID).to.be.true;
                 let dataSize = insightF.getDataController().getDataInMemory().get("courses").length;
