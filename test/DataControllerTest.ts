@@ -11,8 +11,9 @@ describe("data controller tests", function() {
     var dataController: DataController;
     beforeEach(function () {
         // load the dataset for testing
-        let data  = fs.readFileSync(__dirname + '/data/courses.txt', 'utf-8');
-        fs.writeFileSync('./src/controller/courses.txt', data, 'utf-8')
+        //let data  = fs.readFileSync(__dirname + '/data/courses.txt', 'utf-8');
+        //fs.writeFileSync('./src/controller/courses.txt', data, 'utf-8')
+        let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
         insightF = new InsightFacade();
         insightF.addDataset('courses', data);
         dataController = insightF.dataController;
