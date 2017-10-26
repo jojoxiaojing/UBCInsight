@@ -15,7 +15,7 @@ describe("testLoadData", function() {
     });
 
     after(function() {
-        //insightF.removeDataset('courses');
+        insightF.removeDataset('courses');
     })
 //Not in memory
 
