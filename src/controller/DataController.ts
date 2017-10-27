@@ -141,8 +141,7 @@ export default class DataController {
         });
     }
 
-    // TODO change relative path to match performQuery
-    public processRooms(id: string, content: any): Promise<InsightResponse> {
+    public processRooms(id: string, content: any): Promise<boolean> {
         let that = this;
 
         const buildFindTableAttr: string = "views-table cols-5 table";
@@ -157,7 +156,7 @@ export default class DataController {
         const roomMoreDetailAttr: string = "views-field views-field-nothing";
         const roomsFindTable: string = "views-table cols-5 table";
 
-        return new Promise<InsightResponse>((fullfill, reject) => {
+        return new Promise<boolean>((fullfill, reject) => {
 
             JSZip.loadAsync(content, {base64: true}).then((zip: any) => {
 
@@ -231,13 +230,7 @@ export default class DataController {
                         let roomDataSet = that.contactWholeArray(value);
                         that.dataInMemory.set(id,roomDataSet);
                         fs.writeFileSync(__dirname + "/" + id + '.txt', JSON.stringify(roomDataSet), 'utf-8');
-                        let s: InsightResponse = {
-                            code: 201,
-                            body: {}
-                        };
-                        fullfill(s);
-
-
+                        fullfill(true);
 
                     }).catch((err: any) => {
                         throw err;
@@ -247,7 +240,7 @@ export default class DataController {
                     throw err;
                 });
             }).catch(function (err: any) {
-                reject(err);
+                reject(false);
             });
         });
     }

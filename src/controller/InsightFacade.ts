@@ -40,8 +40,13 @@ export default class InsightFacade implements IInsightFacade {
                         reject({code: 400, error: err});
                     });
                 } else if (id === "rooms") {
-                    dataController.processRooms(id, content).then(()=>{
-                        fulfill({code: c, body: {}});
+                    dataController.processRooms(id, content).then((value: boolean)=>{
+                        if (value === true) {
+                            fulfill({code: c, body: {}});
+                        } else {
+                            throw new Error("Dataset is invalid")
+                            //reject({code: 400, error: "dataset invalid"})
+                        }
                     }).catch(function (err: Error) {
                         reject({code: 400, error: 'error'});
                     });
