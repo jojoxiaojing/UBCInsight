@@ -112,7 +112,7 @@ export default class InsightFacade implements IInsightFacade {
 
             try {
                 if (isValid) {
-                    if (dataController.loadDataset(id) === null) {
+                    if (dataController.loadDataset(id) == null) {
                         s.code = 424;
                         s.body = {error: "missing dataset"}
                         reject(s);
