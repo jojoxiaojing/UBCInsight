@@ -28,7 +28,7 @@ describe("testRemoveData", function() {
 
     it("simple test for addDataset with courses.zip", function () {
         let data = fs.readFileSync(__dirname + '/data/courses.zip', "base64");
-        insightF.removeDataset('courses');
+        //insightF.removeDataset('courses');
 
         return insightF.addDataset("courses", data).then(function (value: InsightResponse) {
 
