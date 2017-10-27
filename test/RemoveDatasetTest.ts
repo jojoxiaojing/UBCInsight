@@ -46,7 +46,7 @@ describe("testRemoveData", function() {
 
     });
 
-/*
+
         it("Import course.zip ，store the data and remove successfully", function () {
             let ifFileExist = fs.existsSync('./src/controller/courses.txt');
             expect(ifFileExist).to.deep.equal(true);
@@ -58,7 +58,7 @@ describe("testRemoveData", function() {
             }).catch(function () {
                 expect.fail();
             });
-        });*/
+        });
 
 
     it("Test remove when not in memory and file does not exist", function () {
