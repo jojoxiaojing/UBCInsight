@@ -51,7 +51,7 @@ export default class InsightFacade implements IInsightFacade {
                         reject({code: 400, body: {error: err}});
                     });
                 } else {
-                    reject({code: 400, body: {error: 'smth went wrong'}});
+                    reject({code: 400, body: {error: 'ID is invalid'}});
                 }
             } catch (err) {
                 reject({code: 400, body: {error: err}});
