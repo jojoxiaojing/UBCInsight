@@ -37,7 +37,7 @@ export default class InsightFacade implements IInsightFacade {
                             //reject({code: 400, error: "dataset invalid"})
                         }
                     }).catch(function (err: Error) {
-                        reject({code: 400, body: {error: err}});
+                        reject({code: 400, body: {error: "smth is wrong"}});
                     });
                 } else if (id === "rooms") {
                     dataController.processRooms(id, content).then((value: boolean)=>{
@@ -48,13 +48,13 @@ export default class InsightFacade implements IInsightFacade {
                             //reject({code: 400, error: "dataset invalid"})
                         }
                     }).catch(function (err: Error) {
-                        reject({code: 400, body: {error: err}});
+                        reject({code: 400, body: {error: "smth is wrong"}});
                     });
                 } else {
                     reject({code: 400, body: {error: 'ID is invalid'}});
                 }
             } catch (err) {
-                reject({code: 400, body: {error: err}});
+                reject({code: 400, body: {error: "smth is wrong"}});
             }
         });
     }
