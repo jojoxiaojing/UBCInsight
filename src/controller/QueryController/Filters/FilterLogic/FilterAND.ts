@@ -96,7 +96,7 @@ export default class FilterAND implements IFilterLogic{
             for (var key of keys) {
                 let val = element[key];
                 if (key === "AND" || key === "OR") {
-                    if (!Array.isArray(val) || val.length == 0 || val.length == 1) return false;
+                    if (!Array.isArray(val) || val.length == 0) return false;
                 }
             }
         }
