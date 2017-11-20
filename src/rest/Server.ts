@@ -7,6 +7,7 @@ import restify = require('restify');
 
 import Log from "../Util";
 import {InsightResponse} from "../controller/IInsightFacade";
+import InsightFacade from "../controller/InsightFacade";
 
 /**
  * This configures the REST endpoints for the server.
@@ -46,6 +47,7 @@ export default class Server {
      */
     public start(): Promise<boolean> {
         let that = this;
+        let insi = new InsightFacade();
         return new Promise(function (fulfill, reject) {
             try {
                 //Log.info('Server::start() - start');
@@ -53,6 +55,8 @@ export default class Server {
                 that.rest = restify.createServer({
                     name: 'insightUBC'
                 });
+
+                that.rest.use(restify.bodyParser({mapParams: true, mapFiles: true}));
 
                 // support CORS
                 that.rest.use(function crossOrigin(req, res, next) {
@@ -64,6 +68,29 @@ export default class Server {
                 that.rest.get('/', function (req: restify.Request, res: restify.Response, next: restify.Next) {
                     res.send(200);
                     return next();
+                });
+
+                that.rest.put('/dataset/:id',function(req: restify.Request, res: restify.Response, next: restify.Next){
+                    let dataStr = new Buffer(req.params.body).toString('base64');
+                    insi.addDataset(req.params.id, dataStr).then(function(result:InsightResponse){
+                        res.send(result);
+                        return next();
+                    });
+
+                });
+
+                that.rest.del('/dataset/:id',function(req: restify.Request, res: restify.Response, next: restify.Next){
+                    insi.removeDataset(req.params.id).then(function (result:InsightResponse) {
+                        res.send(result);
+                        return next();
+                    });
+                });
+
+                that.rest.post('/dataset/query',function(req: restify.Request, res: restify.Response, next: restify.Next){
+                    insi.performQuery(req.body).then(function(result:InsightResponse){
+                        res.send(result);
+                        return next();
+                    });
                 });
 
                 // provides the echo service
@@ -115,3 +142,5 @@ export default class Server {
     }
 
 }
+const s = new Server(30000);
+s.start();
